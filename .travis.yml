@@ -1,0 +1,12 @@
+language: php
+
+php:
+  - 5.3
+  - 5.4
+
+before_script:
+  - composer --prefer-source update
+
+script:
+  - bin/phpspec run -f pretty
+  - bin/behat --no-snippets --no-paths --verbose
