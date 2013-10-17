@@ -75,11 +75,7 @@ class DownloadPageParser
      */
     public function getStreetsFileRoundedSize($terytDownloadPageUrl)
     {
-        $crawler = $this->createDownloadPageCrawler($terytDownloadPageUrl);
-        $sizeNode = $crawler->filter('table#row tbody tr:first-child td:nth-child(5)');
-        $sizeString = $sizeNode->html();
-
-        return $this->formatSize($sizeString) * 1024;
+        return $this->getFileSize($terytDownloadPageUrl, 'table#row tbody tr:first-child td:nth-child(5)');
     }
 
     /**
@@ -88,11 +84,7 @@ class DownloadPageParser
      */
     public function getPlacesFileRoundedSize($terytDownloadPageUrl)
     {
-        $crawler = $this->createDownloadPageCrawler($terytDownloadPageUrl);
-        $sizeNode = $crawler->filter('table#row tbody tr:nth-child(2) td:nth-child(5)');
-        $sizeString = $sizeNode->html();
-
-        return $this->formatSize($sizeString) * 1024;
+        return $this->getFileSize($terytDownloadPageUrl, 'table#row tbody tr:nth-child(2) td:nth-child(5)');
     }
 
     /**
@@ -101,11 +93,7 @@ class DownloadPageParser
      */
     public function getPlacesDictionaryFileRoundedSize($terytDownloadPageUrl)
     {
-        $crawler = $this->createDownloadPageCrawler($terytDownloadPageUrl);
-        $sizeNode = $crawler->filter('table#row tbody tr:nth-child(3) td:nth-child(5)');
-        $sizeString = $sizeNode->html();
-
-        return $this->formatSize($sizeString) * 1024;
+        return $this->getFileSize($terytDownloadPageUrl, 'table#row tbody tr:nth-child(3) td:nth-child(5)');
     }
 
     /**
@@ -114,11 +102,7 @@ class DownloadPageParser
      */
     public function getTerritorialDivisionFileRoundedSize($terytDownloadPageUrl)
     {
-        $crawler = $this->createDownloadPageCrawler($terytDownloadPageUrl);
-        $sizeNode = $crawler->filter('table#row tbody tr:nth-child(4) td:nth-child(5)');
-        $sizeString = $sizeNode->html();
-
-        return $this->formatSize($sizeString) * 1024;
+        return $this->getFileSize($terytDownloadPageUrl, 'table#row tbody tr:nth-child(4) td:nth-child(5)');
     }
 
     /**
@@ -202,5 +186,19 @@ class DownloadPageParser
         $sizeString = preg_replace('/\s+/', '', $sizeString);
 
         return (int) $sizeString;
+    }
+
+    /**
+     * @param $terytDownloadPageUrl
+     * @param $selector
+     * @return int
+     */
+    public function getFileSize($terytDownloadPageUrl, $selector)
+    {
+        $crawler = $this->createDownloadPageCrawler($terytDownloadPageUrl);
+        $sizeNode = $crawler->filter($selector);
+        $sizeString = $sizeNode->html();
+        $size = $this->formatSize($sizeString) * 1024;
+        return $size;
     }
 }
