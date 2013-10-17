@@ -4,12 +4,12 @@ namespace FSi\Bundle\TerytDatabaseBundle\Command;
 
 use Symfony\Component\Console\Input\InputArgument;
 
-class TerytDownloadStreetsDatabaseCommand extends TerytDownloadCommand
+class TerytDownloadPlacesDictionaryDatabaseCommand extends TerytDownloadCommand
 {
     protected function configure()
     {
-        $this->setName('teryt:download:streets')
-            ->setDescription('Download teryt streets database files')
+        $this->setName('teryt:download:places-dictionary')
+            ->setDescription('Download teryt places dictionary database files')
             ->addArgument(
                 'target',
                 InputArgument::OPTIONAL,
@@ -17,8 +17,8 @@ class TerytDownloadStreetsDatabaseCommand extends TerytDownloadCommand
             )->addArgument(
                 'filename',
                 InputArgument::OPTIONAL,
-                'Default streets file name',
-                'streets'
+                'Default places dictionary file name',
+                'places-dictionary'
             );
     }
 
@@ -28,7 +28,7 @@ class TerytDownloadStreetsDatabaseCommand extends TerytDownloadCommand
     protected function getFileDownloadUrl()
     {
         return $this->getTerytPageParser()
-            ->getStreetsFileUrl($this->getContainer()->getParameter('fsi_teryt_db.files_list_page'));
+            ->getPlacesDictionaryFileUrl($this->getContainer()->getParameter('fsi_teryt_db.files_list_page'));
     }
 
     /**
@@ -37,6 +37,6 @@ class TerytDownloadStreetsDatabaseCommand extends TerytDownloadCommand
     protected function getFileRoundedSize()
     {
         return $this->getTerytPageParser()
-            ->getStreetsFileRoundedSize($this->getContainer()->getParameter('fsi_teryt_db.files_list_page'));
+            ->getPlacesDictionaryFileRoundedSize($this->getContainer()->getParameter('fsi_teryt_db.files_list_page'));
     }
 }

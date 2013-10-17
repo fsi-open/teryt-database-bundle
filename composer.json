@@ -21,8 +21,7 @@
         "behat/mink-extension": "*",
         "behat/mink-browserkit-driver": "*",
         "phpspec/phpspec": "2.0.*@dev",
-        "bossa/phpspec2-expect": "dev-master",
-        "guzzle/plugin-mock": "3.7.*"
+        "bossa/phpspec2-expect": "dev-master"
     },
     "config": {
         "bin-dir": "bin"

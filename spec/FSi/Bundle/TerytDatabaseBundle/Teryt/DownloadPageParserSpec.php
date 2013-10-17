@@ -35,18 +35,33 @@ class DownloadPageParserSpec extends ObjectBehavior
         $this->getStreetsFileUrl($this->downloadPageUrl)->shouldReturn($fileUrl);
     }
 
-    function it_returns_places_dictionary_file_url_from_teryt_download_page()
+    function it_returns_streets_file_size_from_teryt_download_page()
     {
-        $fileUrl = dirname($this->downloadPageUrl) . '/downloadPreFile.jspa?id=649';
-
-        $this->getPlacesDictionaryFileUrl($this->downloadPageUrl)->shouldReturn($fileUrl);
+        $this->getStreetsFileRoundedSize($this->downloadPageUrl)->shouldReturn(4365312);
     }
 
     function it_returns_places_file_url_from_teryt_download_page()
     {
-        $fileUrl = dirname($this->downloadPageUrl) . '/downloadPreFile.jspa?id=648';
+        $fileUrl = dirname($this->downloadPageUrl) . '/downloadPreFile.jspa?id=649';
 
         $this->getPlacesFileUrl($this->downloadPageUrl)->shouldReturn($fileUrl);
+    }
+
+    function it_returns_places_file_size_from_teryt_download_page()
+    {
+        $this->getPlacesFileRoundedSize($this->downloadPageUrl)->shouldReturn(2520064);
+    }
+
+    function it_returns_places_dictionary_file_url_from_teryt_download_page()
+    {
+        $fileUrl = dirname($this->downloadPageUrl) . '/downloadPreFile.jspa?id=648';
+
+        $this->getPlacesDictionaryFileUrl($this->downloadPageUrl)->shouldReturn($fileUrl);
+    }
+
+    function it_returns_places_dictionary_file_size_from_teryt_download_page()
+    {
+        $this->getPlacesDictionaryFileRoundedSize($this->downloadPageUrl)->shouldReturn(0);
     }
 
     function it_returns_territorial_division_file_url_from_teryt_download_page()
@@ -54,6 +69,11 @@ class DownloadPageParserSpec extends ObjectBehavior
         $fileUrl = dirname($this->downloadPageUrl) . '/downloadPreFile.jspa?id=594';
 
         $this->getTerritorialDivisionFileUrl($this->downloadPageUrl)->shouldReturn($fileUrl);
+    }
+
+    function it_returns_territorial_division_file_size_from_teryt_download_page()
+    {
+        $this->getTerritorialDivisionFileRoundedSize($this->downloadPageUrl)->shouldReturn(45056);
     }
 
     function it_throws_an_exception_when_download_page_is_not_avaialble(Client $client, Request $request)

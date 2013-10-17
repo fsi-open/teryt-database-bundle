@@ -46,7 +46,7 @@ class DownloadPageParser
      * @param $terytDownloadPageUrl
      * @return string
      */
-    public function getPlacesDictionaryFileUrl($terytDownloadPageUrl)
+    public function getPlacesFileUrl($terytDownloadPageUrl)
     {
         return $this->getFileDownloadUrl($terytDownloadPageUrl, 'table#row tbody tr:nth-child(2) td:last-child > a');
     }
@@ -55,7 +55,7 @@ class DownloadPageParser
      * @param $terytDownloadPageUrl
      * @return string
      */
-    public function getPlacesFileUrl($terytDownloadPageUrl)
+    public function getPlacesDictionaryFileUrl($terytDownloadPageUrl)
     {
         return $this->getFileDownloadUrl($terytDownloadPageUrl, 'table#row tbody tr:nth-child(3) td:last-child > a');
     }
@@ -67,6 +67,58 @@ class DownloadPageParser
     public function getTerritorialDivisionFileUrl($terytDownloadPageUrl)
     {
         return $this->getFileDownloadUrl($terytDownloadPageUrl, 'table#row tbody tr:nth-child(4) td:last-child > a');
+    }
+
+    /**
+     * @param $terytDownloadPageUrl
+     * @return int
+     */
+    public function getStreetsFileRoundedSize($terytDownloadPageUrl)
+    {
+        $crawler = $this->createDownloadPageCrawler($terytDownloadPageUrl);
+        $sizeNode = $crawler->filter('table#row tbody tr:first-child td:nth-child(5)');
+        $sizeString = $sizeNode->html();
+
+        return $this->formatSize($sizeString) * 1024;
+    }
+
+    /**
+     * @param $terytDownloadPageUrl
+     * @return int
+     */
+    public function getPlacesFileRoundedSize($terytDownloadPageUrl)
+    {
+        $crawler = $this->createDownloadPageCrawler($terytDownloadPageUrl);
+        $sizeNode = $crawler->filter('table#row tbody tr:nth-child(2) td:nth-child(5)');
+        $sizeString = $sizeNode->html();
+
+        return $this->formatSize($sizeString) * 1024;
+    }
+
+    /**
+     * @param $terytDownloadPageUrl
+     * @return int
+     */
+    public function getPlacesDictionaryFileRoundedSize($terytDownloadPageUrl)
+    {
+        $crawler = $this->createDownloadPageCrawler($terytDownloadPageUrl);
+        $sizeNode = $crawler->filter('table#row tbody tr:nth-child(3) td:nth-child(5)');
+        $sizeString = $sizeNode->html();
+
+        return $this->formatSize($sizeString) * 1024;
+    }
+
+    /**
+     * @param $terytDownloadPageUrl
+     * @return int
+     */
+    public function getTerritorialDivisionFileRoundedSize($terytDownloadPageUrl)
+    {
+        $crawler = $this->createDownloadPageCrawler($terytDownloadPageUrl);
+        $sizeNode = $crawler->filter('table#row tbody tr:nth-child(4) td:nth-child(5)');
+        $sizeString = $sizeNode->html();
+
+        return $this->formatSize($sizeString) * 1024;
     }
 
     /**
@@ -138,5 +190,17 @@ class DownloadPageParser
         $this->crawler = new Crawler($content);
 
         return $this->crawler;
+    }
+
+    /**
+     * @param $sizeString
+     * @return int
+     */
+    private function formatSize($sizeString)
+    {
+        $sizeString = iconv('UTF-8', 'ASCII//TRANSLIT', $sizeString);
+        $sizeString = preg_replace('/\s+/', '', $sizeString);
+
+        return (int) $sizeString;
     }
 }
