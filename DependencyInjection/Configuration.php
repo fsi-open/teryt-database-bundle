@@ -25,6 +25,8 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('fsi_teryt_db');
 
+        $supportedDrivers = array('orm');
+
         $rootNode
             ->children()
                 ->scalarNode('files_list_page')->defaultValue('http://www.stat.gov.pl/broker/access/prefile/listPreFiles.jspa')->end()

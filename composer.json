@@ -13,9 +13,13 @@
     "require": {
         "php": ">=5.3.3",
         "symfony/symfony": "*@stable",
-        "guzzle/guzzle": "3.7.*"
+        "guzzle/guzzle": "3.7.*",
+        "hobnob/xml-stream-reader": "1.0.*"
     },
     "require-dev": {
+        "ext-pdo_sqlite": "*",
+        "doctrine/doctrine-bundle": "1.2.*",
+        "doctrine/orm": ">=2.2.3,<2.4-dev",
         "behat/behat": "*@stable",
         "behat/symfony2-extension": "*@stable",
         "behat/mink-extension": "*",

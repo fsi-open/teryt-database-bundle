@@ -38,13 +38,13 @@ class ApplicationTester
     }
 
     /**
-     * @param string $input
+     * @param array $input
      *
      * @return integer
      */
-    public function run($input)
+    public function run($input = array())
     {
-        $this->input = new ArrayInput(array($input));
+        $this->input = new ArrayInput((array) $input);
         $this->output = new StreamOutput(fopen('php://memory', 'r+', false));
 
         $inputStream = $this->getInputStream();
