@@ -21,10 +21,6 @@ class DownloadTerytCommandContext extends BehatContext implements KernelAwareInt
 {
     private $parameters;
 
-    private $terytFixturesPath;
-
-    private $lastCommandOutput;
-
     /**
      * @var KernelInterface
      */
@@ -32,7 +28,6 @@ class DownloadTerytCommandContext extends BehatContext implements KernelAwareInt
 
     public function __construct(array $parameters)
     {
-        $this->terytFixturesPath = __DIR__ . '/../Fixtures/TerytPage';
         $this->parameters = $parameters;
     }
 
@@ -50,21 +45,6 @@ class DownloadTerytCommandContext extends BehatContext implements KernelAwareInt
     }
 
     /**
-     * @When /^I run console command "([^"]*)"$/
-     */
-    public function iRunConsoleCommand($command)
-    {
-        $this->prepareGuzzleResponses($command);
-        $application = new Application($this->kernel);
-        $application->setAutoExit(false);
-
-        $tester = new ApplicationTester($application);
-
-        $tester->run($command);
-        $this->lastCommandOutput = $tester->getDisplay(true);
-    }
-
-    /**
      * @Then /^"([^"]*)" file should be downloaded into "([^"]*)" folder$/
      */
     public function fileShouldBeDownloadedIntoFolder($fileName, $targetFilesPath)
@@ -72,8 +52,6 @@ class DownloadTerytCommandContext extends BehatContext implements KernelAwareInt
         $downloadPath = realpath( __DIR__ . '/../' . $targetFilesPath);
         $filePath = $downloadPath . '/' . $fileName;
         expect(file_exists($filePath))->toBe(true);
-        unlink($filePath);
-        rmdir($downloadPath);
     }
 
     /**
@@ -81,45 +59,26 @@ class DownloadTerytCommandContext extends BehatContext implements KernelAwareInt
      */
     public function iShouldSeeOutputAtConsole($consoleOutput)
     {
-        expect(trim($this->lastCommandOutput))->toBe($consoleOutput);
-    }
-
-    private function prepareGuzzleResponses($command)
-    {
-        $mock = $this->createGuzzleMockPlugin();
-
-        $fileUrlResponse = new \Guzzle\Http\Message\Response(200);
-        switch ($command) {
-            case 'teryt:download:streets':
-                $fileUrlResponse->setBody(file_get_contents($this->terytFixturesPath . DIRECTORY_SEPARATOR . 'streets.zip'));
-            case 'teryt:download:places':
-                $fileUrlResponse->setBody(file_get_contents($this->terytFixturesPath . DIRECTORY_SEPARATOR . 'places.zip'));
-                break;
-            case 'teryt:download:places-dictionary':
-                $fileUrlResponse->setBody(file_get_contents($this->terytFixturesPath . DIRECTORY_SEPARATOR . 'places-dictionary.zip'));
-                break;
-            case 'teryt:download:territorial-division':
-                $fileUrlResponse->setBody(file_get_contents($this->terytFixturesPath . DIRECTORY_SEPARATOR . 'territorial-division.zip'));
-                break;
-            default:
-                throw new BehaviorException(sprintf("Unknown command \"%s\"", $command));
-                break;
-        }
-
-        $mock->addResponse($fileUrlResponse);
-        $this->kernel->getContainer()->get('fsi_teryt_db.http_client')->addSubscriber($mock);
+        expect(trim($this->getMainContext()->getSubcontext('command')->getLastCommandOutput()))->toBe($consoleOutput);
     }
 
     /**
-     * @return MockPlugin
+     * @AfterScenario
      */
-    private function createGuzzleMockPlugin()
+    public function afterScenario()
     {
-        $mock = new MockPlugin();
-        $downloadPageResponse = new \Guzzle\Http\Message\Response(200);
-        $downloadPageResponse->setBody(file_get_contents($this->terytFixturesPath . DIRECTORY_SEPARATOR . 'listTerytFiles.html'));
-        $mock->addResponse($downloadPageResponse);
+        $terytDownloadPath = $this->parameters['fixtures_path'] . '/Project/app/teryt';
+        if (!file_exists($terytDownloadPath)) {
+            return;
+        }
 
-        return $mock;
+        foreach (new \DirectoryIterator($terytDownloadPath) as $file) {
+            if ($file->isDot()) {
+                continue;
+            }
+            unlink($terytDownloadPath . DIRECTORY_SEPARATOR . $file->getFilename());
+        }
+
+        rmdir($terytDownloadPath);
     }
 }

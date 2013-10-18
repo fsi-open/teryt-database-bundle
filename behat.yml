@@ -4,6 +4,8 @@ default:
     bootstrap: %behat.paths.features%/../Behat
   context:
     class: FSi\Bundle\TerytDatabaseBundle\Behat\Context\FeatureContext
+    parameters:
+        fixtures_path: %behat.paths.features%/../Behat/Fixtures
   extensions:
     Behat\Symfony2Extension\Extension:
       mink_driver: true

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="FSi\Bundle\TerytDatabaseBundle\Entity\Province" table="teryt_province">
+        <id name="code" type="string" length="2" />
+        <field name="name" type="string" length="32" />
+        <one-to-many field="districts" target-entity="District" mapped-by="province" />
+    </entity>
+</doctrine-mapping>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="FSi\Bundle\TerytDatabaseBundle\Entity\Community" table="teryt_community">
+        <id name="code" type="string" length="4" />
+        <field name="name" type="string" length="32" />
+        <many-to-one field="district" target-entity="District" inversed-by="communities">
+            <join-column name="district_code" referenced-column-name="code" />
+        </many-to-one>
+    </entity>
+</doctrine-mapping>
