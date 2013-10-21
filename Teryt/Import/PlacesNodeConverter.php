@@ -94,7 +94,7 @@ class PlacesNodeConverter extends NodeConverter
      */
     private function getPlaceType()
     {
-        return $this->om->getRepository('FSiTerytDbBundle:PlaceDictionary')->findOneBy(array(
+        return $this->om->getRepository('FSiTerytDbBundle:PlaceType')->findOneBy(array(
             'type' => $this->getPlaceDictionaryType()
         ));
     }

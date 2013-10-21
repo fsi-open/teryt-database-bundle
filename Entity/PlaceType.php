@@ -9,8 +9,8 @@
 
 namespace FSi\Bundle\TerytDatabaseBundle\Entity;
 
-use FSi\Bundle\TerytDatabaseBundle\Model\Place\Dictionary;
+use FSi\Bundle\TerytDatabaseBundle\Model\Place\Type;
 
-class PlaceDictionary extends Dictionary
+class PlaceType extends Type
 {
 }

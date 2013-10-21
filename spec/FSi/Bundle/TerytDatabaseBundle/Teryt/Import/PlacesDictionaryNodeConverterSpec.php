@@ -4,7 +4,7 @@ namespace spec\FSi\Bundle\TerytDatabaseBundle\Teryt\Import;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
-use FSi\Bundle\TerytDatabaseBundle\Entity\PlaceDictionary;
+use FSi\Bundle\TerytDatabaseBundle\Entity\PlaceType;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -27,11 +27,11 @@ class PlacesDictionaryNodeConverterSpec extends ObjectBehavior
 </row>
 EOT;
 
-        $placeDictionary = new PlaceDictionary();
-        $placeDictionary->setType('02')
+        $placeType = new PlaceType();
+        $placeType->setType('02')
             ->setName('kolonia');
 
         $this->beConstructedWith(new \SimpleXMLElement($xml), $om);
-        $this->convertToEntity()->shouldBeLike($placeDictionary);
+        $this->convertToEntity()->shouldBeLike($placeType);
     }
 }

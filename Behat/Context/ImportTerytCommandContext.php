@@ -82,7 +82,7 @@ class ImportTerytCommandContext extends BehatContext implements KernelAwareInter
      */
     public function placesDictionaryTableInDatabaseIsEmpty()
     {
-        expect($this->getPlaceDictionaryRepository()
+        expect($this->getPlaceTypeRepository()
             ->findAll())->toBe(array());
     }
 
@@ -162,8 +162,8 @@ class ImportTerytCommandContext extends BehatContext implements KernelAwareInter
         $tableHash = $table->getHash();
 
         foreach ($tableHash as $row) {
-            $entity = $this->getPlaceDictionaryRepository()->findOneByType($row['Type']);
-            expect($entity)->toBeAnInstanceOf('FSi\Bundle\TerytDatabaseBundle\Entity\PlaceDictionary');
+            $entity = $this->getPlaceTypeRepository()->findOneByType($row['Type']);
+            expect($entity)->toBeAnInstanceOf('FSi\Bundle\TerytDatabaseBundle\Entity\PlaceType');
             expect($entity->getName())->toBe($row['Name']);
         }
     }
@@ -231,13 +231,13 @@ class ImportTerytCommandContext extends BehatContext implements KernelAwareInter
     /**
      * @return mixed
      */
-    private function getPlaceDictionaryRepository()
+    private function getPlaceTypeRepository()
     {
         return $this->kernel
             ->getContainer()
             ->get('doctrine')
             ->getManager()
-            ->getRepository('FSiTerytDbBundle:PlaceDictionary');
+            ->getRepository('FSiTerytDbBundle:PlaceType');
     }
 
     /**

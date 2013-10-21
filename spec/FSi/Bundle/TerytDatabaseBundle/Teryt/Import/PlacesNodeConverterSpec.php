@@ -6,7 +6,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Community;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Place;
-use FSi\Bundle\TerytDatabaseBundle\Model\Place\Dictionary;
+use FSi\Bundle\TerytDatabaseBundle\Model\Place\Type;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -39,7 +39,7 @@ EOT;
         $community = new Community();
         $community->setCode('041105');
 
-        $placeType = new Dictionary();
+        $placeType = new Type();
         $placeType->setName('miasto')
             ->setType('01');
 

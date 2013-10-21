@@ -7,7 +7,7 @@ use Behat\Gherkin\Node\TableNode;
 use Behat\Symfony2Extension\Context\KernelAwareInterface;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Community;
 use FSi\Bundle\TerytDatabaseBundle\Entity\District;
-use FSi\Bundle\TerytDatabaseBundle\Entity\PlaceDictionary;
+use FSi\Bundle\TerytDatabaseBundle\Entity\PlaceType;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Province;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -86,7 +86,7 @@ class DataContext extends BehatContext implements KernelAwareInterface
      */
     public function thereIsAPlaceTypeWithTypeAndName($type, $name)
     {
-        $placeType = new PlaceDictionary();
+        $placeType = new PlaceType();
         $placeType->setType($type)
             ->setName($name);
 

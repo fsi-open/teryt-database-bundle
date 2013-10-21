@@ -11,7 +11,7 @@ namespace FSi\Bundle\TerytDatabaseBundle\Model\Place;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-class Dictionary
+class Type
 {
     /**
      * @var string
@@ -35,7 +35,7 @@ class Dictionary
 
     /**
      * @param mixed $type
-     * @return \FSi\Bundle\TerytDatabaseBundle\Model\Place\Dictionary
+     * @return \FSi\Bundle\TerytDatabaseBundle\Model\Place\Type
      */
     public function setType($type)
     {
@@ -54,7 +54,7 @@ class Dictionary
 
     /**
      * @param mixed $name
-     * @return \FSi\Bundle\TerytDatabaseBundle\Model\Place\Dictionary
+     * @return \FSi\Bundle\TerytDatabaseBundle\Model\Place\Type
      */
     public function setName($name)
     {

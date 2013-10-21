@@ -79,7 +79,7 @@ class Place
      * @param mixed $type
      * @return Place
      */
-    public function setType(Dictionary $type)
+    public function setType(Type $type)
     {
         $this->type = $type;
 
