@@ -9,13 +9,12 @@
 
 namespace FSi\Bundle\TerytDatabaseBundle\Teryt\Import;
 
-use Doctrine\Common\Persistence\ObjectManager;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Community;
 use FSi\Bundle\TerytDatabaseBundle\Entity\District;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Province;
 use FSi\Bundle\TerytDatabaseBundle\Exception\TerritorialDivisionNodeConverterException;
 
-class TerritorialDivisionNodeConverter
+class TerritorialDivisionNodeConverter extends NodeConverter
 {
     const WOJ_CHILD_NODE = 0;
     const POw_CHILD_NODE = 1;
@@ -24,21 +23,9 @@ class TerritorialDivisionNodeConverter
     const NAZWA_CHILD_NODE = 4;
 
     /**
-     * @var \SimpleXMLElement
+     * @throws \FSi\Bundle\TerytDatabaseBundle\Exception\TerritorialDivisionNodeConverterException
+     * @return \FSi\Bundle\TerytDatabaseBundle\Entity\Community|\FSi\Bundle\TerytDatabaseBundle\Entity\District|\FSi\Bundle\TerytDatabaseBundle\Entity\Province
      */
-    private $node;
-
-    /**
-     * @var \Doctrine\Common\Persistence\ObjectManager
-     */
-    private $om;
-
-    public function __construct(\SimpleXMLElement $node, ObjectManager $om)
-    {
-        $this->node = $node;
-        $this->om = $om;
-    }
-
     public function convertToEntity()
     {
         if ($this->isProvinceNode()) {

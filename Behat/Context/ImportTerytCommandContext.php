@@ -90,6 +90,15 @@ class ImportTerytCommandContext extends BehatContext implements KernelAwareInter
     }
 
     /**
+     * @Given /^places dictionary table in database is empty$/
+     */
+    public function placesDictionaryTableInDatabaseIsEmpty()
+    {
+        expect($this->getPlaceDictionaryRepository()
+            ->findAll())->toBe(array());
+    }
+
+    /**
      * @Then /^following province should exist in database$/
      */
     public function followingProvinceShouldExistInDatabase(TableNode $table)
@@ -133,12 +142,27 @@ class ImportTerytCommandContext extends BehatContext implements KernelAwareInter
         }
     }
 
+
     /**
      * @Then /^I should see "([^"]*)" console output$/
      */
     public function iShouldSeeConsoleOutput($output)
     {
         expect(trim($this->getMainContext()->getSubcontext('command')->getLastCommandOutput()))->toBe($output);
+    }
+
+    /**
+     * @Then /^places dictionary table in database should have following records$/
+     */
+    public function placesDictionaryTableInDatabaseShouldHaveFollowingRecords(TableNode $table)
+    {
+        $tableHash = $table->getHash();
+
+        foreach ($tableHash as $row) {
+            $entity = $this->getPlaceDictionaryRepository()->findOneByType($row['Type']);
+            expect($entity)->toBeAnInstanceOf('FSi\Bundle\TerytDatabaseBundle\Entity\PlaceDictionary');
+            expect($entity->getName())->toBe($row['Name']);
+        }
     }
 
     /**
@@ -175,5 +199,17 @@ class ImportTerytCommandContext extends BehatContext implements KernelAwareInter
             ->get('doctrine')
             ->getManager()
             ->getRepository('FSiTerytDbBundle:Community');
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getPlaceDictionaryRepository()
+    {
+        return $this->kernel
+            ->getContainer()
+            ->get('doctrine')
+            ->getManager()
+            ->getRepository('FSiTerytDbBundle:PlaceDictionary');
     }
 }
