@@ -36,18 +36,6 @@ class ImportTerytCommandContext extends BehatContext implements KernelAwareInter
     }
 
     /**
-     * @Given /^"([^"]*)" command was already called$/
-     */
-    public function commandWasAlreadyCalled($command)
-    {
-        $application = new Application($this->kernel);
-        $application->setAutoExit(false);
-
-        $tester = new ApplicationTester($application);
-        $tester->run($command);
-    }
-
-    /**
      * @Given /^"([^"]*)" file have following content:$/
      */
     public function xmlFileHaveFollowingContent($fileName, PyStringNode $fileContent)
@@ -139,16 +127,22 @@ class ImportTerytCommandContext extends BehatContext implements KernelAwareInter
             expect($entity)->toBeAnInstanceOf('FSi\Bundle\TerytDatabaseBundle\Entity\Community');
             expect($entity->getName())->toBe($row['Name']);
             expect($entity->getDistrict()->getName())->toBe($row['District']);
+            expect($entity->getType()->getName())->toBe($row['Community type']);
         }
     }
 
-
     /**
-     * @Then /^I should see "([^"]*)" console output$/
+     * @Then /^following community types should exist in database$/
      */
-    public function iShouldSeeConsoleOutput($output)
+    public function followingCommunityTypesShouldExistInDatabase(TableNode $table)
     {
-        expect(trim($this->getMainContext()->getSubcontext('command')->getLastCommandOutput()))->toBe($output);
+        $tableHash = $table->getHash();
+
+        foreach ($tableHash as $row) {
+            $entity = $this->getCommunityTypeRepository()->findOneByType($row['Type']);
+            expect($entity)->toBeAnInstanceOf('FSi\Bundle\TerytDatabaseBundle\Entity\CommunityType');
+            expect($entity->getName())->toBe($row['Name']);
+        }
     }
 
     /**
@@ -163,6 +157,14 @@ class ImportTerytCommandContext extends BehatContext implements KernelAwareInter
             expect($entity)->toBeAnInstanceOf('FSi\Bundle\TerytDatabaseBundle\Entity\PlaceDictionary');
             expect($entity->getName())->toBe($row['Name']);
         }
+    }
+
+    /**
+     * @Then /^I should see "([^"]*)" console output$/
+     */
+    public function iShouldSeeConsoleOutput($output)
+    {
+        expect(trim($this->getMainContext()->getSubcontext('command')->getLastCommandOutput()))->toBe($output);
     }
 
     /**
@@ -211,5 +213,17 @@ class ImportTerytCommandContext extends BehatContext implements KernelAwareInter
             ->get('doctrine')
             ->getManager()
             ->getRepository('FSiTerytDbBundle:PlaceDictionary');
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getCommunityTypeRepository()
+    {
+        return $this->kernel
+            ->getContainer()
+            ->get('doctrine')
+            ->getManager()
+            ->getRepository('FSiTerytDbBundle:CommunityType');
     }
 }

@@ -5,7 +5,7 @@
                   http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
     <entity name="FSi\Bundle\TerytDatabaseBundle\Entity\District" table="teryt_district">
         <id name="code" type="string" length="4" />
-        <field name="name" type="string" length="32" />
+        <field name="name" type="string" length="36" />
         <one-to-many field="communities" target-entity="Community" mapped-by="district" />
         <many-to-one field="province" target-entity="Province" inversed-by="districts">
             <join-column name="province_code" referenced-column-name="code" />
