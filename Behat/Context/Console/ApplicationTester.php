@@ -45,6 +45,8 @@ class ApplicationTester
     public function run($input = array())
     {
         $this->input = new ArrayInput((array) $input);
+        $this->input->setInteractive(false);
+
         $this->output = new StreamOutput(fopen('php://memory', 'r+', false));
 
         $inputStream = $this->getInputStream();

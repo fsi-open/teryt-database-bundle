@@ -14,7 +14,8 @@
         "php": ">=5.3.3",
         "symfony/symfony": "*@stable",
         "guzzle/guzzle": "3.7.*",
-        "hobnob/xml-stream-reader": "1.0.*"
+        "hobnob/xml-stream-reader": "1.0.*",
+        "doctrine/doctrine-fixtures-bundle":    "2.2.*"
     },
     "require-dev": {
         "ext-pdo_sqlite": "*",

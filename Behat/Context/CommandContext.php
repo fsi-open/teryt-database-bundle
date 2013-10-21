@@ -63,9 +63,9 @@ class CommandContext extends BehatContext implements KernelAwareInterface
     }
 
     /**
-     * @When /^I run console command "([^"]*)" with arguments "--([^"]*)=([^"]*)"$/
+     * @When /^I run console command "([^"]*)" with argument "--([^"]*)=([^"]*)"$/
      */
-    public function iRunConsoleCommandWithArguments($command, $argument, $value)
+    public function iRunConsoleCommandWithArgument($command, $argument, $value = 1)
     {
         $application = new Application($this->kernel);
         $tester = new ApplicationTester($application);
@@ -81,9 +81,9 @@ class CommandContext extends BehatContext implements KernelAwareInterface
     }
 
     /**
-     * @When /^I unsuccessfully run console command "([^"]*)" with arguments "--([^"]*)=([^"]*)"$/
+     * @When /^I unsuccessfully run console command "([^"]*)" with argument "--([^"]*)=([^"]*)"$/
      */
-    public function iUnsuccessfullyRunConsoleCommandWithArguments($command, $argument, $value)
+    public function iUnsuccessfullyRunConsoleCommandWithArgument($command, $argument, $value)
     {
         $application = new Application($this->kernel);
         $tester = new ApplicationTester($application);
@@ -98,9 +98,9 @@ class CommandContext extends BehatContext implements KernelAwareInterface
 
 
     /**
-     * @When /^I successfully run console command "([^"]*)" with arguments "--([^"]*)=([^"]*)"$/
+     * @When /^I successfully run console command "([^"]*)" with argument "--([^"]*)=([^"]*)"$/
      */
-    public function iSuccessfullyRunConsoleCommandWithArguments($command, $argument, $value)
+    public function iSuccessfullyRunConsoleCommandWithArgument($command, $argument, $value)
     {
         $application = new Application($this->kernel);
         $tester = new ApplicationTester($application);

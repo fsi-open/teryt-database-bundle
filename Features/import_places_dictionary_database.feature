@@ -1,7 +1,7 @@
 Feature: Parse places dictionary xml file and import data into database
 
   Background:
-    Given "doctrine:schema:create" command was already called
+    Given I successfully run console command "doctrine:schema:create"
 
   Scenario: Import places dictionary from xml file
     Given "places-dictionary.xml" file have following content:
@@ -28,7 +28,7 @@ Feature: Parse places dictionary xml file and import data into database
     </teryt>
     """
     And places dictionary table in database is empty
-    When I successfully run console command "teryt:import:places-dictionary" with arguments "--file=teryt/places-dictionary.xml"
+    When I successfully run console command "teryt:import:places-dictionary" with argument "--file=teryt/places-dictionary.xml"
     Then places dictionary table in database should have following records
       | Type | Name       |
       | 01   | wieś       |

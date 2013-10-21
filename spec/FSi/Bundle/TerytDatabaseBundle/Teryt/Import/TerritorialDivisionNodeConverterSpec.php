@@ -5,6 +5,7 @@ namespace spec\FSi\Bundle\TerytDatabaseBundle\Teryt\Import;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Community;
+use FSi\Bundle\TerytDatabaseBundle\Entity\CommunityType;
 use FSi\Bundle\TerytDatabaseBundle\Entity\District;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Province;
 use FSi\Bundle\TerytDatabaseBundle\Exception\TerritorialDivisionNodeConverterException;
@@ -87,14 +88,22 @@ EOT;
         $district->setCode('0201')
             ->setName('Bolesławiec');
 
+        $communityType = new CommunityType();
+        $communityType->setType(1)
+            ->setName('gmina miejska');
+
         $or->findOneBy(array(
             'code' => '0201'
         ))->shouldBeCalled()->willReturn($district);
 
+        $or->findOneBy(array(
+            'type' => 1
+        ))->shouldBeCalled()->willReturn($communityType);
 
         $expectedCommunity = new Community();
         $expectedCommunity->setCode('020101')
             ->setName('Bolesławiec')
+            ->setType($communityType)
             ->setDistrict($district);
 
         $this->beConstructedWith(new \SimpleXMLElement($xml), $om);

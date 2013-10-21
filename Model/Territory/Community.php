@@ -20,6 +20,11 @@ class Community extends Territory
     protected $district;
 
     /**
+     * @var \FSi\Bundle\TerytDatabaseBundle\Model\Territory\CommunityType
+     */
+    protected $type;
+
+    /**
      *
      * @param \FSi\Bundle\TerytDatabaseBundle\Model\Territory\District $district
      * @return \FSi\Bundle\TerytDatabaseBundle\Model\Territory\Community
@@ -37,5 +42,24 @@ class Community extends Territory
     public function getDistrict()
     {
         return $this->district;
+    }
+
+    /**
+     * @param \FSi\Bundle\TerytDatabaseBundle\Model\Territory\CommunityType $type
+     * @return Community
+     */
+    public function setType(CommunityType $type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return \FSi\Bundle\TerytDatabaseBundle\Model\Territory\CommunityType
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 }

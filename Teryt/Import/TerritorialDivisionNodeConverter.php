@@ -106,6 +106,10 @@ class TerritorialDivisionNodeConverter extends NodeConverter
             'code' => sprintf("%s%s", $this->getProvinceCode(), $this->getDistrictCode())
         ));
 
+        $type = $this->om->getRepository('FSiTerytDbBundle:CommunityType')->findOneBy(array(
+            'type' => (int) $this->node->col[self::RODZ_CHILD_NODE]
+        ));
+
         $communityEntity = new Community();
         $communityEntity->setCode(sprintf(
             "%s%s%s",
@@ -114,6 +118,7 @@ class TerritorialDivisionNodeConverter extends NodeConverter
             $this->getCommunityCode()
         ))
             ->setName($this->getTerritoryName())
+            ->setType($type)
             ->setDistrict($district);
 
         return $communityEntity;
