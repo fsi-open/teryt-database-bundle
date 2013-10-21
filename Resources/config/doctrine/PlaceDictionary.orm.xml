@@ -6,5 +6,6 @@
     <entity name="FSi\Bundle\TerytDatabaseBundle\Entity\PlaceDictionary" table="teryt_place_dictionary">
         <id name="type" type="string" length="2" />
         <field name="name" type="string" length="24" />
+        <one-to-many field="places" target-entity="Place" mapped-by="type" />
     </entity>
 </doctrine-mapping>

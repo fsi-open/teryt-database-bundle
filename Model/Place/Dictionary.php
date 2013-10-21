@@ -9,6 +9,8 @@
 
 namespace FSi\Bundle\TerytDatabaseBundle\Model\Place;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 class Dictionary
 {
     /**
@@ -20,6 +22,16 @@ class Dictionary
      * @var string
      */
     protected $name;
+
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     */
+    protected $places;
+
+    function __construct()
+    {
+        $this->places = new ArrayCollection();
+    }
 
     /**
      * @param mixed $type
@@ -57,5 +69,13 @@ class Dictionary
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getPlaces()
+    {
+        return $this->places;
     }
 }

@@ -6,6 +6,7 @@
     <entity name="FSi\Bundle\TerytDatabaseBundle\Entity\Community" table="teryt_community">
         <id name="code" type="string" length="4" />
         <field name="name" type="string" length="36" />
+        <one-to-many field="places" target-entity="Place" mapped-by="community" />
         <many-to-one field="type" target-entity="CommunityType" inversed-by="types">
             <join-column name="community_type" referenced-column-name="type" />
         </many-to-one>

@@ -9,6 +9,7 @@
 
 namespace FSi\Bundle\TerytDatabaseBundle\Model\Territory;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use FSi\Bundle\TerytDatabaseBundle\Model\Territory\District;
 use FSi\Bundle\TerytDatabaseBundle\Model\Territory\Territory;
 
@@ -24,8 +25,14 @@ class Community extends Territory
      */
     protected $type;
 
+    protected $places;
+
+    function __construct()
+    {
+        $this->places = new ArrayCollection();
+    }
+
     /**
-     *
      * @param \FSi\Bundle\TerytDatabaseBundle\Model\Territory\District $district
      * @return \FSi\Bundle\TerytDatabaseBundle\Model\Territory\Community
      */
@@ -61,5 +68,10 @@ class Community extends Territory
     public function getType()
     {
         return $this->type;
+    }
+
+    public function getPlaces()
+    {
+        return $this->places;
     }
 }

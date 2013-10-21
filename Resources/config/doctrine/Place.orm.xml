@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="FSi\Bundle\TerytDatabaseBundle\Entity\Place" table="teryt_place">
+        <id name="id" type="string" length="7" />
+        <field name="name" type="string" length="56" />
+        <many-to-one field="type" target-entity="PlaceDictionary" inversed-by="places">
+            <join-column name="place_type" referenced-column-name="type" />
+        </many-to-one>
+        <many-to-one field="community" target-entity="Community" inversed-by="places">
+            <join-column name="community_code" referenced-column-name="code" />
+        </many-to-one>
+    </entity>
+</doctrine-mapping>

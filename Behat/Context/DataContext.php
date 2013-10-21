@@ -7,6 +7,7 @@ use Behat\Gherkin\Node\TableNode;
 use Behat\Symfony2Extension\Context\KernelAwareInterface;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Community;
 use FSi\Bundle\TerytDatabaseBundle\Entity\District;
+use FSi\Bundle\TerytDatabaseBundle\Entity\PlaceDictionary;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Province;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -65,6 +66,32 @@ class DataContext extends BehatContext implements KernelAwareInterface
         foreach ($tableHash as $row) {
             $this->createDistrict($row['Code'], $row['Name'], $this->findProvinceByName($row['Province']));
         }
+    }
+
+    /**
+     * @Given /^there is a community in database with code "([^"]*)" and name "([^"]*)"$/
+     */
+    public function thereIsACommunityInDatabaseWithCodeAndName($code, $name)
+    {
+        $community = new Community();
+        $community->setCode($code)
+            ->setName($name);
+
+        $this->kernel->getContainer()->get('doctrine')->getManager()->persist($community);
+        $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
+    }
+
+    /**
+     * @Given /^there is a place type with type "([^"]*)" and name "([^"]*)"$/
+     */
+    public function thereIsAPlaceTypeWithTypeAndName($type, $name)
+    {
+        $placeType = new PlaceDictionary();
+        $placeType->setType($type)
+            ->setName($name);
+
+        $this->kernel->getContainer()->get('doctrine')->getManager()->persist($placeType);
+        $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
     }
 
     protected function findProvinceByName($name)
