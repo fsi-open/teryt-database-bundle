@@ -3,17 +3,18 @@
 namespace FSi\Bundle\TerytDatabaseBundle\Command;
 
 use FSi\Bundle\TerytDatabaseBundle\Teryt\Import\PlacesDictionaryNodeConverter;
+use FSi\Bundle\TerytDatabaseBundle\Teryt\Import\PlacesNodeConverter;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class TerytImportPlacesDictionaryCommand extends ContainerAwareCommand
+class TerytImportPlacesCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
-        $this->setName('teryt:import:places-dictionary')
-            ->setDescription('Import places dictionary data from xml to database')
+        $this->setName('teryt:import:places')
+            ->setDescription('Import places data from xml to database')
             ->addArgument(
                 'file',
                 InputArgument::REQUIRED,
@@ -36,7 +37,7 @@ class TerytImportPlacesDictionaryCommand extends ContainerAwareCommand
         $xmlParser->registerCallback(
             '/teryt/catalog/row',
             function(\Hobnob\XmlStreamReader\Parser $parser, \SimpleXMLElement $node) use ($objectManager) {
-                $converter = new PlacesDictionaryNodeConverter($node, $objectManager);
+                $converter = new PlacesNodeConverter($node, $objectManager);
                 $entity = $converter->convertToEntity();
                 $objectManager->persist($entity);
                 $objectManager->flush();

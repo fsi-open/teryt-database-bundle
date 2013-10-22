@@ -82,7 +82,16 @@ class ImportTerytCommandContext extends BehatContext implements KernelAwareInter
      */
     public function placesDictionaryTableInDatabaseIsEmpty()
     {
-        expect($this->getPlaceDictionaryRepository()
+        expect($this->getPlaceTypeRepository()
+            ->findAll())->toBe(array());
+    }
+
+    /**
+     * @Given /^places table in database is empty$/
+     */
+    public function placesTableInDatabaseIsEmpty()
+    {
+        expect($this->getPlaceRepository()
             ->findAll())->toBe(array());
     }
 
@@ -153,9 +162,25 @@ class ImportTerytCommandContext extends BehatContext implements KernelAwareInter
         $tableHash = $table->getHash();
 
         foreach ($tableHash as $row) {
-            $entity = $this->getPlaceDictionaryRepository()->findOneByType($row['Type']);
-            expect($entity)->toBeAnInstanceOf('FSi\Bundle\TerytDatabaseBundle\Entity\PlaceDictionary');
+            $entity = $this->getPlaceTypeRepository()->findOneByType($row['Type']);
+            expect($entity)->toBeAnInstanceOf('FSi\Bundle\TerytDatabaseBundle\Entity\PlaceType');
             expect($entity->getName())->toBe($row['Name']);
+        }
+    }
+
+    /**
+     * @Then /^places table in database should have following records$/
+     */
+    public function placesTableInDatabaseShouldHaveFollowingRecords(TableNode $table)
+    {
+        $tableHash = $table->getHash();
+
+        foreach ($tableHash as $row) {
+            $entity = $this->getPlaceRepository()->findOneById($row['Identity']);
+            expect($entity)->toBeAnInstanceOf('FSi\Bundle\TerytDatabaseBundle\Entity\Place');
+            expect($entity->getName())->toBe($row['Name']);
+            expect($entity->getType()->getName())->toBe($row['Place type']);
+            expect($entity->getCommunity()->getName())->toBe($row['Community']);
         }
     }
 
@@ -206,13 +231,13 @@ class ImportTerytCommandContext extends BehatContext implements KernelAwareInter
     /**
      * @return mixed
      */
-    private function getPlaceDictionaryRepository()
+    private function getPlaceTypeRepository()
     {
         return $this->kernel
             ->getContainer()
             ->get('doctrine')
             ->getManager()
-            ->getRepository('FSiTerytDbBundle:PlaceDictionary');
+            ->getRepository('FSiTerytDbBundle:PlaceType');
     }
 
     /**
@@ -225,5 +250,14 @@ class ImportTerytCommandContext extends BehatContext implements KernelAwareInter
             ->get('doctrine')
             ->getManager()
             ->getRepository('FSiTerytDbBundle:CommunityType');
+    }
+
+    private function getPlaceRepository()
+    {
+        return $this->kernel
+            ->getContainer()
+            ->get('doctrine')
+            ->getManager()
+            ->getRepository('FSiTerytDbBundle:Place');
     }
 }

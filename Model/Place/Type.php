@@ -9,7 +9,9 @@
 
 namespace FSi\Bundle\TerytDatabaseBundle\Model\Place;
 
-class Dictionary
+use Doctrine\Common\Collections\ArrayCollection;
+
+class Type
 {
     /**
      * @var string
@@ -22,8 +24,18 @@ class Dictionary
     protected $name;
 
     /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     */
+    protected $places;
+
+    function __construct()
+    {
+        $this->places = new ArrayCollection();
+    }
+
+    /**
      * @param mixed $type
-     * @return \FSi\Bundle\TerytDatabaseBundle\Model\Place\Dictionary
+     * @return \FSi\Bundle\TerytDatabaseBundle\Model\Place\Type
      */
     public function setType($type)
     {
@@ -42,7 +54,7 @@ class Dictionary
 
     /**
      * @param mixed $name
-     * @return \FSi\Bundle\TerytDatabaseBundle\Model\Place\Dictionary
+     * @return \FSi\Bundle\TerytDatabaseBundle\Model\Place\Type
      */
     public function setName($name)
     {
@@ -57,5 +69,13 @@ class Dictionary
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getPlaces()
+    {
+        return $this->places;
     }
 }

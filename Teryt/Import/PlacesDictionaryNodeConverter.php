@@ -9,7 +9,7 @@
 
 namespace FSi\Bundle\TerytDatabaseBundle\Teryt\Import;
 
-use FSi\Bundle\TerytDatabaseBundle\Entity\PlaceDictionary;
+use FSi\Bundle\TerytDatabaseBundle\Entity\PlaceType;
 
 class PlacesDictionaryNodeConverter extends NodeConverter
 {
@@ -18,10 +18,10 @@ class PlacesDictionaryNodeConverter extends NodeConverter
 
     public function convertToEntity()
     {
-        $placeDictionary = new PlaceDictionary();
-        $placeDictionary->setType($this->node->col[self::TYPE_CHILD_NODE])
+        $placeType = new PlaceType();
+        $placeType->setType($this->node->col[self::TYPE_CHILD_NODE])
             ->setName(trim($this->node->col[self::TYPE_NAME_CHILD_NODE]));
 
-        return $placeDictionary;
+        return $placeType;
     }
 }
