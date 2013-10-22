@@ -1,14 +1,19 @@
 <?php
 
+/**
+ * (c) FSi sp. z o.o <info@fsi.pl>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace FSi\Bundle\TerytDatabaseBundle\Command;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use FSi\Bundle\TerytDatabaseBundle\Teryt\Import\TerritorialDivisionNodeConverter;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 
-class TerytImportTerritorialDivisionCommand extends ContainerAwareCommand
+class TerytImportTerritorialDivisionCommand extends TerytImportCommand
 {
     protected function configure()
     {
@@ -21,31 +26,13 @@ class TerytImportTerritorialDivisionCommand extends ContainerAwareCommand
             );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    /**
+     * @param \SimpleXMLElement $node
+     * @param \Doctrine\Common\Persistence\ObjectManager $om
+     * @return \FSi\Bundle\TerytDatabaseBundle\Teryt\Import\NodeConverter
+     */
+    public function getNodeConverter(\SimpleXMLElement $node, ObjectManager $om)
     {
-        $xmlFile = $input->getArgument('file');
-
-        if (!file_exists($xmlFile)) {
-            $output->writeln(sprintf('File %s does not exist', $xmlFile));
-            return 1;
-        }
-
-        $xmlParser = new \Hobnob\XmlStreamReader\Parser();
-
-        $objectManager = $this->getContainer()->get('doctrine')->getManager();
-        $xmlParser->registerCallback(
-            '/teryt/catalog/row',
-            function(\Hobnob\XmlStreamReader\Parser $parser, \SimpleXMLElement $node) use ($objectManager) {
-                $converter = new TerritorialDivisionNodeConverter($node, $objectManager);
-                $entity = $converter->convertToEntity();
-                $objectManager->persist($entity);
-                $objectManager->flush();
-                $objectManager->clear();
-            }
-        );
-
-        $xmlParser->parse(fopen($xmlFile, 'r'));
-
-        return 0;
+        return new TerritorialDivisionNodeConverter($node, $om);
     }
 }

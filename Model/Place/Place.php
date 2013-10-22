@@ -9,6 +9,7 @@
 
 namespace FSi\Bundle\TerytDatabaseBundle\Model\Place;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use FSi\Bundle\TerytDatabaseBundle\Model\Territory\Community;
 
 class Place
@@ -21,9 +22,16 @@ class Place
 
     protected $community;
 
+    protected $streets;
+
+    function __construct()
+    {
+        $this->streets = new ArrayCollection();
+    }
+
     /**
-     * @param mixed $id
-     * @return Place
+     * @param string $id
+     * @return \FSi\Bundle\TerytDatabaseBundle\Model\Place\Place
      */
     public function setId($id)
     {
@@ -32,7 +40,7 @@ class Place
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getId()
     {
@@ -40,8 +48,8 @@ class Place
     }
 
     /**
-     * @param mixed $community
-     * @return Place
+     * @param \FSi\Bundle\TerytDatabaseBundle\Model\Territory\Community $community
+     * @return \FSi\Bundle\TerytDatabaseBundle\Model\Place\Place
      */
     public function setCommunity(Community $community)
     {
@@ -50,7 +58,7 @@ class Place
     }
 
     /**
-     * @return mixed
+     * @return \FSi\Bundle\TerytDatabaseBundle\Model\Territory\Community
      */
     public function getCommunity()
     {
@@ -58,8 +66,8 @@ class Place
     }
 
     /**
-     * @param mixed $name
-     * @return Place
+     * @param string $name
+     * @return \FSi\Bundle\TerytDatabaseBundle\Model\Place\Place
      */
     public function setName($name)
     {
@@ -68,7 +76,7 @@ class Place
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getName()
     {
@@ -76,8 +84,8 @@ class Place
     }
 
     /**
-     * @param mixed $type
-     * @return Place
+     * @param \FSi\Bundle\TerytDatabaseBundle\Model\Place\Type $type
+     * @return \FSi\Bundle\TerytDatabaseBundle\Model\Place\Place
      */
     public function setType(Type $type)
     {
@@ -87,10 +95,18 @@ class Place
     }
 
     /**
-     * @return mixed
+     * @return \FSi\Bundle\TerytDatabaseBundle\Model\Place\Type
      */
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getStreets()
+    {
+        return $this->streets;
     }
 }

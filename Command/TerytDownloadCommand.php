@@ -1,7 +1,13 @@
 <?php
 
-namespace FSi\Bundle\TerytDatabaseBundle\Command;
+/**
+ * (c) FSi sp. z o.o <info@fsi.pl>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
+namespace FSi\Bundle\TerytDatabaseBundle\Command;
 
 use FSi\Bundle\TerytDatabaseBundle\Teryt\DownloadPageParser;
 use Guzzle\Common\Event;
@@ -110,7 +116,7 @@ abstract class TerytDownloadCommand extends ContainerAwareCommand
         $fileSize = $this->getFileRoundedSize();
 
         return function (Event $event) use ($output, $fileSize, $progressHelper) {
-            if ($event['downloaded'] === 0) {
+            if ($event['downloaded'] === 0 || $fileSize == 0) {
                 return;
             }
 

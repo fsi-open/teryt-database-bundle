@@ -6,6 +6,7 @@
     <entity name="FSi\Bundle\TerytDatabaseBundle\Entity\Place" table="teryt_place">
         <id name="id" type="string" length="7" />
         <field name="name" type="string" length="56" />
+        <one-to-many field="streets" target-entity="Street" mapped-by="place" />
         <many-to-one field="type" target-entity="PlaceType" inversed-by="places">
             <join-column name="place_type" referenced-column-name="type" />
         </many-to-one>

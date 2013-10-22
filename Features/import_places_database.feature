@@ -3,7 +3,7 @@ Feature: Parse places xml file and import data into database
   Background:
     Given I successfully run console command "doctrine:schema:create"
 
-  Scenario: Import places dictionary from xml file
+  Scenario: Import places from xml file
     Given "places.xml" file have following content:
     """
     <?xml version="1.0" encoding="UTF-8"?>
