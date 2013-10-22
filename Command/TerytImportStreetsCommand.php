@@ -10,19 +10,19 @@
 namespace FSi\Bundle\TerytDatabaseBundle\Command;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use FSi\Bundle\TerytDatabaseBundle\Teryt\Import\PlacesNodeConverter;
+use FSi\Bundle\TerytDatabaseBundle\Teryt\Import\StreetsNodeConverter;
 use Symfony\Component\Console\Input\InputArgument;
 
-class TerytImportPlacesCommand extends TerytImportCommand
+class TerytImportStreetsCommand extends TerytImportCommand
 {
     protected function configure()
     {
-        $this->setName('teryt:import:places')
-            ->setDescription('Import places data from xml to database')
+        $this->setName('teryt:import:streets')
+            ->setDescription('Import streets data from xml to database')
             ->addArgument(
                 'file',
                 InputArgument::REQUIRED,
-                'Places dictionary xml file'
+                'Places streets xml file'
             );
     }
 
@@ -33,6 +33,6 @@ class TerytImportPlacesCommand extends TerytImportCommand
      */
     public function getNodeConverter(\SimpleXMLElement $node, ObjectManager $om)
     {
-        return new PlacesNodeConverter($node, $om);
+        return new StreetsNodeConverter($node, $om);
     }
 }

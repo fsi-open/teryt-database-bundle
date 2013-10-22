@@ -3,7 +3,7 @@ Feature: Parse places xml file and import data into database
   Background:
     Given I successfully run console command "doctrine:schema:create"
 
-  Scenario: Import places dictionary from xml file
+  Scenario: Import places from xml file
     Given "places.xml" file have following content:
     """
     <?xml version="1.0" encoding="UTF-8"?>
@@ -26,7 +26,7 @@ Feature: Parse places xml file and import data into database
     """
     And places table in database is empty
     And there is a place type with type "01" and name "wieś"
-    And there is a community in database with code "041105" and name "Gmina Rzerzyca"
+    And there is a community in database with code "0411055" and name "Gmina Rzerzyca"
     When I successfully run console command "teryt:import:places" with argument "--file=teryt/places.xml"
     Then places table in database should have following records
       | Identity | Name     | Place type | Community      |

@@ -44,7 +44,7 @@ EOT;
             ->setType('01');
 
         $or->findOneBy(array(
-            'code' => '041105'
+            'code' => '0411055'
         ))->shouldBeCalled()->willReturn($community);
 
         $or->findOneBy(array(

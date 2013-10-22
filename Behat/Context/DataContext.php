@@ -7,6 +7,7 @@ use Behat\Gherkin\Node\TableNode;
 use Behat\Symfony2Extension\Context\KernelAwareInterface;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Community;
 use FSi\Bundle\TerytDatabaseBundle\Entity\District;
+use FSi\Bundle\TerytDatabaseBundle\Entity\Place;
 use FSi\Bundle\TerytDatabaseBundle\Entity\PlaceType;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Province;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -69,6 +70,18 @@ class DataContext extends BehatContext implements KernelAwareInterface
     }
 
     /**
+     * @Given /^following places was already imported$/
+     */
+    public function followingPlacesWasAlreadyImported(TableNode $table)
+    {
+        $tableHash = $table->getHash();
+
+        foreach ($tableHash as $row) {
+            $this->createPlace($row['Identity'], $row['Name']);
+        }
+    }
+
+    /**
      * @Given /^there is a community in database with code "([^"]*)" and name "([^"]*)"$/
      */
     public function thereIsACommunityInDatabaseWithCodeAndName($code, $name)
@@ -111,6 +124,16 @@ class DataContext extends BehatContext implements KernelAwareInterface
             ->setName($name);
 
         $this->kernel->getContainer()->get('doctrine')->getManager()->persist($provinceEntity);
+        $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
+    }
+
+    protected function createPlace($id, $name)
+    {
+        $place = new Place();
+        $place->setId($id)
+            ->setName($name);
+
+        $this->kernel->getContainer()->get('doctrine')->getManager()->persist($place);
         $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
     }
 

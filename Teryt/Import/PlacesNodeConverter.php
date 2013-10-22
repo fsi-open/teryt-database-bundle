@@ -16,7 +16,8 @@ class PlacesNodeConverter extends NodeConverter
     const WOJ_CHILD_NODE = 0;
     const POw_CHILD_NODE = 1;
     const GMI_CHILD_NODE = 2;
-    const TYP_CHILD_NODE = 4;
+    const COMMUNITY_TYPE_CHILD_NODE = 3;
+    const TYPE_CHILD_NODE = 4;
     const NAME_CHILD_NODE = 6;
     const ID_CHILD_NODE = 7;
 
@@ -60,7 +61,7 @@ class PlacesNodeConverter extends NodeConverter
      */
     private function getPlaceDictionaryType()
     {
-        return (string) $this->node->col[self::TYP_CHILD_NODE];
+        return (string) $this->node->col[self::TYPE_CHILD_NODE];
     }
 
     /**
@@ -85,7 +86,13 @@ class PlacesNodeConverter extends NodeConverter
     private function getPlaceCommunity()
     {
         return $this->om->getRepository('FSiTerytDbBundle:Community')->findOneBy(array(
-            'code' => sprintf("%s%s%s", $this->getProvinceCode(), $this->getDistrictCode(), $this->getCommunityCode())
+            'code' => sprintf(
+                "%s%s%s%s",
+                $this->getProvinceCode(),
+                $this->getDistrictCode(),
+                $this->getCommunityCode(),
+                (string) $this->node->col[self::COMMUNITY_TYPE_CHILD_NODE]
+            )
         ));
     }
 

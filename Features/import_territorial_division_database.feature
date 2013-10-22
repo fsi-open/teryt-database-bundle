@@ -82,8 +82,8 @@ Feature: Parse territorial division xml file and import data into database
       | 0201 | bolesławiecki | DOLNOŚLĄSKIE |
     When I successfully run console command "teryt:import:territorial-division" with argument "--file=teryt/territorial-division.xml"
     Then following communities should exist in database
-      | Code   | Name        | District      | Community type |
-      | 020101 | Bolesławiec | bolesławiecki | gmina miejska  |
+      | Code    | Name        | District      | Community type |
+      | 0201011 | Bolesławiec | bolesławiecki | gmina miejska  |
 
   Scenario: Attempting to import data from non existing xml file
     When I unsuccessfully run console command "teryt:import:territorial-division" with argument "--file=teryt/territorial-division.xml"

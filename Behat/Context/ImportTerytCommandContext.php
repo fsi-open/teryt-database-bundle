@@ -185,6 +185,25 @@ class ImportTerytCommandContext extends BehatContext implements KernelAwareInter
     }
 
     /**
+     * @Then /^following streets should exist in database$/
+     */
+    public function followingStreetsShouldExistInDatabase(TableNode $table)
+    {
+        $tableHash = $table->getHash();
+
+        foreach ($tableHash as $row) {
+            $entity = $this->getStreetRepository()->findOneById($row['Identity']);
+            expect($entity)->toBeAnInstanceOf('FSi\Bundle\TerytDatabaseBundle\Entity\Street');
+            expect($entity->getId())->toBe($row['Identity']);
+            expect($entity->getName())->toBe($row['Name']);
+            expect($entity->getType())->toBe($row['Type']);
+            expect($entity->getAdditionalName())->toBe($row['Additional name']);
+            expect($entity->getPlace()->getName())->toBe($row['Place']);
+        }
+    }
+
+
+    /**
      * @Then /^I should see "([^"]*)" console output$/
      */
     public function iShouldSeeConsoleOutput($output)
@@ -259,5 +278,14 @@ class ImportTerytCommandContext extends BehatContext implements KernelAwareInter
             ->get('doctrine')
             ->getManager()
             ->getRepository('FSiTerytDbBundle:Place');
+    }
+
+    private function getStreetRepository()
+    {
+        return $this->kernel
+            ->getContainer()
+            ->get('doctrine')
+            ->getManager()
+            ->getRepository('FSiTerytDbBundle:Street');
     }
 }
