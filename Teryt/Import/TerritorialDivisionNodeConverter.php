@@ -17,7 +17,7 @@ use FSi\Bundle\TerytDatabaseBundle\Exception\TerritorialDivisionNodeConverterExc
 class TerritorialDivisionNodeConverter extends NodeConverter
 {
     const WOJ_CHILD_NODE = 0;
-    const POw_CHILD_NODE = 1;
+    const POW_CHILD_NODE = 1;
     const GMI_CHILD_NODE = 2;
     const TYPE_CHILD_NODE = 3;
     const NAZWA_CHILD_NODE = 4;
@@ -130,7 +130,7 @@ class TerritorialDivisionNodeConverter extends NodeConverter
      */
     public function getDistrictCode()
     {
-        return (string) $this->node->col[self::POw_CHILD_NODE];
+        return (string) $this->node->col[self::POW_CHILD_NODE];
     }
 
     /**
@@ -154,7 +154,7 @@ class TerritorialDivisionNodeConverter extends NodeConverter
      */
     public function hasDistrictCode()
     {
-        return !empty($this->node->col[self::POw_CHILD_NODE]);
+        return !empty($this->node->col[self::POW_CHILD_NODE]);
     }
 
     /**
