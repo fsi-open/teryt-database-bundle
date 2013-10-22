@@ -101,7 +101,7 @@ EOT;
         ))->shouldBeCalled()->willReturn($communityType);
 
         $expectedCommunity = new Community();
-        $expectedCommunity->setCode('020101')
+        $expectedCommunity->setCode('0201011')
             ->setName('Bolesławiec')
             ->setType($communityType)
             ->setDistrict($district);

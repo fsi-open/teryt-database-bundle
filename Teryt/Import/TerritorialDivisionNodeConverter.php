@@ -19,7 +19,7 @@ class TerritorialDivisionNodeConverter extends NodeConverter
     const WOJ_CHILD_NODE = 0;
     const POw_CHILD_NODE = 1;
     const GMI_CHILD_NODE = 2;
-    const RODZ_CHILD_NODE = 3;
+    const TYPE_CHILD_NODE = 3;
     const NAZWA_CHILD_NODE = 4;
 
     /**
@@ -107,15 +107,16 @@ class TerritorialDivisionNodeConverter extends NodeConverter
         ));
 
         $type = $this->om->getRepository('FSiTerytDbBundle:CommunityType')->findOneBy(array(
-            'type' => (int) $this->node->col[self::RODZ_CHILD_NODE]
+            'type' => (int) $this->node->col[self::TYPE_CHILD_NODE]
         ));
 
         $communityEntity = new Community();
         $communityEntity->setCode(sprintf(
-            "%s%s%s",
+            "%s%s%s%s",
             $this->getProvinceCode(),
             $this->getDistrictCode(),
-            $this->getCommunityCode()
+            $this->getCommunityCode(),
+            $this->getCommunityType()
         ))
             ->setName($this->getTerritoryName())
             ->setType($type)
@@ -169,7 +170,7 @@ class TerritorialDivisionNodeConverter extends NodeConverter
      */
     private function getCommunityCode()
     {
-        return (string)$this->node->col[self::GMI_CHILD_NODE];
+        return (string) $this->node->col[self::GMI_CHILD_NODE];
     }
 
     /**
@@ -178,5 +179,13 @@ class TerritorialDivisionNodeConverter extends NodeConverter
     private function getTerritoryName()
     {
         return (string) $this->node->col[self::NAZWA_CHILD_NODE];
+    }
+
+    /**
+     * @return string
+     */
+    private function getCommunityType()
+    {
+        return (string) $this->node->col[self::TYPE_CHILD_NODE];
     }
 }
