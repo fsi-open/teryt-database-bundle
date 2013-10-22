@@ -17,7 +17,6 @@ doctrine:
         user:     teryt
         password: teryt
         charset:  UTF8
-        #path: "%kernel.root_dir%/teryt/sqlite.db"
         memory: true
 
     orm:
