@@ -38,7 +38,6 @@ class TerritorialDivisionNodeConverter extends NodeConverter
 
         if ($this->isCommunity()) {
             return $this->convertToCommunity();
-
         }
 
         throw new TerritorialDivisionNodeConverterException();
@@ -69,19 +68,18 @@ class TerritorialDivisionNodeConverter extends NodeConverter
     }
 
     /**
-     * @return Province
+     * @return \FSi\Bundle\TerytDatabaseBundle\Entity\Province
      */
     private function convertToProvince()
     {
-        $provinceEntity = new Province();
-        $provinceEntity->setName($this->getTerritoryName())
-            ->setCode($this->getProvinceCode());
+        $provinceEntity = $this->createProvinceEntity();
+        $provinceEntity->setName($this->getTerritoryName());
 
         return $provinceEntity;
     }
 
     /**
-     * @return District
+     * @return \FSi\Bundle\TerytDatabaseBundle\Entity\District
      */
     private function convertToDistrict()
     {
@@ -89,16 +87,15 @@ class TerritorialDivisionNodeConverter extends NodeConverter
             'code' => $this->getProvinceCode()
         ));
 
-        $districtEntity = new District();
-        $districtEntity->setCode(sprintf('%s%s', $this->getProvinceCode(), $this->getDistrictCode()))
-            ->setName($this->getTerritoryName())
+        $districtEntity = $this->createDistrictEntity();
+        $districtEntity->setName($this->getTerritoryName())
             ->setProvince($province);
 
         return $districtEntity;
     }
 
     /**
-     * @return Community
+     * @return \FSi\Bundle\TerytDatabaseBundle\Entity\Community
      */
     private function convertToCommunity()
     {
@@ -110,17 +107,71 @@ class TerritorialDivisionNodeConverter extends NodeConverter
             'type' => (int) $this->node->col[self::TYPE_CHILD_NODE]
         ));
 
-        $communityEntity = new Community();
-        $communityEntity->setCode(sprintf(
+        $communityEntity = $this->createCommunityEntity();
+        $communityEntity->setName($this->getTerritoryName())
+            ->setType($type)
+            ->setDistrict($district);
+
+        return $communityEntity;
+    }
+
+    /**
+     * @return \FSi\Bundle\TerytDatabaseBundle\Entity\Province
+     */
+    private function createProvinceEntity()
+    {
+        $provinceEntity = $this->om->getRepository('FSiTerytDbBundle:Province')
+            ->findOneBy(array(
+                'code' => $this->getProvinceCode()
+            ));
+
+        if (!isset($provinceEntity)) {
+            $provinceEntity = new Province();
+            $provinceEntity->setCode($this->getProvinceCode());
+        }
+
+        return $provinceEntity;
+    }
+
+    /**
+     * @return \FSi\Bundle\TerytDatabaseBundle\Entity\District
+     */
+    private function createDistrictEntity()
+    {
+        $districtEntity = $this->om->getRepository('FSiTerytDbBundle:District')
+            ->findOneBy(array(
+                'code' => $this->getProvinceCode() . $this->getDistrictCode()
+            ));
+
+        if (!isset($districtEntity)) {
+            $districtEntity = new District();
+            $districtEntity->setCode(sprintf('%s%s', $this->getProvinceCode(), $this->getDistrictCode()));
+        }
+
+        return $districtEntity;
+    }
+
+    /**
+     * @return \FSi\Bundle\TerytDatabaseBundle\Entity\Community
+     */
+    private function createCommunityEntity()
+    {
+        $communityCode = sprintf(
             "%s%s%s%s",
             $this->getProvinceCode(),
             $this->getDistrictCode(),
             $this->getCommunityCode(),
             $this->getCommunityType()
-        ))
-            ->setName($this->getTerritoryName())
-            ->setType($type)
-            ->setDistrict($district);
+        );
+
+        $communityEntity = $this->om->getRepository('FSiTerytDbBundle:Community')->findOneBy(array(
+            'code' => $communityCode
+        ));
+
+        if (!isset($communityEntity)) {
+            $communityEntity = new Community();
+            $communityEntity->setCode($communityCode);
+        }
 
         return $communityEntity;
     }

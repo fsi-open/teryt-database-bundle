@@ -18,10 +18,42 @@ class PlacesDictionaryNodeConverter extends NodeConverter
 
     public function convertToEntity()
     {
-        $placeType = new PlaceType();
-        $placeType->setType($this->node->col[self::TYPE_CHILD_NODE])
-            ->setName(trim($this->node->col[self::TYPE_NAME_CHILD_NODE]));
+        $placeType = $this->createPlaceTypeEntity();
+        $placeType->setName($this->getPlaceName());
 
         return $placeType;
+    }
+
+    /**
+     * @return \FSi\Bundle\TerytDatabaseBundle\Entity\PlaceType
+     */
+    private function createPlaceTypeEntity()
+    {
+        $placeType = $this->om->getRepository('FSiTerytDbBundle:PlaceType')->findOneBy(array(
+            'type' => $this->getPlaceType()
+        ));
+
+        if (!isset($placeType)) {
+            $placeType = new PlaceType();
+            $placeType->setType($this->getPlaceType());
+            return $placeType;
+        }
+        return $placeType;
+    }
+
+    /**
+     * @return \SimpleXMLElement
+     */
+    private function getPlaceType()
+    {
+        return (string) $this->node->col[self::TYPE_CHILD_NODE];
+    }
+
+    /**
+     * @return string
+     */
+    private function getPlaceName()
+    {
+        return trim((string) $this->node->col[self::TYPE_NAME_CHILD_NODE]);
     }
 }

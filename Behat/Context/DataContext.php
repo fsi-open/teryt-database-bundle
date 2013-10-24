@@ -12,7 +12,6 @@ use FSi\Bundle\TerytDatabaseBundle\Entity\PlaceType;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Province;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-
 class DataContext extends BehatContext implements KernelAwareInterface
 {
     /**
@@ -82,6 +81,42 @@ class DataContext extends BehatContext implements KernelAwareInterface
     }
 
     /**
+     * @Given /^following community was already imported$/
+     */
+    public function followingCommunityWasAlreadyImported(TableNode $table)
+    {
+        $tableHash = $table->getHash();
+
+        foreach ($tableHash as $row) {
+            $this->createCommunity($row['Code'], $row['Name'], $row['Community type'], $row['District']);
+        }
+    }
+
+    /**
+     * @Then /^following place should exist in database$/
+     */
+    public function followingPlaceShouldExistInDatabase(TableNode $table)
+    {
+        $tableHash = $table->getHash();
+
+        foreach ($tableHash as $row) {
+            $this->createPlace($row['Identity'], $row['Name'], $row['Place type'], $row['Community']);
+        }
+    }
+
+    /**
+     * @Then /^following places dictionary exist in database$/
+     */
+    public function followingPlacesDictionaryExistInDatabase(TableNode $table)
+    {
+        $tableHash = $table->getHash();
+
+        foreach ($tableHash as $row) {
+            $this->createPlaceType($row['Type'], $row['Name']);
+        }
+    }
+
+    /**
      * @Given /^there is a community in database with code "([^"]*)" and name "([^"]*)"$/
      */
     public function thereIsACommunityInDatabaseWithCodeAndName($code, $name)
@@ -107,6 +142,53 @@ class DataContext extends BehatContext implements KernelAwareInterface
         $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
     }
 
+    /**
+     * @param $code
+     * @param $name
+     * @param $typeName
+     * @param $districtName
+     * @internal param $row
+     */
+    protected function createCommunity($code, $name, $typeName, $districtName)
+    {
+        $community = new Community();
+        $community->setCode($code)
+            ->setName($name)
+            ->setType($this->findCommunityTypeByName($typeName))
+            ->setDistrict($this->findDistrictByName($districtName));
+
+        $this->kernel->getContainer()->get('doctrine')->getManager()->persist($community);
+        $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
+    }
+
+    protected function createPlace($id, $name, $typeName = null, $communityName = null)
+    {
+        $place = new Place();
+        $place->setId($id)
+            ->setName($name);
+
+        if (isset($typeName)) {
+            $place->setType($this->findPlaceTypeByName($typeName));
+        }
+
+        if (isset($communityName)) {
+            $place->setCommunity($this->findCommunityByName($communityName));
+        }
+
+        $this->kernel->getContainer()->get('doctrine')->getManager()->persist($place);
+        $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
+    }
+
+    protected function createPlaceType($type, $name)
+    {
+        $placeType = new PlaceType();
+        $placeType->setType($type)
+            ->setName($name);
+
+        $this->kernel->getContainer()->get('doctrine')->getManager()->persist($placeType);
+        $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
+    }
+
     protected function findProvinceByName($name)
     {
         return $this->kernel
@@ -114,6 +196,46 @@ class DataContext extends BehatContext implements KernelAwareInterface
             ->get('doctrine')
             ->getManager()
             ->getRepository('FSiTerytDbBundle:Province')
+            ->findOneByName($name);
+    }
+
+    protected function findDistrictByName($name)
+    {
+        return $this->kernel
+            ->getContainer()
+            ->get('doctrine')
+            ->getManager()
+            ->getRepository('FSiTerytDbBundle:District')
+            ->findOneByName($name);
+    }
+
+    protected function findCommunityByName($name)
+    {
+        return $this->kernel
+            ->getContainer()
+            ->get('doctrine')
+            ->getManager()
+            ->getRepository('FSiTerytDbBundle:Community')
+            ->findOneByName($name);
+    }
+
+    protected function findCommunityTypeByName($name)
+    {
+        return $this->kernel
+            ->getContainer()
+            ->get('doctrine')
+            ->getManager()
+            ->getRepository('FSiTerytDbBundle:CommunityType')
+            ->findOneByName($name);
+    }
+
+    protected function findPlaceTypeByName($name)
+    {
+        return $this->kernel
+            ->getContainer()
+            ->get('doctrine')
+            ->getManager()
+            ->getRepository('FSiTerytDbBundle:PlaceType')
             ->findOneByName($name);
     }
 
@@ -127,15 +249,6 @@ class DataContext extends BehatContext implements KernelAwareInterface
         $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
     }
 
-    protected function createPlace($id, $name)
-    {
-        $place = new Place();
-        $place->setId($id)
-            ->setName($name);
-
-        $this->kernel->getContainer()->get('doctrine')->getManager()->persist($place);
-        $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
-    }
 
     protected function createDistrict($code, $name, Province $province)
     {
