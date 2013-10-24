@@ -12,7 +12,6 @@ use FSi\Bundle\TerytDatabaseBundle\Entity\PlaceType;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Province;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-
 class DataContext extends BehatContext implements KernelAwareInterface
 {
     /**
@@ -106,6 +105,18 @@ class DataContext extends BehatContext implements KernelAwareInterface
     }
 
     /**
+     * @Then /^following places dictionary exist in database$/
+     */
+    public function followingPlacesDictionaryExistInDatabase(TableNode $table)
+    {
+        $tableHash = $table->getHash();
+
+        foreach ($tableHash as $row) {
+            $this->createPlaceType($row['Type'], $row['Name']);
+        }
+    }
+
+    /**
      * @Given /^there is a community in database with code "([^"]*)" and name "([^"]*)"$/
      */
     public function thereIsACommunityInDatabaseWithCodeAndName($code, $name)
@@ -165,6 +176,16 @@ class DataContext extends BehatContext implements KernelAwareInterface
         }
 
         $this->kernel->getContainer()->get('doctrine')->getManager()->persist($place);
+        $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
+    }
+
+    protected function createPlaceType($type, $name)
+    {
+        $placeType = new PlaceType();
+        $placeType->setType($type)
+            ->setName($name);
+
+        $this->kernel->getContainer()->get('doctrine')->getManager()->persist($placeType);
         $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
     }
 

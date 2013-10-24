@@ -62,7 +62,7 @@ EOT;
         $this->convertToEntity()->shouldBeLike($place);
     }
 
-    function it_converts_node_to_community_with_updating_existing_one(
+    function it_converts_node_to_place_with_updating_existing_one(
         ObjectManager $om, ObjectRepository $or, Place $place
     ) {
         $xml = <<<EOT
