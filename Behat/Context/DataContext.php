@@ -82,6 +82,19 @@ class DataContext extends BehatContext implements KernelAwareInterface
     }
 
     /**
+     * @Given /^following community was already imported$/
+     */
+    public function followingCommunityWasAlreadyImported(TableNode $table)
+    {
+        $tableHash = $table->getHash();
+
+        foreach ($tableHash as $row) {
+            $this->createCommunity($row['Code'], $row['Name'], $row['Community type'], $row['District']);
+        }
+    }
+
+
+    /**
      * @Given /^there is a community in database with code "([^"]*)" and name "([^"]*)"$/
      */
     public function thereIsACommunityInDatabaseWithCodeAndName($code, $name)
@@ -107,6 +120,25 @@ class DataContext extends BehatContext implements KernelAwareInterface
         $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
     }
 
+    /**
+     * @param $code
+     * @param $name
+     * @param $typeName
+     * @param $districtName
+     * @internal param $row
+     */
+    protected function createCommunity($code, $name, $typeName, $districtName)
+    {
+        $community = new Community();
+        $community->setCode($code)
+            ->setName($name)
+            ->setType($this->findCommunityTypeByName($typeName))
+            ->setDistrict($this->findDistrictByName($districtName));
+
+        $this->kernel->getContainer()->get('doctrine')->getManager()->persist($community);
+        $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
+    }
+
     protected function findProvinceByName($name)
     {
         return $this->kernel
@@ -114,6 +146,26 @@ class DataContext extends BehatContext implements KernelAwareInterface
             ->get('doctrine')
             ->getManager()
             ->getRepository('FSiTerytDbBundle:Province')
+            ->findOneByName($name);
+    }
+
+    protected function findDistrictByName($name)
+    {
+        return $this->kernel
+            ->getContainer()
+            ->get('doctrine')
+            ->getManager()
+            ->getRepository('FSiTerytDbBundle:District')
+            ->findOneByName($name);
+    }
+
+    protected function findCommunityTypeByName($name)
+    {
+        return $this->kernel
+            ->getContainer()
+            ->get('doctrine')
+            ->getManager()
+            ->getRepository('FSiTerytDbBundle:CommunityType')
             ->findOneByName($name);
     }
 
