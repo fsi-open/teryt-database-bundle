@@ -23,19 +23,36 @@ class PlacesNodeConverter extends NodeConverter
 
     public function convertToEntity()
     {
-        $place = new Place();
-        $place->setId($this->getPlaceId())
-            ->setName($this->getPlaceName())
+        $placeEntity = $this->createPlaceEntity();
+        $placeEntity->setName($this->getPlaceName())
             ->setCommunity($this->getPlaceCommunity())
             ->setType($this->getPlaceType());
 
-        return $place;
+        return $placeEntity;
+    }
+
+    /**
+     * @return \FSi\Bundle\TerytDatabaseBundle\Entity\Place
+     */
+    private function createPlaceEntity()
+    {
+        $placeEntity = $this->om->getRepository('FSiTerytDbBundle:Place')
+            ->findOneBy(array(
+                'id' => $this->getPlaceId()
+            ));
+
+        if (!isset($placeEntity)) {
+            $placeEntity = new Place();
+            $placeEntity->setId($this->getPlaceId());
+        }
+
+        return $placeEntity;
     }
 
     /**
      * @return string
      */
-    public function getDistrictCode()
+    private function getDistrictCode()
     {
         return (string) $this->node->col[self::POw_CHILD_NODE];
     }
@@ -81,7 +98,7 @@ class PlacesNodeConverter extends NodeConverter
     }
 
     /**
-     * @return object
+     * @return \FSi\Bundle\TerytDatabaseBundle\Entity\Community
      */
     private function getPlaceCommunity()
     {
@@ -97,7 +114,7 @@ class PlacesNodeConverter extends NodeConverter
     }
 
     /**
-     * @return object
+     * @return \FSi\Bundle\TerytDatabaseBundle\Entity\PlaceType
      */
     private function getPlaceType()
     {
