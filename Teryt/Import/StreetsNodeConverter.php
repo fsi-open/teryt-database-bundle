@@ -21,20 +21,36 @@ class StreetsNodeConverter extends NodeConverter
 
     public function convertToEntity()
     {
-        $street = new Street();
-        $street->setId($this->getId())
-            ->setName($this->getName())
+        $streetEntity = $this->createStreetEntity();
+        $streetEntity->setName($this->getName())
             ->setAdditionalName($this->getAdditionalName())
             ->setType($this->getStreetType())
             ->setPlace($this->getPlace());
 
-        return $street;
+        return $streetEntity;
+    }
+
+    /**
+     * @return \FSi\Bundle\TerytDatabaseBundle\Entity\Street
+     */
+    private function createStreetEntity()
+    {
+        $streetEntity = $this->om->getRepository('FSiTerytDbBundle:Street')->findOneBy(array(
+            'id' => $this->getStreetId()
+        ));
+
+        if (!isset($streetEntity)) {
+            $streetEntity = new Street();
+            $streetEntity->setId($this->getStreetId());
+        }
+
+        return $streetEntity;
     }
 
     /**
      * @return string
      */
-    private function getId()
+    private function getStreetId()
     {
         return (string) $this->node->col[self::ID_CHILD_NODE];
     }
