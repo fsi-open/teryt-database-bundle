@@ -58,6 +58,7 @@ It is important to execute following commands in given order:
 
 ```
 $ cd project
+$ php app/console doctrine:schema:update --force
 $ php app/console doctrine:fixtures:load
 $ php app/console teryt:import:territorial-division teryt/TERC.xml
 $ php app/console teryt:import:places-dictionary teryt/WMRODZ.xml
