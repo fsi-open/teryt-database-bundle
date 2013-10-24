@@ -16,6 +16,7 @@ class StreetsNodeConverterSpec extends ObjectBehavior
         // It is not possible to mock internal classes with final constructor
         $this->beConstructedWith(new \SimpleXMLElement('<row></row>'), $om);
         $om->getRepository(Argument::type('string'))->willReturn($or);
+        $or->findOneBy(Argument::type('array'))->willReturn();
     }
 
     function it_converts_node_to_street_entry(ObjectManager $om, ObjectRepository $or)
@@ -53,4 +54,42 @@ EOT;
         $this->convertToEntity()->shouldBeLike($street);
     }
 
+    function it_converts_node_to_street_entry_with_updating_existing_one(
+        ObjectManager $om, ObjectRepository $or, Street $street
+    ) {
+        $xml = <<<EOT
+<row>
+    <col name="WOJ">02</col>
+    <col name="POW">23</col>
+    <col name="GMI">09</col>
+    <col name="RODZ_GMI">2</col>
+    <col name="SYM">0884849</col>
+    <col name="SYM_UL">10268</col>
+    <col name="CECHA">ul.</col>
+    <col name="NAZWA_1">Księżycowa </col>
+    <col name="NAZWA_2"/>
+    <col name="STAN_NA">2013-10-10</col>
+</row>
+EOT;
+        $place = new Place();
+        $place->setId('0884849')
+            ->setName('City');
+
+        $or->findOneBy(array('id' => '0884849'))
+            ->shouldBeCalled()
+            ->willReturn($place);
+
+        $or->findOneBy(array('id' => '10268'))
+            ->shouldBeCalled()
+            ->willReturn($street);
+
+        $street->setName('Księżycowa')->shouldBeCalled()->willReturn($street);
+        $street->setAdditionalName('')->shouldBeCalled()->willReturn($street);
+        $street->setType('ul.')->shouldBeCalled()->willReturn($street);
+        $street->setPlace($place)->shouldBeCalled()->willReturn($street);
+        $street->setId('10268')->shouldNotBeCalled();
+
+        $this->beConstructedWith(new \SimpleXMLElement($xml), $om);
+        $this->convertToEntity()->shouldBeLike($street->getWrappedObject());
+    }
 }

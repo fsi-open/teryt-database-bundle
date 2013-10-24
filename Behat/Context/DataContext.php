@@ -10,6 +10,7 @@ use FSi\Bundle\TerytDatabaseBundle\Entity\District;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Place;
 use FSi\Bundle\TerytDatabaseBundle\Entity\PlaceType;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Province;
+use FSi\Bundle\TerytDatabaseBundle\Entity\Street;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 class DataContext extends BehatContext implements KernelAwareInterface
@@ -117,6 +118,18 @@ class DataContext extends BehatContext implements KernelAwareInterface
     }
 
     /**
+     * @Given /^following streets was already imported$/
+     */
+    public function followingStreetsWasAlreadyImported(TableNode $table)
+    {
+        $tableHash = $table->getHash();
+
+        foreach ($tableHash as $row) {
+            $this->createStreet($row['Identity'], $row['Type'], $row['Name'], $row['Additional name'], $row['Place']);
+        }
+    }
+
+    /**
      * @Given /^there is a community in database with code "([^"]*)" and name "([^"]*)"$/
      */
     public function thereIsACommunityInDatabaseWithCodeAndName($code, $name)
@@ -189,6 +202,50 @@ class DataContext extends BehatContext implements KernelAwareInterface
         $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
     }
 
+
+    protected function createProvince($code, $name)
+    {
+        $provinceEntity = new Province();
+        $provinceEntity->setCode($code)
+            ->setName($name);
+
+        $this->kernel->getContainer()->get('doctrine')->getManager()->persist($provinceEntity);
+        $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
+    }
+
+
+    protected function createDistrict($code, $name, Province $province)
+    {
+        $communityEntity = new District();
+        $communityEntity->setCode($code)
+            ->setName($name)
+            ->setProvince($province);
+
+        $this->kernel->getContainer()->get('doctrine')->getManager()->persist($communityEntity);
+        $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
+    }
+
+    /**
+     * @param $id
+     * @param $type
+     * @param $name
+     * @param $additionalName
+     * @param $placeName
+     * @internal param $row
+     */
+    private function createStreet($id, $type, $name, $additionalName, $placeName)
+    {
+        $street = new Street();
+        $street->setId($id)
+            ->setType($type)
+            ->setName($name)
+            ->setAdditionalName($additionalName)
+            ->setPlace($this->findPlaceByName($placeName));
+
+        $this->kernel->getContainer()->get('doctrine')->getManager()->persist($street);
+        $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
+    }
+
     protected function findProvinceByName($name)
     {
         return $this->kernel
@@ -239,25 +296,13 @@ class DataContext extends BehatContext implements KernelAwareInterface
             ->findOneByName($name);
     }
 
-    protected function createProvince($code, $name)
+    protected function findPlaceByName($name)
     {
-        $provinceEntity = new Province();
-        $provinceEntity->setCode($code)
-            ->setName($name);
-
-        $this->kernel->getContainer()->get('doctrine')->getManager()->persist($provinceEntity);
-        $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
-    }
-
-
-    protected function createDistrict($code, $name, Province $province)
-    {
-        $communityEntity = new District();
-        $communityEntity->setCode($code)
-            ->setName($name)
-            ->setProvince($province);
-
-        $this->kernel->getContainer()->get('doctrine')->getManager()->persist($communityEntity);
-        $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
+        return $this->kernel
+            ->getContainer()
+            ->get('doctrine')
+            ->getManager()
+            ->getRepository('FSiTerytDbBundle:Place')
+            ->findOneByName($name);
     }
 }
