@@ -24,8 +24,7 @@ class StreetsNodeConverter extends NodeConverter
         $streetEntity = $this->createStreetEntity();
         $streetEntity->setName($this->getName())
             ->setAdditionalName($this->getAdditionalName())
-            ->setType($this->getStreetType())
-            ->setPlace($this->getPlace());
+            ->setType($this->getStreetType());
 
         return $streetEntity;
     }
@@ -35,13 +34,16 @@ class StreetsNodeConverter extends NodeConverter
      */
     private function createStreetEntity()
     {
+        $place = $this->getPlace();
         $streetEntity = $this->om->getRepository('FSiTerytDbBundle:Street')->findOneBy(array(
-            'id' => $this->getStreetId()
+            'id' => $this->getStreetId(),
+            'place' => $place
         ));
 
         if (!isset($streetEntity)) {
             $streetEntity = new Street();
             $streetEntity->setId($this->getStreetId());
+            $streetEntity->setPlace($place);
         }
 
         return $streetEntity;

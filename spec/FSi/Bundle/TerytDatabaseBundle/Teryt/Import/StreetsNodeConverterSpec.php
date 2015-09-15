@@ -79,14 +79,13 @@ EOT;
             ->shouldBeCalled()
             ->willReturn($place);
 
-        $or->findOneBy(array('id' => '10268'))
+        $or->findOneBy(array('id' => '10268', 'place' => $place))
             ->shouldBeCalled()
             ->willReturn($street);
 
         $street->setName('Księżycowa')->shouldBeCalled()->willReturn($street);
         $street->setAdditionalName('')->shouldBeCalled()->willReturn($street);
         $street->setType('ul.')->shouldBeCalled()->willReturn($street);
-        $street->setPlace($place)->shouldBeCalled()->willReturn($street);
         $street->setId('10268')->shouldNotBeCalled();
 
         $this->beConstructedWith(new \SimpleXMLElement($xml), $om);
