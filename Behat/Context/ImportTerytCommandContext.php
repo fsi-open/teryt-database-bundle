@@ -2,27 +2,27 @@
 
 namespace FSi\Bundle\TerytDatabaseBundle\Behat\Context;
 
-use Behat\Behat\Context\BehatContext;
-use Behat\Behat\Exception\PendingException;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
+use Behat\Symfony2Extension\Context\KernelAwareContext;
 use Behat\Symfony2Extension\Context\KernelAwareInterface;
-use FSi\Bundle\TerytDatabaseBundle\Behat\Context\Console\ApplicationTester;
-use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-class ImportTerytCommandContext extends BehatContext implements KernelAwareInterface
+class ImportTerytCommandContext implements KernelAwareContext
 {
-    private $parameters;
-
     /**
      * @var KernelInterface
      */
     private $kernel;
 
-    public function __construct(array $parameters)
+    /**
+     * @var string
+     */
+    protected $fixturesPath;
+
+    function __construct($fixturesPath)
     {
-        $this->parameters = $parameters;
+        $this->fixturesPath = $fixturesPath;
     }
 
     /**
@@ -40,7 +40,7 @@ class ImportTerytCommandContext extends BehatContext implements KernelAwareInter
      */
     public function xmlFileHaveFollowingContent($fileName, PyStringNode $fileContent)
     {
-        $targetFolder = sprintf("%s/Project/app/teryt", $this->parameters['fixtures_path']);
+        $targetFolder = sprintf("%s/Project/app/teryt", $this->fixturesPath);
         if (!file_exists($targetFolder)) {
             mkdir($targetFolder);
         }
@@ -200,15 +200,6 @@ class ImportTerytCommandContext extends BehatContext implements KernelAwareInter
             expect($entity->getAdditionalName())->toBe($row['Additional name']);
             expect($entity->getPlace()->getName())->toBe($row['Place']);
         }
-    }
-
-
-    /**
-     * @Then /^I should see "([^"]*)" console output$/
-     */
-    public function iShouldSeeConsoleOutput($output)
-    {
-        expect(trim($this->getMainContext()->getSubcontext('command')->getLastCommandOutput()))->toBe($output);
     }
 
     /**

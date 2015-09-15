@@ -2,9 +2,8 @@
 
 namespace FSi\Bundle\TerytDatabaseBundle\Behat\Context;
 
-use Behat\Behat\Context\BehatContext;
 use Behat\Gherkin\Node\TableNode;
-use Behat\Symfony2Extension\Context\KernelAwareInterface;
+use Behat\Symfony2Extension\Context\KernelAwareContext;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Community;
 use FSi\Bundle\TerytDatabaseBundle\Entity\District;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Place;
@@ -13,7 +12,7 @@ use FSi\Bundle\TerytDatabaseBundle\Entity\Province;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Street;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-class DataContext extends BehatContext implements KernelAwareInterface
+class DataContext implements KernelAwareContext
 {
     /**
      * @var KernelInterface
@@ -24,16 +23,6 @@ class DataContext extends BehatContext implements KernelAwareInterface
      * @var string
      */
     protected $lastCommandOutput;
-
-    /**
-     * @var array
-     */
-    protected $parameters;
-
-    function __construct($parameters = array())
-    {
-        $this->parameters = $parameters;
-    }
 
     /**
      * Sets Kernel instance.
