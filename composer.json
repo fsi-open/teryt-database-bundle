@@ -11,7 +11,7 @@
         }
     ],
     "require": {
-        "php": ">=5.3.3",
+        "php": ">=5.4",
         "symfony/symfony": "*@stable",
         "guzzle/guzzle": "3.7.*",
         "hobnob/xml-stream-reader": "1.0.*",

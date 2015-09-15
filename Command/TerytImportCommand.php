@@ -10,13 +10,20 @@
 namespace FSi\Bundle\TerytDatabaseBundle\Command;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManager;
 use Hobnob\XmlStreamReader\Parser;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Helper\ProgressHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class TerytImportCommand extends ContainerAwareCommand
 {
+    const FLUSH_FREQUENCY = 2000;
+
+    /** @var resource */
+    protected $handle;
+
     /**
      * @param \SimpleXMLElement $node
      * @param \Doctrine\Common\Persistence\ObjectManager $om
@@ -38,7 +45,14 @@ abstract class TerytImportCommand extends ContainerAwareCommand
             '/teryt/catalog/row',
             $this->getNodeParserCallbackFunction()
         );
-        $xmlParser->parse(fopen($xmlFile, 'r'));
+
+        $this->handle = fopen($xmlFile, 'r');
+        /** @var ProgressHelper $progress */
+        $this->getProgressHelper()->start($output, filesize($xmlFile));
+        $xmlParser->parse($this->handle);
+        $this->flushAndClear();
+        fclose($this->handle);
+        $this->getProgressHelper()->finish();
 
         return 0;
     }
@@ -48,15 +62,44 @@ abstract class TerytImportCommand extends ContainerAwareCommand
      */
     protected function getNodeParserCallbackFunction()
     {
-        $om = $this->getContainer()->get('doctrine')->getManager();
-        $self = $this;
+        $om = $this->getEntityManager();
+        $counter = self::FLUSH_FREQUENCY;
 
-        return function (Parser $parser, \SimpleXMLElement $node) use ($om, $self) {
-            $converter = $self->getNodeConverter($node, $om);
+        return function (Parser $parser, \SimpleXMLElement $node) use ($om, &$counter) {
+            $converter = $this->getNodeConverter($node, $om);
             $entity = $converter->convertToEntity();
             $om->persist($entity);
-            $om->flush();
-            $om->clear();
+
+            $this->getProgressHelper()->setCurrent(ftell($this->handle), true);
+
+            $counter--;
+            if (!$counter) {
+                $counter = self::FLUSH_FREQUENCY;
+                $this->flushAndClear();
+            }
         };
+    }
+
+    private function flushAndClear()
+    {
+        $om = $this->getEntityManager();
+        $om->flush();
+        $om->clear();
+    }
+
+    /**
+     * @return EntityManager
+     */
+    private function getEntityManager()
+    {
+        return $this->getContainer()->get('doctrine')->getManager();
+    }
+
+    /**
+     * @return ProgressHelper
+     */
+    private function getProgressHelper()
+    {
+        return $this->getHelperSet()->get('progress');
     }
 }
