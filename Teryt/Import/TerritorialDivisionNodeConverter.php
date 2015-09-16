@@ -83,15 +83,13 @@ class TerritorialDivisionNodeConverter extends NodeConverter
      */
     private function convertToDistrict()
     {
-        $province = $this->om->getRepository('FSiTerytDbBundle:Province')->findOneBy(array(
+        $province = $this->findOneBy('FSiTerytDbBundle:Province', array(
             'code' => $this->getProvinceCode()
         ));
 
-        $districtEntity = $this->createDistrictEntity();
-        $districtEntity->setName($this->getTerritoryName())
+        return $this->createDistrictEntity()
+            ->setName($this->getTerritoryName())
             ->setProvince($province);
-
-        return $districtEntity;
     }
 
     /**
@@ -99,20 +97,18 @@ class TerritorialDivisionNodeConverter extends NodeConverter
      */
     private function convertToCommunity()
     {
-        $district = $this->om->getRepository('FSiTerytDbBundle:District')->findOneBy(array(
+        $district = $this->findOneBy('FSiTerytDbBundle:District', array(
             'code' => (int) sprintf("%1d%02d", $this->getProvinceCode(), $this->getDistrictCode())
         ));
 
-        $type = $this->om->getRepository('FSiTerytDbBundle:CommunityType')->findOneBy(array(
+        $type = $this->findOneBy('FSiTerytDbBundle:CommunityType', array(
             'type' => (int) $this->node->col[self::TYPE_CHILD_NODE]
         ));
 
-        $communityEntity = $this->createCommunityEntity();
-        $communityEntity->setName($this->getTerritoryName())
+        return $this->createCommunityEntity()
+            ->setName($this->getTerritoryName())
             ->setType($type)
             ->setDistrict($district);
-
-        return $communityEntity;
     }
 
     /**
@@ -120,16 +116,9 @@ class TerritorialDivisionNodeConverter extends NodeConverter
      */
     private function createProvinceEntity()
     {
-        $provinceEntity = $this->om->getRepository('FSiTerytDbBundle:Province')
-            ->findOneBy(array(
-                'code' => $this->getProvinceCode()
-            ));
-
-        if (!isset($provinceEntity)) {
-            return new Province($this->getProvinceCode());
-        }
-
-        return $provinceEntity;
+        return $this->findOneBy('FSiTerytDbBundle:Province', array(
+            'code' => $this->getProvinceCode()
+        )) ?: new Province($this->getProvinceCode());
     }
 
     /**
@@ -137,16 +126,11 @@ class TerritorialDivisionNodeConverter extends NodeConverter
      */
     private function createDistrictEntity()
     {
-        $districtEntity = $this->om->getRepository('FSiTerytDbBundle:District')
-            ->findOneBy(array(
-                'code' => (int) sprintf('%d%02d', $this->getProvinceCode(), $this->getDistrictCode())
-            ));
+        $districtCode = (int) sprintf('%d%02d', $this->getProvinceCode(), $this->getDistrictCode());
 
-        if (!isset($districtEntity)) {
-            return new District((int) sprintf('%d%02d', $this->getProvinceCode(), $this->getDistrictCode()));
-        }
-
-        return $districtEntity;
+        return $this->findOneBy('FSiTerytDbBundle:District', array(
+            'code' => $districtCode
+        )) ?: new District($districtCode);
     }
 
     /**
@@ -162,15 +146,9 @@ class TerritorialDivisionNodeConverter extends NodeConverter
             $this->getCommunityType()
         );
 
-        $communityEntity = $this->om->getRepository('FSiTerytDbBundle:Community')->findOneBy(array(
+        return $this->findOneBy('FSiTerytDbBundle:Community', array(
             'code' => $communityCode
-        ));
-
-        if (!isset($communityEntity)) {
-            $communityEntity = new Community($communityCode);
-        }
-
-        return $communityEntity;
+        )) ?: new Community($communityCode);
     }
 
     /**

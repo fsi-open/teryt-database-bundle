@@ -68,7 +68,7 @@ EOT;
         $province->setName('Dolnośląskie')->shouldBeCalled();
 
         $this->beConstructedWith(new \SimpleXMLElement($xml), $om);
-        $this->convertToEntity()->shouldBeLike($province->getWrappedObject());
+        $this->convertToEntity()->shouldBeLike($province);
     }
 
     function it_converts_node_to_district(ObjectManager $om, ObjectRepository $or)
@@ -125,7 +125,7 @@ EOT;
         $district->setProvince($province)->shouldBeCalled()->willReturn($district);
 
         $this->beConstructedWith(new \SimpleXMLElement($xml), $om);
-        $this->convertToEntity();//->shouldBeLike($district->getWrappedObject());
+        $this->convertToEntity()->shouldBeLike($district);
     }
 
     function it_converts_node_to_community(ObjectManager $om, ObjectRepository $or)

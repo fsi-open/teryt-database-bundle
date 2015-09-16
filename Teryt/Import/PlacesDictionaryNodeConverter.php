@@ -30,15 +30,9 @@ class PlacesDictionaryNodeConverter extends NodeConverter
      */
     private function createPlaceTypeEntity()
     {
-        $placeType = $this->om->getRepository('FSiTerytDbBundle:PlaceType')->findOneBy(array(
+        return $this->findOneBy('FSiTerytDbBundle:PlaceType', array(
             'type' => $this->getPlaceType()
-        ));
-
-        if (!isset($placeType)) {
-            return new PlaceType($this->getPlaceType());
-        }
-
-        return $placeType;
+        )) ?: new PlaceType($this->getPlaceType());
     }
 
     /**

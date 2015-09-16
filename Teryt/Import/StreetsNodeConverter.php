@@ -35,16 +35,11 @@ class StreetsNodeConverter extends NodeConverter
     private function createStreetEntity()
     {
         $place = $this->getPlace();
-        $streetEntity = $this->om->getRepository('FSiTerytDbBundle:Street')->findOneBy(array(
+
+        return $this->findOneBy('FSiTerytDbBundle:Street', array(
             'id' => $this->getStreetId(),
             'place' => $place
-        ));
-
-        if (!isset($streetEntity)) {
-            return new Street($place, $this->getStreetId());
-        }
-
-        return $streetEntity;
+        )) ?: new Street($place, $this->getStreetId());
     }
 
     /**

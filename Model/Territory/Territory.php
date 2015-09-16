@@ -39,7 +39,7 @@ class Territory
 
     /**
      * @param string $name
-     * @return Community
+     * @return Territory
      */
     public function setName($name)
     {

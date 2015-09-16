@@ -36,16 +36,9 @@ class PlacesNodeConverter extends NodeConverter
      */
     private function createPlaceEntity()
     {
-        $placeEntity = $this->om->getRepository('FSiTerytDbBundle:Place')
-            ->findOneBy(array(
-                'id' => $this->getPlaceId()
-            ));
-
-        if (!isset($placeEntity)) {
-            return new Place($this->getPlaceId());
-        }
-
-        return $placeEntity;
+        return $this->findOneBy('FSiTerytDbBundle:Place', array(
+            'id' => $this->getPlaceId()
+        )) ?: new Place($this->getPlaceId());
     }
 
     /**
@@ -53,7 +46,7 @@ class PlacesNodeConverter extends NodeConverter
      */
     private function getDistrictCode()
     {
-        return (string) $this->node->col[self::POw_CHILD_NODE];
+        return (int) $this->node->col[self::POw_CHILD_NODE];
     }
 
     /**
@@ -61,7 +54,7 @@ class PlacesNodeConverter extends NodeConverter
      */
     private function getProvinceCode()
     {
-        return (string) $this->node->col[self::WOJ_CHILD_NODE];
+        return (int) $this->node->col[self::WOJ_CHILD_NODE];
     }
 
     /**
@@ -69,7 +62,7 @@ class PlacesNodeConverter extends NodeConverter
      */
     private function getCommunityCode()
     {
-        return (string) $this->node->col[self::GMI_CHILD_NODE];
+        return (int) $this->node->col[self::GMI_CHILD_NODE];
     }
 
     /**
@@ -101,8 +94,8 @@ class PlacesNodeConverter extends NodeConverter
      */
     private function getPlaceCommunity()
     {
-        return $this->om->getRepository('FSiTerytDbBundle:Community')->findOneBy(array(
-            'code' => sprintf(
+        return $this->findOneBy('FSiTerytDbBundle:Community', array(
+            'code' => (int) sprintf(
                 "%d%02d%02d%1d",
                 $this->getProvinceCode(),
                 $this->getDistrictCode(),
@@ -117,7 +110,7 @@ class PlacesNodeConverter extends NodeConverter
      */
     private function getPlaceType()
     {
-        return $this->om->getRepository('FSiTerytDbBundle:PlaceType')->findOneBy(array(
+        return $this->findOneBy('FSiTerytDbBundle:PlaceType', array(
             'type' => $this->getPlaceDictionaryType()
         ));
     }
