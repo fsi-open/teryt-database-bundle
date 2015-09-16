@@ -14,7 +14,7 @@ use FSi\Bundle\TerytDatabaseBundle\Entity\Place;
 class PlacesNodeConverter extends NodeConverter
 {
     const WOJ_CHILD_NODE = 0;
-    const POw_CHILD_NODE = 1;
+    const POW_CHILD_NODE = 1;
     const GMI_CHILD_NODE = 2;
     const COMMUNITY_TYPE_CHILD_NODE = 3;
     const TYPE_CHILD_NODE = 4;
@@ -46,7 +46,7 @@ class PlacesNodeConverter extends NodeConverter
      */
     private function getDistrictCode()
     {
-        return (int) $this->node->col[self::POw_CHILD_NODE];
+        return (int) $this->node->col[self::POW_CHILD_NODE];
     }
 
     /**
