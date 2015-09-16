@@ -10,8 +10,8 @@
 namespace FSi\Bundle\TerytDatabaseBundle\Command;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ORM\EntityManager;
 use Hobnob\XmlStreamReader\Parser;
+use SimpleXMLElement;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Helper\ProgressHelper;
 use Symfony\Component\Console\Input\InputInterface;
@@ -25,11 +25,11 @@ abstract class TerytImportCommand extends ContainerAwareCommand
     protected $handle;
 
     /**
-     * @param \SimpleXMLElement $node
+     * @param SimpleXMLElement $node
      * @param \Doctrine\Common\Persistence\ObjectManager $om
      * @return \FSi\Bundle\TerytDatabaseBundle\Teryt\Import\NodeConverter
      */
-    abstract public function getNodeConverter(\SimpleXMLElement $node, ObjectManager $om);
+    abstract public function getNodeConverter(SimpleXMLElement $node, ObjectManager $om);
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -40,37 +40,41 @@ abstract class TerytImportCommand extends ContainerAwareCommand
             return 1;
         }
 
-        $xmlParser = new Parser();
-        $xmlParser->registerCallback(
-            '/teryt/catalog/row',
-            $this->getNodeParserCallbackFunction()
-        );
-
-        $this->handle = fopen($xmlFile, 'r');
-        /** @var ProgressHelper $progress */
+        $xmlParser = $this->createXmlParser();
         $this->getProgressHelper()->start($output, filesize($xmlFile));
-        $xmlParser->parse($this->handle);
+
+        $this->importXmlFile($xmlParser, $xmlFile);
+
         $this->flushAndClear();
-        fclose($this->handle);
         $this->getProgressHelper()->finish();
 
         return 0;
     }
 
     /**
+     * @return Parser
+     * @throws \Exception
+     */
+    private function createXmlParser()
+    {
+        $xmlParser = new Parser();
+
+        return $xmlParser->registerCallback(
+            '/teryt/catalog/row',
+            $this->getNodeParserCallbackFunction()
+        );
+    }
+
+    /**
      * @return callable
      */
-    protected function getNodeParserCallbackFunction()
+    private function getNodeParserCallbackFunction()
     {
-        $om = $this->getEntityManager();
         $counter = self::FLUSH_FREQUENCY;
 
-        return function (Parser $parser, \SimpleXMLElement $node) use ($om, &$counter) {
-            $converter = $this->getNodeConverter($node, $om);
-            $entity = $converter->convertToEntity();
-            $om->persist($entity);
-
-            $this->getProgressHelper()->setCurrent(ftell($this->handle), true);
+        return function (Parser $parser, SimpleXMLElement $node) use (&$counter) {
+            $this->convertNodeToPersistedEntity($node);
+            $this->updateProgressHelper();
 
             $counter--;
             if (!$counter) {
@@ -80,17 +84,44 @@ abstract class TerytImportCommand extends ContainerAwareCommand
         };
     }
 
+    /**
+     * @param SimpleXMLElement $node
+     */
+    private function convertNodeToPersistedEntity(SimpleXMLElement $node)
+    {
+        $om = $this->getObjectManager();
+        $converter = $this->getNodeConverter($node, $om);
+        $om->persist(
+            $converter->convertToEntity()
+        );
+    }
+
+    private function updateProgressHelper()
+    {
+        $this->getProgressHelper()->setCurrent(ftell($this->handle), false);
+    }
+
     private function flushAndClear()
     {
-        $om = $this->getEntityManager();
-        $om->flush();
-        $om->clear();
+        $this->getObjectManager()->flush();
+        $this->getObjectManager()->clear();
     }
 
     /**
-     * @return EntityManager
+     * @param Parser $xmlParser
+     * @param string $xmlFile
      */
-    private function getEntityManager()
+    private function importXmlFile(Parser $xmlParser, $xmlFile)
+    {
+        $this->handle = fopen($xmlFile, 'r');
+        $xmlParser->parse($this->handle);
+        fclose($this->handle);
+    }
+
+    /**
+     * @return ObjectManager
+     */
+    private function getObjectManager()
     {
         return $this->getContainer()->get('doctrine')->getManager();
     }
