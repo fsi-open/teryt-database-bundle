@@ -10,31 +10,38 @@
 namespace FSi\Bundle\TerytDatabaseBundle\Model\Territory;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use FSi\Bundle\TerytDatabaseBundle\Model\Territory\District;
-use FSi\Bundle\TerytDatabaseBundle\Model\Territory\Territory;
+use Doctrine\Common\Collections\Collection;
+use FSi\Bundle\TerytDatabaseBundle\Model\Place\Place;
 
 class Community extends Territory
 {
     /**
-     * @var \FSi\Bundle\TerytDatabaseBundle\Model\Territory\District
+     * @var District
      */
     protected $district;
 
     /**
-     * @var \FSi\Bundle\TerytDatabaseBundle\Model\Territory\CommunityType
+     * @var CommunityType
      */
     protected $type;
 
+    /**
+     * @var Collection|Place[]
+     */
     protected $places;
 
-    function __construct()
+    /**
+     * @param int $code
+     */
+    function __construct($code)
     {
+        parent::__construct($code);
         $this->places = new ArrayCollection();
     }
 
     /**
-     * @param \FSi\Bundle\TerytDatabaseBundle\Model\Territory\District $district
-     * @return \FSi\Bundle\TerytDatabaseBundle\Model\Territory\Community
+     * @param District $district
+     * @return Community
      */
     public function setDistrict(District $district)
     {
@@ -44,7 +51,7 @@ class Community extends Territory
     }
 
     /**
-     * @return \FSi\Bundle\TerytDatabaseBundle\Model\Territory\District
+     * @return District
      */
     public function getDistrict()
     {
@@ -52,7 +59,7 @@ class Community extends Territory
     }
 
     /**
-     * @param \FSi\Bundle\TerytDatabaseBundle\Model\Territory\CommunityType $type
+     * @param CommunityType $type
      * @return Community
      */
     public function setType(CommunityType $type)
@@ -63,13 +70,16 @@ class Community extends Territory
     }
 
     /**
-     * @return \FSi\Bundle\TerytDatabaseBundle\Model\Territory\CommunityType
+     * @return CommunityType
      */
     public function getType()
     {
         return $this->type;
     }
 
+    /**
+     * @return Collection|Place[]
+     */
     public function getPlaces()
     {
         return $this->places;

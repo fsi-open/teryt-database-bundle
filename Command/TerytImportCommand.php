@@ -11,18 +11,25 @@ namespace FSi\Bundle\TerytDatabaseBundle\Command;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Hobnob\XmlStreamReader\Parser;
+use SimpleXMLElement;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Helper\ProgressHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class TerytImportCommand extends ContainerAwareCommand
 {
+    const FLUSH_FREQUENCY = 2000;
+
+    /** @var resource */
+    protected $handle;
+
     /**
-     * @param \SimpleXMLElement $node
+     * @param SimpleXMLElement $node
      * @param \Doctrine\Common\Persistence\ObjectManager $om
      * @return \FSi\Bundle\TerytDatabaseBundle\Teryt\Import\NodeConverter
      */
-    abstract public function getNodeConverter(\SimpleXMLElement $node, ObjectManager $om);
+    abstract public function getNodeConverter(SimpleXMLElement $node, ObjectManager $om);
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -33,30 +40,97 @@ abstract class TerytImportCommand extends ContainerAwareCommand
             return 1;
         }
 
-        $xmlParser = new Parser();
-        $xmlParser->registerCallback(
-            '/teryt/catalog/row',
-            $this->getNodeParserCallbackFunction()
-        );
-        $xmlParser->parse(fopen($xmlFile, 'r'));
+        $xmlParser = $this->createXmlParser();
+        $this->getProgressHelper()->start($output, filesize($xmlFile));
+
+        $this->importXmlFile($xmlParser, $xmlFile);
+
+        $this->flushAndClear();
+        $this->getProgressHelper()->finish();
 
         return 0;
     }
 
     /**
+     * @return Parser
+     * @throws \Exception
+     */
+    private function createXmlParser()
+    {
+        $xmlParser = new Parser();
+
+        return $xmlParser->registerCallback(
+            '/teryt/catalog/row',
+            $this->getNodeParserCallbackFunction()
+        );
+    }
+
+    /**
      * @return callable
      */
-    protected function getNodeParserCallbackFunction()
+    private function getNodeParserCallbackFunction()
     {
-        $om = $this->getContainer()->get('doctrine')->getManager();
-        $self = $this;
+        $counter = self::FLUSH_FREQUENCY;
 
-        return function (Parser $parser, \SimpleXMLElement $node) use ($om, $self) {
-            $converter = $self->getNodeConverter($node, $om);
-            $entity = $converter->convertToEntity();
-            $om->persist($entity);
-            $om->flush();
-            $om->clear();
+        return function (Parser $parser, SimpleXMLElement $node) use (&$counter) {
+            $this->convertNodeToPersistedEntity($node);
+            $this->updateProgressHelper();
+
+            $counter--;
+            if (!$counter) {
+                $counter = self::FLUSH_FREQUENCY;
+                $this->flushAndClear();
+            }
         };
+    }
+
+    /**
+     * @param SimpleXMLElement $node
+     */
+    private function convertNodeToPersistedEntity(SimpleXMLElement $node)
+    {
+        $om = $this->getObjectManager();
+        $converter = $this->getNodeConverter($node, $om);
+        $om->persist(
+            $converter->convertToEntity()
+        );
+    }
+
+    private function updateProgressHelper()
+    {
+        $this->getProgressHelper()->setCurrent(ftell($this->handle), false);
+    }
+
+    private function flushAndClear()
+    {
+        $this->getObjectManager()->flush();
+        $this->getObjectManager()->clear();
+    }
+
+    /**
+     * @param Parser $xmlParser
+     * @param string $xmlFile
+     */
+    private function importXmlFile(Parser $xmlParser, $xmlFile)
+    {
+        $this->handle = fopen($xmlFile, 'r');
+        $xmlParser->parse($this->handle);
+        fclose($this->handle);
+    }
+
+    /**
+     * @return ObjectManager
+     */
+    private function getObjectManager()
+    {
+        return $this->getContainer()->get('doctrine')->getManager();
+    }
+
+    /**
+     * @return ProgressHelper
+     */
+    private function getProgressHelper()
+    {
+        return $this->getHelperSet()->get('progress');
     }
 }

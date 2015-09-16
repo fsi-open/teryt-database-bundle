@@ -11,7 +11,7 @@
         }
     ],
     "require": {
-        "php": ">=5.3.3",
+        "php": ">=5.4",
         "symfony/symfony": "*@stable",
         "guzzle/guzzle": "3.7.*",
         "hobnob/xml-stream-reader": "1.0.*",
@@ -21,8 +21,8 @@
         "ext-pdo_sqlite": "*",
         "doctrine/doctrine-bundle": "1.2.*",
         "doctrine/orm": ">=2.2.3,<2.4-dev",
-        "behat/behat": "*@stable",
-        "behat/symfony2-extension": "*@stable",
+        "behat/behat": "~3.0",
+        "behat/symfony2-extension": "~2.0",
         "behat/mink-extension": "*",
         "behat/mink-browserkit-driver": "*",
         "phpspec/phpspec": "2.0.*@dev",

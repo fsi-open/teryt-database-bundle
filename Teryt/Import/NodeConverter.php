@@ -30,4 +30,9 @@ abstract class NodeConverter
     }
 
     abstract public function convertToEntity();
+
+    protected function findOneBy($className, array $criteria)
+    {
+        return $this->om->getRepository($className)->findOneBy($criteria);
+    }
 }

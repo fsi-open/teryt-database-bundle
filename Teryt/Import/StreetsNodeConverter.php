@@ -24,8 +24,7 @@ class StreetsNodeConverter extends NodeConverter
         $streetEntity = $this->createStreetEntity();
         $streetEntity->setName($this->getName())
             ->setAdditionalName($this->getAdditionalName())
-            ->setType($this->getStreetType())
-            ->setPlace($this->getPlace());
+            ->setType($this->getStreetType());
 
         return $streetEntity;
     }
@@ -35,16 +34,12 @@ class StreetsNodeConverter extends NodeConverter
      */
     private function createStreetEntity()
     {
-        $streetEntity = $this->om->getRepository('FSiTerytDbBundle:Street')->findOneBy(array(
-            'id' => $this->getStreetId()
-        ));
+        $place = $this->getPlace();
 
-        if (!isset($streetEntity)) {
-            $streetEntity = new Street();
-            $streetEntity->setId($this->getStreetId());
-        }
-
-        return $streetEntity;
+        return $this->findOneBy('FSiTerytDbBundle:Street', array(
+            'id' => $this->getStreetId(),
+            'place' => $place
+        )) ?: new Street($place, $this->getStreetId());
     }
 
     /**
@@ -52,7 +47,7 @@ class StreetsNodeConverter extends NodeConverter
      */
     private function getStreetId()
     {
-        return (string) $this->node->col[self::ID_CHILD_NODE];
+        return (int) $this->node->col[self::ID_CHILD_NODE];
     }
 
     /**
@@ -85,7 +80,7 @@ class StreetsNodeConverter extends NodeConverter
     private function getPlace()
     {
         return $this->om->getRepository('FSiTerytDbBundle:Place')->findOneBy(array(
-            'id' => (string)$this->node->col[self::PLACE_CHILD_NODE]
+            'id' => (int) $this->node->col[self::PLACE_CHILD_NODE]
         ));
     }
 }

@@ -12,7 +12,7 @@ namespace FSi\Bundle\TerytDatabaseBundle\Model\Territory;
 class Territory
 {
     /**
-     * @var string
+     * @var int
      */
     protected $code;
 
@@ -22,17 +22,15 @@ class Territory
     protected $name;
 
     /**
-     * @param string $code
-     * @return \FSi\Bundle\TerytDatabaseBundle\Model\Territory\Community
+     * @param int $code
      */
-    public function setCode($code)
+    public function __construct($code)
     {
         $this->code = $code;
-        return $this;
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getCode()
     {
@@ -40,8 +38,8 @@ class Territory
     }
 
     /**
-     * @param mixed $name
-     * @return \FSi\Bundle\TerytDatabaseBundle\Model\Territory\Community
+     * @param string $name
+     * @return Territory
      */
     public function setName($name)
     {
@@ -51,7 +49,7 @@ class Territory
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getName()
     {

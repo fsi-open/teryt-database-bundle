@@ -14,7 +14,7 @@ use FSi\Bundle\TerytDatabaseBundle\Entity\Place;
 class PlacesNodeConverter extends NodeConverter
 {
     const WOJ_CHILD_NODE = 0;
-    const POw_CHILD_NODE = 1;
+    const POW_CHILD_NODE = 1;
     const GMI_CHILD_NODE = 2;
     const COMMUNITY_TYPE_CHILD_NODE = 3;
     const TYPE_CHILD_NODE = 4;
@@ -36,17 +36,9 @@ class PlacesNodeConverter extends NodeConverter
      */
     private function createPlaceEntity()
     {
-        $placeEntity = $this->om->getRepository('FSiTerytDbBundle:Place')
-            ->findOneBy(array(
-                'id' => $this->getPlaceId()
-            ));
-
-        if (!isset($placeEntity)) {
-            $placeEntity = new Place();
-            $placeEntity->setId($this->getPlaceId());
-        }
-
-        return $placeEntity;
+        return $this->findOneBy('FSiTerytDbBundle:Place', array(
+            'id' => $this->getPlaceId()
+        )) ?: new Place($this->getPlaceId());
     }
 
     /**
@@ -54,7 +46,7 @@ class PlacesNodeConverter extends NodeConverter
      */
     private function getDistrictCode()
     {
-        return (string) $this->node->col[self::POw_CHILD_NODE];
+        return (int) $this->node->col[self::POW_CHILD_NODE];
     }
 
     /**
@@ -62,7 +54,7 @@ class PlacesNodeConverter extends NodeConverter
      */
     private function getProvinceCode()
     {
-        return (string) $this->node->col[self::WOJ_CHILD_NODE];
+        return (int) $this->node->col[self::WOJ_CHILD_NODE];
     }
 
     /**
@@ -70,7 +62,7 @@ class PlacesNodeConverter extends NodeConverter
      */
     private function getCommunityCode()
     {
-        return (string) $this->node->col[self::GMI_CHILD_NODE];
+        return (int) $this->node->col[self::GMI_CHILD_NODE];
     }
 
     /**
@@ -78,7 +70,7 @@ class PlacesNodeConverter extends NodeConverter
      */
     private function getPlaceDictionaryType()
     {
-        return (string) $this->node->col[self::TYPE_CHILD_NODE];
+        return (int) $this->node->col[self::TYPE_CHILD_NODE];
     }
 
     /**
@@ -86,7 +78,7 @@ class PlacesNodeConverter extends NodeConverter
      */
     private function getPlaceId()
     {
-        return (string) $this->node->col[self::ID_CHILD_NODE];
+        return (int) $this->node->col[self::ID_CHILD_NODE];
     }
 
     /**
@@ -102,13 +94,13 @@ class PlacesNodeConverter extends NodeConverter
      */
     private function getPlaceCommunity()
     {
-        return $this->om->getRepository('FSiTerytDbBundle:Community')->findOneBy(array(
-            'code' => sprintf(
-                "%s%s%s%s",
+        return $this->findOneBy('FSiTerytDbBundle:Community', array(
+            'code' => (int) sprintf(
+                "%d%02d%02d%1d",
                 $this->getProvinceCode(),
                 $this->getDistrictCode(),
                 $this->getCommunityCode(),
-                (string) $this->node->col[self::COMMUNITY_TYPE_CHILD_NODE]
+                $this->node->col[self::COMMUNITY_TYPE_CHILD_NODE]
             )
         ));
     }
@@ -118,7 +110,7 @@ class PlacesNodeConverter extends NodeConverter
      */
     private function getPlaceType()
     {
-        return $this->om->getRepository('FSiTerytDbBundle:PlaceType')->findOneBy(array(
+        return $this->findOneBy('FSiTerytDbBundle:PlaceType', array(
             'type' => $this->getPlaceDictionaryType()
         ));
     }

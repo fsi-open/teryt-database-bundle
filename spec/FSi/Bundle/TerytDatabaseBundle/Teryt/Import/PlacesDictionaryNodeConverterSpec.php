@@ -28,9 +28,8 @@ class PlacesDictionaryNodeConverterSpec extends ObjectBehavior
 </row>
 EOT;
 
-        $placeType = new PlaceType();
-        $placeType->setType('02')
-            ->setName('kolonia');
+        $placeType = new PlaceType(2);
+        $placeType->setName('kolonia');
 
         $this->beConstructedWith(new \SimpleXMLElement($xml), $om);
         $this->convertToEntity()->shouldBeLike($placeType);
@@ -48,11 +47,10 @@ EOT;
 EOT;
 
         $or->findOneBy(array(
-            'type' => '02'
+            'type' => 2
         ))->shouldBeCalled()->willReturn($placeType);
 
         $placeType->setName('kolonia')->shouldBeCalled()->willReturn($placeType);
-        $placeType->setType('02')->shouldNotBeCalled();
 
         $this->beConstructedWith(new \SimpleXMLElement($xml), $om);
         $this->convertToEntity()->shouldBeLike($placeType);

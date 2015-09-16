@@ -37,11 +37,22 @@ Feature: Parse streets xml file and import data into database
       </catalog>
     </teryt>
     """
-    And there are no provinces in database
+    And following province was already imported
+      | Code | Name         |
+      | 02   | DOLNOŚLĄSKIE |
+    And following district was already imported
+      | Code | Name        | Province     |
+      | 0223 | CZŁUCHOWSKI | DOLNOŚLĄSKIE |
+      | 0261 | BUSKI       | DOLNOŚLĄSKIE |
+    And following community was already imported
+      | Code    | Name         | District    | Community type |
+      | 0223091 | ŻORAWINA     | CZŁUCHOWSKI | gmina wiejska  |
+      | 0261011 | JELENIA GÓRA | BUSKI       | gmina wiejska  |
     And following places was already imported
-      | Identity | Name   |
-      | 0884849  | City 1 |
-      | 0935802  | City 2 |
+      | Identity | Name   | Community    |
+      | 0884849  | City 1 | ŻORAWINA     |
+      | 0935802  | City 2 | JELENIA GÓRA |
+    And there are no streets in database
     When I successfully run console command "teryt:import:streets" with argument "--file=teryt/streets.xml"
     Then following streets should exist in database
       | Identity | Type | Name        | Additional name | Place  |
@@ -69,10 +80,18 @@ Feature: Parse streets xml file and import data into database
       </catalog>
     </teryt>
     """
-    And there are no provinces in database
+    And following province was already imported
+      | Code | Name         |
+      | 02   | DOLNOŚLĄSKIE |
+    And following district was already imported
+      | Code | Name  | Province     |
+      | 0261 | BUSKI | DOLNOŚLĄSKIE |
+    And following community was already imported
+      | Code    | Name         | District    | Community type |
+      | 0261011 | JELENIA GÓRA | BUSKI       | gmina wiejska  |
     And following places was already imported
-      | Identity | Name   |
-      | 0935802  | City 1 |
+      | Identity | Name   | Community    |
+      | 0935802  | City 1 | JELENIA GÓRA |
     And following streets was already imported
       | Identity | Type | Name        | Additional name | Place  |
       | 14018    | ul.  | NARUTOWICZA | GABRIELA        | City 1 |

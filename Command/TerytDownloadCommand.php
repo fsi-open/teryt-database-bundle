@@ -116,11 +116,17 @@ abstract class TerytDownloadCommand extends ContainerAwareCommand
         $fileSize = $this->getFileRoundedSize();
 
         return function (Event $event) use ($output, $fileSize, $progressHelper) {
-            if ($event['downloaded'] === 0 || $fileSize == 0) {
+            if (version_compare(curl_version()['version'], '7.32') === 1) {
+                $downloaded = $event['upload_size'];
+            } else {
+                $downloaded = $event['downloaded'];
+            }
+
+            if ($downloaded === 0 || $fileSize == 0) {
                 return;
             }
 
-            $percent = ($event['downloaded'] / $fileSize) * 100;
+            $percent = ($downloaded / $fileSize) * 100;
 
             if ($percent > 100) {
                 return;

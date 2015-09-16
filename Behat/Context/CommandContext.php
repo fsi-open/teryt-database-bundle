@@ -2,16 +2,14 @@
 
 namespace FSi\Bundle\TerytDatabaseBundle\Behat\Context;
 
-use Behat\Behat\Context\BehatContext;
-use Behat\Behat\Exception\BehaviorException;
-use Behat\Symfony2Extension\Context\KernelAwareInterface;
+use Behat\Symfony2Extension\Context\KernelAwareContext;
 use FSi\Bundle\TerytDatabaseBundle\Behat\Context\Console\ApplicationTester;
 use Guzzle\Http\Message\Response;
 use Guzzle\Plugin\Mock\MockPlugin;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-class CommandContext extends BehatContext implements KernelAwareInterface
+class CommandContext implements KernelAwareContext
 {
     /**
      * @var KernelInterface
@@ -29,13 +27,13 @@ class CommandContext extends BehatContext implements KernelAwareInterface
     protected $lastCommandExitCode;
 
     /**
-     * @var array
+     * @var string
      */
-    protected $parameters;
+    protected $fixturesPath;
 
-    function __construct($parameters = array())
+    function __construct($fixturesPath)
     {
-        $this->parameters = $parameters;
+        $this->fixturesPath = $fixturesPath;
     }
 
     /**
@@ -116,6 +114,15 @@ class CommandContext extends BehatContext implements KernelAwareInterface
     }
 
     /**
+     * @Then /^I should see "([^"]*)" console output$/
+     * @Given /^I should see "([^"]*)" output at console$/
+     */
+    public function iShouldSeeOutputAtConsole($consoleOutput)
+    {
+        expect(trim($this->getLastCommandOutput()))->toBe($consoleOutput);
+    }
+
+    /**
      * @return mixed
      */
     public function getLastCommandOutput()
@@ -138,7 +145,7 @@ class CommandContext extends BehatContext implements KernelAwareInterface
         $mock = $this->createGuzzleMockPlugin();
 
         $fileUrlResponse = new Response(200);
-        $terytPageFixturesPath = $this->parameters['fixtures_path'] . '/TerytPage';
+        $terytPageFixturesPath = $this->fixturesPath . '/TerytPage';
 
         switch ($command) {
             case 'teryt:download:streets':
@@ -153,7 +160,7 @@ class CommandContext extends BehatContext implements KernelAwareInterface
                 $fileUrlResponse->setBody(file_get_contents($terytPageFixturesPath . DIRECTORY_SEPARATOR . 'territorial-division.zip'));
                 break;
             default:
-                throw new BehaviorException(sprintf("Unknown command \"%s\"", $command));
+                throw new \InvalidArgumentException(sprintf("Unknown command \"%s\"", $command));
                 break;
         }
 
@@ -166,7 +173,7 @@ class CommandContext extends BehatContext implements KernelAwareInterface
      */
     private function createGuzzleMockPlugin()
     {
-        $terytPageFixturesPath = $this->parameters['fixtures_path'] . '/TerytPage';
+        $terytPageFixturesPath = $this->fixturesPath . '/TerytPage';
         $mock = new MockPlugin();
         $downloadPageResponse = new Response(200);
         $downloadPageResponse->setBody(file_get_contents($terytPageFixturesPath . DIRECTORY_SEPARATOR . 'listTerytFiles.html'));

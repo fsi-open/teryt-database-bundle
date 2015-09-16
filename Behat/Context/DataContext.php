@@ -2,10 +2,11 @@
 
 namespace FSi\Bundle\TerytDatabaseBundle\Behat\Context;
 
-use Behat\Behat\Context\BehatContext;
+use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\TableNode;
-use Behat\Symfony2Extension\Context\KernelAwareInterface;
+use Behat\Symfony2Extension\Context\KernelAwareContext;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Community;
+use FSi\Bundle\TerytDatabaseBundle\Entity\CommunityType;
 use FSi\Bundle\TerytDatabaseBundle\Entity\District;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Place;
 use FSi\Bundle\TerytDatabaseBundle\Entity\PlaceType;
@@ -13,7 +14,7 @@ use FSi\Bundle\TerytDatabaseBundle\Entity\Province;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Street;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-class DataContext extends BehatContext implements KernelAwareInterface
+class DataContext implements KernelAwareContext
 {
     /**
      * @var KernelInterface
@@ -24,16 +25,6 @@ class DataContext extends BehatContext implements KernelAwareInterface
      * @var string
      */
     protected $lastCommandOutput;
-
-    /**
-     * @var array
-     */
-    protected $parameters;
-
-    function __construct($parameters = array())
-    {
-        $this->parameters = $parameters;
-    }
 
     /**
      * Sets Kernel instance.
@@ -74,10 +65,11 @@ class DataContext extends BehatContext implements KernelAwareInterface
      */
     public function followingPlacesWasAlreadyImported(TableNode $table)
     {
+        $this->createPlaceType(1, 'fake');
         $tableHash = $table->getHash();
 
         foreach ($tableHash as $row) {
-            $this->createPlace($row['Identity'], $row['Name']);
+            $this->createPlace($row['Identity'], $row['Name'], 'fake', $row['Community']);
         }
     }
 
@@ -130,16 +122,12 @@ class DataContext extends BehatContext implements KernelAwareInterface
     }
 
     /**
-     * @Given /^there is a community in database with code "([^"]*)" and name "([^"]*)"$/
+     * @Given /^there is a community in database with code "([^"]*)" and name "([^"]*)" in district "([^"]*)"$/
      */
-    public function thereIsACommunityInDatabaseWithCodeAndName($code, $name)
+    public function thereIsACommunityInDatabaseWithCodeAndName($code, $name, $district)
     {
-        $community = new Community();
-        $community->setCode($code)
-            ->setName($name);
-
-        $this->kernel->getContainer()->get('doctrine')->getManager()->persist($community);
-        $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
+        $this->createCommunityType(1, 'fake');
+        $this->createCommunity($code, $name, 'fake', $district);
     }
 
     /**
@@ -147,9 +135,8 @@ class DataContext extends BehatContext implements KernelAwareInterface
      */
     public function thereIsAPlaceTypeWithTypeAndName($type, $name)
     {
-        $placeType = new PlaceType();
-        $placeType->setType($type)
-            ->setName($name);
+        $placeType = new PlaceType($type);
+        $placeType->setName($name);
 
         $this->kernel->getContainer()->get('doctrine')->getManager()->persist($placeType);
         $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
@@ -164,9 +151,8 @@ class DataContext extends BehatContext implements KernelAwareInterface
      */
     protected function createCommunity($code, $name, $typeName, $districtName)
     {
-        $community = new Community();
-        $community->setCode($code)
-            ->setName($name)
+        $community = new Community($code);
+        $community->setName($name)
             ->setType($this->findCommunityTypeByName($typeName))
             ->setDistrict($this->findDistrictByName($districtName));
 
@@ -174,11 +160,19 @@ class DataContext extends BehatContext implements KernelAwareInterface
         $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
     }
 
+    protected function createCommunityType($type, $name)
+    {
+        $communityType = new CommunityType($type);
+        $communityType->setName($name);
+
+        $this->kernel->getContainer()->get('doctrine')->getManager()->persist($communityType);
+        $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
+    }
+
     protected function createPlace($id, $name, $typeName = null, $communityName = null)
     {
-        $place = new Place();
-        $place->setId($id)
-            ->setName($name);
+        $place = new Place($id);
+        $place->setName($name);
 
         if (isset($typeName)) {
             $place->setType($this->findPlaceTypeByName($typeName));
@@ -194,9 +188,8 @@ class DataContext extends BehatContext implements KernelAwareInterface
 
     protected function createPlaceType($type, $name)
     {
-        $placeType = new PlaceType();
-        $placeType->setType($type)
-            ->setName($name);
+        $placeType = new PlaceType($type);
+        $placeType->setName($name);
 
         $this->kernel->getContainer()->get('doctrine')->getManager()->persist($placeType);
         $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
@@ -205,9 +198,8 @@ class DataContext extends BehatContext implements KernelAwareInterface
 
     protected function createProvince($code, $name)
     {
-        $provinceEntity = new Province();
-        $provinceEntity->setCode($code)
-            ->setName($name);
+        $provinceEntity = new Province($code);
+        $provinceEntity->setName($name);
 
         $this->kernel->getContainer()->get('doctrine')->getManager()->persist($provinceEntity);
         $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
@@ -216,9 +208,8 @@ class DataContext extends BehatContext implements KernelAwareInterface
 
     protected function createDistrict($code, $name, Province $province)
     {
-        $communityEntity = new District();
-        $communityEntity->setCode($code)
-            ->setName($name)
+        $communityEntity = new District($code);
+        $communityEntity->setName($name)
             ->setProvince($province);
 
         $this->kernel->getContainer()->get('doctrine')->getManager()->persist($communityEntity);
@@ -235,12 +226,10 @@ class DataContext extends BehatContext implements KernelAwareInterface
      */
     private function createStreet($id, $type, $name, $additionalName, $placeName)
     {
-        $street = new Street();
-        $street->setId($id)
-            ->setType($type)
+        $street = new Street($this->findPlaceByName($placeName), $id);
+        $street->setType($type)
             ->setName($name)
-            ->setAdditionalName($additionalName)
-            ->setPlace($this->findPlaceByName($placeName));
+            ->setAdditionalName($additionalName);
 
         $this->kernel->getContainer()->get('doctrine')->getManager()->persist($street);
         $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
