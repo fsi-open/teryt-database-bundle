@@ -24,9 +24,15 @@ Feature: Parse places xml file and import data into database
       </catalog>
     </teryt>
     """
+    And following province was already imported
+      | Code | Name               |
+      | 04   | KUJAWSKO-POMORSKIE |
+    And following district was already imported
+      | Code | Name         | Province           |
+      | 0411 | RADZIEJOWSKI | KUJAWSKO-POMORSKIE |
     And places table in database is empty
     And there is a place type with type "01" and name "wieś"
-    And there is a community in database with code "0411055" and name "Gmina Rzerzyca"
+    And there is a community in database with code "0411055" and name "Gmina Rzerzyca" in district "RADZIEJOWSKI"
     When I successfully run console command "teryt:import:places" with argument "--file=teryt/places.xml"
     Then places table in database should have following records
       | Identity | Name     | Place type | Community      |
@@ -53,9 +59,15 @@ Feature: Parse places xml file and import data into database
       </catalog>
     </teryt>
     """
+    And following province was already imported
+      | Code | Name               |
+      | 04   | KUJAWSKO-POMORSKIE |
+    And following district was already imported
+      | Code | Name         | Province           |
+      | 0411 | RADZIEJOWSKI | KUJAWSKO-POMORSKIE |
     And places table in database is empty
     And there is a place type with type "01" and name "wieś"
-    And there is a community in database with code "0411055" and name "Gmina Rzerzyca"
+    And there is a community in database with code "0411055" and name "Gmina Rzerzyca" in district "RADZIEJOWSKI"
     Then following place should exist in database
       | Identity | Name     | Place type | Community      |
       | 0867650  | RZECZYCA | wieś       | Gmina Rzerzyca |

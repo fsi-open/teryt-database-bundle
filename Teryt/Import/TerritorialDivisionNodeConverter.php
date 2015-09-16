@@ -100,7 +100,7 @@ class TerritorialDivisionNodeConverter extends NodeConverter
     private function convertToCommunity()
     {
         $district = $this->om->getRepository('FSiTerytDbBundle:District')->findOneBy(array(
-            'code' => sprintf("%s%s", $this->getProvinceCode(), $this->getDistrictCode())
+            'code' => (int) sprintf("%1d%02d", $this->getProvinceCode(), $this->getDistrictCode())
         ));
 
         $type = $this->om->getRepository('FSiTerytDbBundle:CommunityType')->findOneBy(array(
@@ -140,12 +140,12 @@ class TerritorialDivisionNodeConverter extends NodeConverter
     {
         $districtEntity = $this->om->getRepository('FSiTerytDbBundle:District')
             ->findOneBy(array(
-                'code' => $this->getProvinceCode() . $this->getDistrictCode()
+                'code' => (int) sprintf('%d%02d', $this->getProvinceCode(), $this->getDistrictCode())
             ));
 
         if (!isset($districtEntity)) {
             $districtEntity = new District();
-            $districtEntity->setCode(sprintf('%s%s', $this->getProvinceCode(), $this->getDistrictCode()));
+            $districtEntity->setCode((int) sprintf('%d%02d', $this->getProvinceCode(), $this->getDistrictCode()));
         }
 
         return $districtEntity;
@@ -156,8 +156,8 @@ class TerritorialDivisionNodeConverter extends NodeConverter
      */
     private function createCommunityEntity()
     {
-        $communityCode = sprintf(
-            "%s%s%s%s",
+        $communityCode = (int) sprintf(
+            "%d%02d%02d%1d",
             $this->getProvinceCode(),
             $this->getDistrictCode(),
             $this->getCommunityCode(),
@@ -181,7 +181,7 @@ class TerritorialDivisionNodeConverter extends NodeConverter
      */
     public function getDistrictCode()
     {
-        return (string) $this->node->col[self::POW_CHILD_NODE];
+        return (int) $this->node->col[self::POW_CHILD_NODE];
     }
 
     /**
@@ -197,7 +197,7 @@ class TerritorialDivisionNodeConverter extends NodeConverter
      */
     private function getProvinceCode()
     {
-        return (string) $this->node->col[self::WOJ_CHILD_NODE];
+        return (int) $this->node->col[self::WOJ_CHILD_NODE];
     }
 
     /**
@@ -221,7 +221,7 @@ class TerritorialDivisionNodeConverter extends NodeConverter
      */
     private function getCommunityCode()
     {
-        return (string) $this->node->col[self::GMI_CHILD_NODE];
+        return (int) $this->node->col[self::GMI_CHILD_NODE];
     }
 
     /**
@@ -237,6 +237,6 @@ class TerritorialDivisionNodeConverter extends NodeConverter
      */
     private function getCommunityType()
     {
-        return (string) $this->node->col[self::TYPE_CHILD_NODE];
+        return (int) $this->node->col[self::TYPE_CHILD_NODE];
     }
 }

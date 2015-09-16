@@ -10,18 +10,17 @@
 namespace FSi\Bundle\TerytDatabaseBundle\Model\Territory;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use FSi\Bundle\TerytDatabaseBundle\Model\Territory\Province;
-use FSi\Bundle\TerytDatabaseBundle\Model\Territory\Territory;
+use Doctrine\Common\Collections\Collection;
 
 class District extends Territory
 {
     /**
-     * @var \FSi\Bundle\TerytDatabaseBundle\Model\Territory\Province
+     * @var Province
      */
     protected $province;
 
     /**
-     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @var Collection|Community[]
      */
     protected $communities;
 
@@ -31,8 +30,8 @@ class District extends Territory
     }
 
     /**
-     * @param \FSi\Bundle\TerytDatabaseBundle\Model\Territory\Province $province
-     * @return \FSi\Bundle\TerytDatabaseBundle\Model\Territory\District
+     * @param Province $province
+     * @return District
      */
     public function setProvince(Province $province)
     {
@@ -41,13 +40,16 @@ class District extends Territory
         return $this;
     }
 
+    /**
+     * @return Province
+     */
     public function getProvince()
     {
         return $this->province;
     }
 
     /**
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return Collection|Community[]
      */
     public function getCommunities()
     {

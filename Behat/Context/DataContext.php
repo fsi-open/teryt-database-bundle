@@ -2,9 +2,11 @@
 
 namespace FSi\Bundle\TerytDatabaseBundle\Behat\Context;
 
+use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Symfony2Extension\Context\KernelAwareContext;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Community;
+use FSi\Bundle\TerytDatabaseBundle\Entity\CommunityType;
 use FSi\Bundle\TerytDatabaseBundle\Entity\District;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Place;
 use FSi\Bundle\TerytDatabaseBundle\Entity\PlaceType;
@@ -63,10 +65,11 @@ class DataContext implements KernelAwareContext
      */
     public function followingPlacesWasAlreadyImported(TableNode $table)
     {
+        $this->createPlaceType(1, 'fake');
         $tableHash = $table->getHash();
 
         foreach ($tableHash as $row) {
-            $this->createPlace($row['Identity'], $row['Name']);
+            $this->createPlace($row['Identity'], $row['Name'], 'fake', $row['Community']);
         }
     }
 
@@ -119,16 +122,12 @@ class DataContext implements KernelAwareContext
     }
 
     /**
-     * @Given /^there is a community in database with code "([^"]*)" and name "([^"]*)"$/
+     * @Given /^there is a community in database with code "([^"]*)" and name "([^"]*)" in district "([^"]*)"$/
      */
-    public function thereIsACommunityInDatabaseWithCodeAndName($code, $name)
+    public function thereIsACommunityInDatabaseWithCodeAndName($code, $name, $district)
     {
-        $community = new Community();
-        $community->setCode($code)
-            ->setName($name);
-
-        $this->kernel->getContainer()->get('doctrine')->getManager()->persist($community);
-        $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
+        $this->createCommunityType(1, 'fake');
+        $this->createCommunity($code, $name, 'fake', $district);
     }
 
     /**
@@ -160,6 +159,16 @@ class DataContext implements KernelAwareContext
             ->setDistrict($this->findDistrictByName($districtName));
 
         $this->kernel->getContainer()->get('doctrine')->getManager()->persist($community);
+        $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
+    }
+
+    protected function createCommunityType($type, $name)
+    {
+        $communityType = new CommunityType();
+        $communityType->setType($type)
+            ->setName($name);
+
+        $this->kernel->getContainer()->get('doctrine')->getManager()->persist($communityType);
         $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
     }
 

@@ -54,7 +54,7 @@ class StreetsNodeConverter extends NodeConverter
      */
     private function getStreetId()
     {
-        return (string) $this->node->col[self::ID_CHILD_NODE];
+        return (int) $this->node->col[self::ID_CHILD_NODE];
     }
 
     /**
@@ -87,7 +87,7 @@ class StreetsNodeConverter extends NodeConverter
     private function getPlace()
     {
         return $this->om->getRepository('FSiTerytDbBundle:Place')->findOneBy(array(
-            'id' => (string)$this->node->col[self::PLACE_CHILD_NODE]
+            'id' => (int) $this->node->col[self::PLACE_CHILD_NODE]
         ));
     }
 }

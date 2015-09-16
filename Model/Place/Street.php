@@ -12,7 +12,7 @@ namespace FSi\Bundle\TerytDatabaseBundle\Model\Place;
 class Street
 {
     /**
-     * @var string
+     * @var int
      */
     protected $id;
 
@@ -32,22 +32,23 @@ class Street
     protected $additionalName;
 
     /**
-     * @var \FSi\Bundle\TerytDatabaseBundle\Model\Place\Place
+     * @var Place
      */
     protected $place;
 
     /**
-     * @param string $id
-     * @return \FSi\Bundle\TerytDatabaseBundle\Model\Place\Street
+     * @param int $id
+     * @return Street
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getId()
     {
@@ -55,17 +56,18 @@ class Street
     }
 
     /**
-     * @param mixed $additionalName
+     * @param string $additionalName
      * @return Street
      */
     public function setAdditionalName($additionalName)
     {
         $this->additionalName = $additionalName;
+
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getAdditionalName()
     {
@@ -74,7 +76,7 @@ class Street
 
     /**
      * @param string $name
-     * @return \FSi\Bundle\TerytDatabaseBundle\Model\Place\Street
+     * @return Street
      */
     public function setName($name)
     {
@@ -92,17 +94,18 @@ class Street
     }
 
     /**
-     * @param mixed $place
-     * @return \FSi\Bundle\TerytDatabaseBundle\Model\Place\Street
+     * @param Place $place
+     * @return Street
      */
     public function setPlace(Place $place)
     {
         $this->place = $place;
+
         return $this;
     }
 
     /**
-     * @return \FSi\Bundle\TerytDatabaseBundle\Model\Place\Place
+     * @return Place
      */
     public function getPlace()
     {
@@ -110,12 +113,13 @@ class Street
     }
 
     /**
-     * @param mixed $type
-     * @return \FSi\Bundle\TerytDatabaseBundle\Model\Place\Street
+     * @param string $type
+     * @return Street
      */
     public function setType($type)
     {
         $this->type = $type;
+
         return $this;
     }
 

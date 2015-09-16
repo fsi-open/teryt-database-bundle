@@ -10,12 +10,12 @@
 namespace FSi\Bundle\TerytDatabaseBundle\Model\Territory;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use FSi\Bundle\TerytDatabaseBundle\Model\Territory\Territory;
+use Doctrine\Common\Collections\Collection;
 
 class Province extends Territory
 {
     /**
-     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @var Collection|District[]
      */
     protected $districts;
 
@@ -25,7 +25,7 @@ class Province extends Territory
     }
 
     /**
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return Collection|District[]
      */
     public function getDistricts()
     {

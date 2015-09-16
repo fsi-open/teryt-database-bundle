@@ -96,6 +96,15 @@ class ImportTerytCommandContext implements KernelAwareContext
     }
 
     /**
+     * @Given /^there are no streets in database$/
+     */
+    public function thereAreNoStreetsInDatabase()
+    {
+        expect($this->getStreetRepository()
+            ->findAll())->toBe(array());
+    }
+
+    /**
      * @Then /^following province should exist in database$/
      */
     public function followingProvinceShouldExistInDatabase(TableNode $table)
@@ -194,7 +203,7 @@ class ImportTerytCommandContext implements KernelAwareContext
         foreach ($tableHash as $row) {
             $entity = $this->getStreetRepository()->findOneById($row['Identity']);
             expect($entity)->toBeAnInstanceOf('FSi\Bundle\TerytDatabaseBundle\Entity\Street');
-            expect($entity->getId())->toBe($row['Identity']);
+            expect($entity->getId())->toBe((int) $row['Identity']);
             expect($entity->getName())->toBe($row['Name']);
             expect($entity->getType())->toBe($row['Type']);
             expect($entity->getAdditionalName())->toBe($row['Additional name']);

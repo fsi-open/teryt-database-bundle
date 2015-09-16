@@ -10,18 +10,34 @@
 namespace FSi\Bundle\TerytDatabaseBundle\Model\Place;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use FSi\Bundle\TerytDatabaseBundle\Model\Territory\Community;
 
 class Place
 {
+    /**
+     * @var int
+     */
     protected $id;
 
+    /**
+     * @var string
+     */
     protected $name;
 
+    /**
+     * @var Type
+     */
     protected $type;
 
+    /**
+     * @var Community
+     */
     protected $community;
 
+    /**
+     * @var Collection|Street[]
+     */
     protected $streets;
 
     function __construct()
@@ -30,17 +46,18 @@ class Place
     }
 
     /**
-     * @param string $id
-     * @return \FSi\Bundle\TerytDatabaseBundle\Model\Place\Place
+     * @param int $id
+     * @return Place
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getId()
     {
@@ -48,17 +65,18 @@ class Place
     }
 
     /**
-     * @param \FSi\Bundle\TerytDatabaseBundle\Model\Territory\Community $community
-     * @return \FSi\Bundle\TerytDatabaseBundle\Model\Place\Place
+     * @param Community $community
+     * @return Place
      */
     public function setCommunity(Community $community)
     {
         $this->community = $community;
+
         return $this;
     }
 
     /**
-     * @return \FSi\Bundle\TerytDatabaseBundle\Model\Territory\Community
+     * @return Community
      */
     public function getCommunity()
     {
@@ -67,7 +85,7 @@ class Place
 
     /**
      * @param string $name
-     * @return \FSi\Bundle\TerytDatabaseBundle\Model\Place\Place
+     * @return Place
      */
     public function setName($name)
     {
@@ -84,8 +102,8 @@ class Place
     }
 
     /**
-     * @param \FSi\Bundle\TerytDatabaseBundle\Model\Place\Type $type
-     * @return \FSi\Bundle\TerytDatabaseBundle\Model\Place\Place
+     * @param Type $type
+     * @return Place
      */
     public function setType(Type $type)
     {
@@ -95,7 +113,7 @@ class Place
     }
 
     /**
-     * @return \FSi\Bundle\TerytDatabaseBundle\Model\Place\Type
+     * @return Type
      */
     public function getType()
     {
@@ -103,7 +121,7 @@ class Place
     }
 
     /**
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return Collection|Street[]
      */
     public function getStreets()
     {

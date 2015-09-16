@@ -10,13 +10,23 @@
 namespace FSi\Bundle\TerytDatabaseBundle\Model\Territory;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 class CommunityType
 {
+    /**
+     * @var int
+     */
     protected $type;
 
+    /**
+     * @var string
+     */
     protected $name;
 
+    /**
+     * @var Collection|Community[]
+     */
     protected $communities;
 
     public function __construct()
@@ -25,17 +35,18 @@ class CommunityType
     }
 
     /**
-     * @param mixed $type
+     * @param int $type
      * @return CommunityType
      */
     public function setType($type)
     {
         $this->type = $type;
+
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getType()
     {
@@ -43,17 +54,18 @@ class CommunityType
     }
 
     /**
-     * @param mixed $name
+     * @param string $name
      * @return CommunityType
      */
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getName()
     {
@@ -61,7 +73,7 @@ class CommunityType
     }
 
     /**
-     * @return mixed
+     * @return Collection|Community[]
      */
     public function getCommunities()
     {
