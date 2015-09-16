@@ -37,24 +37,21 @@ class PlacesNodeConverterSpec extends ObjectBehavior
 </row>
 EOT;
 
-        $community = new Community();
-        $community->setCode('041105');
+        $community = new Community(41105);
 
-        $placeType = new Type();
-        $placeType->setName('miasto')
-            ->setType('01');
+        $placeType = new Type(1);
+        $placeType->setName('miasto');
 
         $or->findOneBy(array(
-            'code' => '0411055'
+            'code' => 411055
         ))->shouldBeCalled()->willReturn($community);
 
         $or->findOneBy(array(
             'type' => '01'
         ))->shouldBeCalled()->willReturn($placeType);
 
-        $place = new Place();
+        $place = new Place(867650);
         $place->setName('Rzeczyca')
-            ->setId('0867650')
             ->setType($placeType)
             ->setCommunity($community);
 
@@ -80,15 +77,13 @@ EOT;
 </row>
 EOT;
 
-        $community = new Community();
-        $community->setCode('041105');
+        $community = new Community(41105);
 
-        $placeType = new Type();
-        $placeType->setName('miasto')
-            ->setType('01');
+        $placeType = new Type(1);
+        $placeType->setName('miasto');
 
         $or->findOneBy(array(
-            'id' => '0867650'
+            'id' => 867650
         ))->shouldBeCalled()->willReturn($place);
 
         $or->findOneBy(array(
@@ -102,7 +97,6 @@ EOT;
         $place->setName('Rzeczyca')->shouldBeCalled()->willReturn($place);
         $place->setType($placeType)->shouldBeCalled()->willReturn($place);
         $place->setCommunity($community)->shouldBeCalled()->willReturn($place);
-        $place->setId('0867650')->shouldNotBeCalled();
 
         $this->beConstructedWith(new \SimpleXMLElement($xml), $om);
         $this->convertToEntity()->shouldBeLike($place->getWrappedObject());

@@ -24,9 +24,8 @@ class LoadCommunityTypeData implements FixtureInterface
     public function load(ObjectManager $manager)
     {
         foreach ($this->communityTypes as $type => $name)  {
-            $communityTypeEntity = new CommunityType();
-            $communityTypeEntity->setType($type)
-                ->setName($name);
+            $communityTypeEntity = new CommunityType($type);
+            $communityTypeEntity->setName($name);
 
             $manager->persist($communityTypeEntity);
             $manager->flush();

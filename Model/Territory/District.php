@@ -24,8 +24,12 @@ class District extends Territory
      */
     protected $communities;
 
-    function __construct()
+    /**
+     * @param int $code
+     */
+    function __construct($code)
     {
+        parent::__construct($code);
         $this->communities = new ArrayCollection();
     }
 

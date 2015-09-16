@@ -30,8 +30,12 @@ class Community extends Territory
      */
     protected $places;
 
-    function __construct()
+    /**
+     * @param int $code
+     */
+    function __construct($code)
     {
+        parent::__construct($code);
         $this->places = new ArrayCollection();
     }
 

@@ -41,9 +41,7 @@ class StreetsNodeConverter extends NodeConverter
         ));
 
         if (!isset($streetEntity)) {
-            $streetEntity = new Street();
-            $streetEntity->setId($this->getStreetId());
-            $streetEntity->setPlace($place);
+            return new Street($place, $this->getStreetId());
         }
 
         return $streetEntity;

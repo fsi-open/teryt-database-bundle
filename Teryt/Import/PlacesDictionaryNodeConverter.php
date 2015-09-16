@@ -10,6 +10,7 @@
 namespace FSi\Bundle\TerytDatabaseBundle\Teryt\Import;
 
 use FSi\Bundle\TerytDatabaseBundle\Entity\PlaceType;
+use SimpleXMLElement;
 
 class PlacesDictionaryNodeConverter extends NodeConverter
 {
@@ -25,7 +26,7 @@ class PlacesDictionaryNodeConverter extends NodeConverter
     }
 
     /**
-     * @return \FSi\Bundle\TerytDatabaseBundle\Entity\PlaceType
+     * @return PlaceType
      */
     private function createPlaceTypeEntity()
     {
@@ -34,19 +35,18 @@ class PlacesDictionaryNodeConverter extends NodeConverter
         ));
 
         if (!isset($placeType)) {
-            $placeType = new PlaceType();
-            $placeType->setType($this->getPlaceType());
-            return $placeType;
+            return new PlaceType($this->getPlaceType());
         }
+
         return $placeType;
     }
 
     /**
-     * @return \SimpleXMLElement
+     * @return SimpleXMLElement
      */
     private function getPlaceType()
     {
-        return (string) $this->node->col[self::TYPE_CHILD_NODE];
+        return (int) $this->node->col[self::TYPE_CHILD_NODE];
     }
 
     /**

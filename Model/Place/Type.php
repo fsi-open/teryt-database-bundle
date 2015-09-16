@@ -28,20 +28,13 @@ class Type
      */
     protected $places;
 
-    function __construct()
-    {
-        $this->places = new ArrayCollection();
-    }
-
     /**
-     * @param mixed $type
-     * @return \FSi\Bundle\TerytDatabaseBundle\Model\Place\Type
+     * @param int $type
      */
-    public function setType($type)
+    function __construct($type)
     {
         $this->type = $type;
-
-        return $this;
+        $this->places = new ArrayCollection();
     }
 
     /**

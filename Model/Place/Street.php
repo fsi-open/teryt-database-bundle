@@ -37,14 +37,21 @@ class Street
     protected $place;
 
     /**
+     * @param Place $place
      * @param int $id
-     * @return Street
      */
-    public function setId($id)
+    public function __construct(Place $place, $id)
     {
+        $this->place = $place;
         $this->id = $id;
+    }
 
-        return $this;
+    /**
+     * @return Place
+     */
+    public function getPlace()
+    {
+        return $this->place;
     }
 
     /**
@@ -91,25 +98,6 @@ class Street
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * @param Place $place
-     * @return Street
-     */
-    public function setPlace(Place $place)
-    {
-        $this->place = $place;
-
-        return $this;
-    }
-
-    /**
-     * @return Place
-     */
-    public function getPlace()
-    {
-        return $this->place;
     }
 
     /**

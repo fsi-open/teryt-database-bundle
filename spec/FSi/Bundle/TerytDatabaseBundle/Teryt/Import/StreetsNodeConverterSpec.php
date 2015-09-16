@@ -35,20 +35,17 @@ class StreetsNodeConverterSpec extends ObjectBehavior
     <col name="STAN_NA">2013-10-10</col>
 </row>
 EOT;
-        $place = new Place();
-        $place->setId('0884849')
-            ->setName('City');
+        $place = new Place(884849);
+        $place->setName('City');
 
-        $or->findOneBy(array('id' => '0884849'))
+        $or->findOneBy(array('id' => 884849))
             ->shouldBeCalled()
             ->willReturn($place);
 
-        $street = new Street();
-        $street->setId('10268')
-            ->setName('Księżycowa')
+        $street = new Street($place, 10268);
+        $street->setName('Księżycowa')
             ->setAdditionalName('')
-            ->setType('ul.')
-            ->setPlace($place);
+            ->setType('ul.');
 
         $this->beConstructedWith(new \SimpleXMLElement($xml), $om);
         $this->convertToEntity()->shouldBeLike($street);
@@ -71,9 +68,8 @@ EOT;
     <col name="STAN_NA">2013-10-10</col>
 </row>
 EOT;
-        $place = new Place();
-        $place->setId('0884849')
-            ->setName('City');
+        $place = new Place(884849);
+        $place->setName('City');
 
         $or->findOneBy(array('id' => '0884849'))
             ->shouldBeCalled()
@@ -86,7 +82,6 @@ EOT;
         $street->setName('Księżycowa')->shouldBeCalled()->willReturn($street);
         $street->setAdditionalName('')->shouldBeCalled()->willReturn($street);
         $street->setType('ul.')->shouldBeCalled()->willReturn($street);
-        $street->setId('10268')->shouldNotBeCalled();
 
         $this->beConstructedWith(new \SimpleXMLElement($xml), $om);
         $this->convertToEntity()->shouldBeLike($street->getWrappedObject());

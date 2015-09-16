@@ -40,8 +40,12 @@ class Place
      */
     protected $streets;
 
-    function __construct()
+    /**
+     * @param int $id
+     */
+    function __construct($id)
     {
+        $this->id = $id;
         $this->streets = new ArrayCollection();
     }
 

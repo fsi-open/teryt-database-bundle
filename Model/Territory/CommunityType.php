@@ -29,20 +29,13 @@ class CommunityType
      */
     protected $communities;
 
-    public function __construct()
-    {
-        $this->communities = new ArrayCollection();
-    }
-
     /**
      * @param int $type
-     * @return CommunityType
      */
-    public function setType($type)
+    public function __construct($type)
     {
         $this->type = $type;
-
-        return $this;
+        $this->communities = new ArrayCollection();
     }
 
     /**

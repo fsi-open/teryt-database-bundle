@@ -23,13 +23,10 @@ class Territory
 
     /**
      * @param int $code
-     * @return Community
      */
-    public function setCode($code)
+    public function __construct($code)
     {
         $this->code = $code;
-
-        return $this;
     }
 
     /**

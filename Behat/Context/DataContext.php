@@ -135,9 +135,8 @@ class DataContext implements KernelAwareContext
      */
     public function thereIsAPlaceTypeWithTypeAndName($type, $name)
     {
-        $placeType = new PlaceType();
-        $placeType->setType($type)
-            ->setName($name);
+        $placeType = new PlaceType($type);
+        $placeType->setName($name);
 
         $this->kernel->getContainer()->get('doctrine')->getManager()->persist($placeType);
         $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
@@ -152,9 +151,8 @@ class DataContext implements KernelAwareContext
      */
     protected function createCommunity($code, $name, $typeName, $districtName)
     {
-        $community = new Community();
-        $community->setCode($code)
-            ->setName($name)
+        $community = new Community($code);
+        $community->setName($name)
             ->setType($this->findCommunityTypeByName($typeName))
             ->setDistrict($this->findDistrictByName($districtName));
 
@@ -164,9 +162,8 @@ class DataContext implements KernelAwareContext
 
     protected function createCommunityType($type, $name)
     {
-        $communityType = new CommunityType();
-        $communityType->setType($type)
-            ->setName($name);
+        $communityType = new CommunityType($type);
+        $communityType->setName($name);
 
         $this->kernel->getContainer()->get('doctrine')->getManager()->persist($communityType);
         $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
@@ -174,9 +171,8 @@ class DataContext implements KernelAwareContext
 
     protected function createPlace($id, $name, $typeName = null, $communityName = null)
     {
-        $place = new Place();
-        $place->setId($id)
-            ->setName($name);
+        $place = new Place($id);
+        $place->setName($name);
 
         if (isset($typeName)) {
             $place->setType($this->findPlaceTypeByName($typeName));
@@ -192,9 +188,8 @@ class DataContext implements KernelAwareContext
 
     protected function createPlaceType($type, $name)
     {
-        $placeType = new PlaceType();
-        $placeType->setType($type)
-            ->setName($name);
+        $placeType = new PlaceType($type);
+        $placeType->setName($name);
 
         $this->kernel->getContainer()->get('doctrine')->getManager()->persist($placeType);
         $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
@@ -203,9 +198,8 @@ class DataContext implements KernelAwareContext
 
     protected function createProvince($code, $name)
     {
-        $provinceEntity = new Province();
-        $provinceEntity->setCode($code)
-            ->setName($name);
+        $provinceEntity = new Province($code);
+        $provinceEntity->setName($name);
 
         $this->kernel->getContainer()->get('doctrine')->getManager()->persist($provinceEntity);
         $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
@@ -214,9 +208,8 @@ class DataContext implements KernelAwareContext
 
     protected function createDistrict($code, $name, Province $province)
     {
-        $communityEntity = new District();
-        $communityEntity->setCode($code)
-            ->setName($name)
+        $communityEntity = new District($code);
+        $communityEntity->setName($name)
             ->setProvince($province);
 
         $this->kernel->getContainer()->get('doctrine')->getManager()->persist($communityEntity);
@@ -233,12 +226,10 @@ class DataContext implements KernelAwareContext
      */
     private function createStreet($id, $type, $name, $additionalName, $placeName)
     {
-        $street = new Street();
-        $street->setId($id)
-            ->setType($type)
+        $street = new Street($this->findPlaceByName($placeName), $id);
+        $street->setType($type)
             ->setName($name)
-            ->setAdditionalName($additionalName)
-            ->setPlace($this->findPlaceByName($placeName));
+            ->setAdditionalName($additionalName);
 
         $this->kernel->getContainer()->get('doctrine')->getManager()->persist($street);
         $this->kernel->getContainer()->get('doctrine')->getManager()->flush();

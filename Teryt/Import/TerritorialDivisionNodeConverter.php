@@ -126,8 +126,7 @@ class TerritorialDivisionNodeConverter extends NodeConverter
             ));
 
         if (!isset($provinceEntity)) {
-            $provinceEntity = new Province();
-            $provinceEntity->setCode($this->getProvinceCode());
+            return new Province($this->getProvinceCode());
         }
 
         return $provinceEntity;
@@ -144,8 +143,7 @@ class TerritorialDivisionNodeConverter extends NodeConverter
             ));
 
         if (!isset($districtEntity)) {
-            $districtEntity = new District();
-            $districtEntity->setCode((int) sprintf('%d%02d', $this->getProvinceCode(), $this->getDistrictCode()));
+            return new District((int) sprintf('%d%02d', $this->getProvinceCode(), $this->getDistrictCode()));
         }
 
         return $districtEntity;
@@ -169,8 +167,7 @@ class TerritorialDivisionNodeConverter extends NodeConverter
         ));
 
         if (!isset($communityEntity)) {
-            $communityEntity = new Community();
-            $communityEntity->setCode($communityCode);
+            $communityEntity = new Community($communityCode);
         }
 
         return $communityEntity;

@@ -42,8 +42,7 @@ class PlacesNodeConverter extends NodeConverter
             ));
 
         if (!isset($placeEntity)) {
-            $placeEntity = new Place();
-            $placeEntity->setId($this->getPlaceId());
+            return new Place($this->getPlaceId());
         }
 
         return $placeEntity;

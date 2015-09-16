@@ -36,9 +36,8 @@ class TerritorialDivisionNodeConverterSpec extends ObjectBehavior
 </row>
 EOT;
 
-        $expectedProvince = new Province();
-        $expectedProvince->setCode('02')
-            ->setName('DOLNOŚLĄSKIE');
+        $expectedProvince = new Province(2);
+        $expectedProvince->setName('DOLNOŚLĄSKIE');
 
         $this->beConstructedWith(new \SimpleXMLElement($xml), $om);
         $this->convertToEntity()->shouldBeLike($expectedProvince);
@@ -63,11 +62,10 @@ EOT;
             ->willReturn($or);
 
         $or->findOneBy(array(
-            'code' => '02'
+            'code' => 2
         ))->shouldBeCalled()->willReturn($province);
 
         $province->setName('Dolnośląskie')->shouldBeCalled();
-        $province->setCode('02')->shouldNotBeCalled();
 
         $this->beConstructedWith(new \SimpleXMLElement($xml), $om);
         $this->convertToEntity()->shouldBeLike($province->getWrappedObject());
@@ -86,15 +84,13 @@ EOT;
     <col name="STAN_NA">2013-01-01</col>
 </row>
 EOT;
-        $province = new Province();
-        $province->setCode(2);
+        $province = new Province(2);
         $or->findOneBy(array(
             'code' => 2
         ))->shouldBeCalled()->willReturn($province);
 
-        $expectedDistrict = new District();
-        $expectedDistrict->setCode(201)
-            ->setName('bolesławiecki')
+        $expectedDistrict = new District(201);
+        $expectedDistrict->setName('bolesławiecki')
             ->setProvince($province);
 
         $this->beConstructedWith(new \SimpleXMLElement($xml), $om);
@@ -120,15 +116,13 @@ EOT;
             'code' => 201
         ))->shouldBeCalled()->willReturn($district);
 
-        $province = new Province();
-        $province->setCode(2);
+        $province = new Province(2);
         $or->findOneBy(array(
             'code' => 2
         ))->shouldBeCalled()->willReturn($province);
 
         $district->setName('bolesławiecki')->shouldBeCalled()->willReturn($district);
         $district->setProvince($province)->shouldBeCalled()->willReturn($district);
-        $district->setCode(201)->shouldNotBeCalled();
 
         $this->beConstructedWith(new \SimpleXMLElement($xml), $om);
         $this->convertToEntity();//->shouldBeLike($district->getWrappedObject());
@@ -147,25 +141,22 @@ EOT;
     <col name="STAN_NA">2013-01-01</col>
 </row>
 EOT;
-        $district = new District();
-        $district->setCode('0201')
-            ->setName('Bolesławiec');
+        $district = new District(201);
+        $district->setName('Bolesławiec');
 
-        $communityType = new CommunityType();
-        $communityType->setType(1)
-            ->setName('gmina miejska');
+        $communityType = new CommunityType(1);
+        $communityType->setName('gmina miejska');
 
         $or->findOneBy(array(
-            'code' => '0201'
+            'code' => 201
         ))->shouldBeCalled()->willReturn($district);
 
         $or->findOneBy(array(
             'type' => 1
         ))->shouldBeCalled()->willReturn($communityType);
 
-        $expectedCommunity = new Community();
-        $expectedCommunity->setCode('0201011')
-            ->setName('Bolesławiec')
+        $expectedCommunity = new Community(201011);
+        $expectedCommunity->setName('Bolesławiec')
             ->setType($communityType)
             ->setDistrict($district);
 
@@ -187,16 +178,14 @@ EOT;
     <col name="STAN_NA">2013-01-01</col>
 </row>
 EOT;
-        $district = new District();
-        $district->setCode('0201')
-            ->setName('Bolesławiec');
+        $district = new District(201);
+        $district->setName('Bolesławiec');
 
-        $communityType = new CommunityType();
-        $communityType->setType(1)
-            ->setName('gmina miejska');
+        $communityType = new CommunityType(1);
+        $communityType->setName('gmina miejska');
 
         $or->findOneBy(array(
-            'code' => '0201'
+            'code' => 201
         ))->shouldBeCalled()->willReturn($district);
 
         $or->findOneBy(array(
@@ -204,13 +193,12 @@ EOT;
         ))->shouldBeCalled()->willReturn($communityType);
 
         $or->findOneBy(array(
-            'code' => '0201011'
+            'code' => 201011
         ))->shouldBeCalled()->willReturn($community);
 
         $community->setName('Bolesławiec')->shouldBeCalled()->willReturn($community);
         $community->setType($communityType)->shouldBeCalled()->willReturn($community);
         $community->setDistrict($district)->shouldBeCalled()->willReturn($community);
-        $community->setCode('0201011')->shouldNotBeCalled();
 
         $this->beConstructedWith(new \SimpleXMLElement($xml), $om);
         $this->convertToEntity()->shouldBeLike($community);
