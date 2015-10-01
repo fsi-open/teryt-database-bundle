@@ -15,6 +15,8 @@ use Symfony\Component\Console\Input\InputArgument;
 
 class TerytImportTerritorialDivisionCommand extends TerytImportCommand
 {
+    const FLUSH_FREQUENCY = 1;
+
     protected function configure()
     {
         $this->setName('teryt:import:territorial-division')
