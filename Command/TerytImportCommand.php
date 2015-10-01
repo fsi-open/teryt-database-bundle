@@ -70,7 +70,7 @@ abstract class TerytImportCommand extends ContainerAwareCommand
      */
     private function getNodeParserCallbackFunction()
     {
-        $counter = self::FLUSH_FREQUENCY;
+        $counter = static::FLUSH_FREQUENCY;
 
         return function (Parser $parser, SimpleXMLElement $node) use (&$counter) {
             $this->convertNodeToPersistedEntity($node);
@@ -78,7 +78,7 @@ abstract class TerytImportCommand extends ContainerAwareCommand
 
             $counter--;
             if (!$counter) {
-                $counter = self::FLUSH_FREQUENCY;
+                $counter = static::FLUSH_FREQUENCY;
                 $this->flushAndClear();
             }
         };
