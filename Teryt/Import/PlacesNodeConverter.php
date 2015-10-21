@@ -20,13 +20,15 @@ class PlacesNodeConverter extends NodeConverter
     const TYPE_CHILD_NODE = 4;
     const NAME_CHILD_NODE = 6;
     const ID_CHILD_NODE = 7;
+    const ID_PARENT_NODE = 8;
 
     public function convertToEntity()
     {
         $placeEntity = $this->createPlaceEntity();
         $placeEntity->setName($this->getPlaceName())
             ->setCommunity($this->getPlaceCommunity())
-            ->setType($this->getPlaceType());
+            ->setType($this->getPlaceType())
+            ->setParentPlace($this->getParentPlace());
 
         return $placeEntity;
     }
@@ -84,6 +86,14 @@ class PlacesNodeConverter extends NodeConverter
     /**
      * @return string
      */
+    private function getParentPlaceId()
+    {
+        return (int) $this->node->col[self::ID_PARENT_NODE];
+    }
+
+    /**
+     * @return string
+     */
     private function getPlaceName()
     {
         return (string) $this->node->col[self::NAME_CHILD_NODE];
@@ -113,5 +123,19 @@ class PlacesNodeConverter extends NodeConverter
         return $this->findOneBy('FSiTerytDbBundle:PlaceType', array(
             'type' => $this->getPlaceDictionaryType()
         ));
+    }
+
+    /**
+     * @return \FSi\Bundle\TerytDatabaseBundle\Entity\Place
+     */
+    private function getParentPlace()
+    {
+        if ($this->getParentPlaceId() && ($this->getParentPlaceId() !== $this->getPlaceId())) {
+            return $this->findOneBy('FSiTerytDbBundle:Place', array(
+                'id' => $this->getParentPlaceId()
+            ));
+        }
+
+        return null;
     }
 }

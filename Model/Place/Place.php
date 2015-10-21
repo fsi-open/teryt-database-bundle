@@ -41,6 +41,16 @@ class Place
     protected $streets;
 
     /**
+     * @var Place
+     */
+    protected $parentPlace;
+
+    /**
+     * @var Collection|Place[]
+     */
+    protected $childPlaces;
+
+    /**
      * @param int $id
      */
     function __construct($id)
@@ -119,5 +129,29 @@ class Place
     public function getStreets()
     {
         return $this->streets;
+    }
+
+    /**
+     * @return Place
+     */
+    public function getParentPlace()
+    {
+        return $this->parentPlace;
+    }
+
+    /**
+     * @param Place $parentPlace
+     */
+    public function setParentPlace(Place $parentPlace = null)
+    {
+        $this->parentPlace = $parentPlace;
+    }
+
+    /**
+     * @return Collection|Place[]
+     */
+    public function getChildPlaces()
+    {
+        return $this->childPlaces;
     }
 }

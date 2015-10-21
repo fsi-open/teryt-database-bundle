@@ -13,5 +13,8 @@
         <many-to-one field="community" target-entity="Community" inversed-by="places">
             <join-column name="community_code" referenced-column-name="code" nullable="false" />
         </many-to-one>
+        <many-to-one field="parentPlace" target-entity="Place" inversed-by="childPlaces">
+            <join-column name="parent_place_id" referenced-column-name="id" nullable="true" />
+        </many-to-one>
     </entity>
 </doctrine-mapping>
