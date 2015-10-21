@@ -134,8 +134,8 @@ class PlacesNodeConverter extends NodeConverter
             return $this->findOneBy('FSiTerytDbBundle:Place', array(
                 'id' => $this->getParentPlaceId()
             ));
-        } else {
-            return null;
         }
+
+        return null;
     }
 }
