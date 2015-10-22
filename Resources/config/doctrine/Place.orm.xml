@@ -7,6 +7,7 @@
         <id name="id" type="integer" />
         <field name="name" type="string" length="56" />
         <one-to-many field="streets" target-entity="Street" mapped-by="place" />
+        <one-to-many field="childPlaces" target-entity="Place" mapped-by="parentPlace" />
         <many-to-one field="type" target-entity="PlaceType" inversed-by="places">
             <join-column name="place_type" referenced-column-name="type" nullable="false" />
         </many-to-one>

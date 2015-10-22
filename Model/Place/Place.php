@@ -57,6 +57,7 @@ class Place
     {
         $this->id = $id;
         $this->streets = new ArrayCollection();
+        $this->childPlaces = new ArrayCollection();
     }
 
     /**
