@@ -7,7 +7,7 @@
         <id name="code" type="integer" />
         <field name="name" type="string" length="36" />
         <one-to-many field="places" target-entity="Place" mapped-by="community" />
-        <many-to-one field="type" target-entity="CommunityType" inversed-by="types">
+        <many-to-one field="type" target-entity="CommunityType" inversed-by="communities">
             <join-column name="community_type" referenced-column-name="type" nullable="false" />
         </many-to-one>
         <many-to-one field="district" target-entity="District" inversed-by="communities">
