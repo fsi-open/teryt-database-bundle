@@ -118,4 +118,12 @@ class Street
     {
         return $this->type;
     }
+
+    /**
+     * @return string
+     */
+    public function getFullName()
+    {
+        return join(' ', array($this->type, $this->additionalName, $this->name));
+    }
 }
