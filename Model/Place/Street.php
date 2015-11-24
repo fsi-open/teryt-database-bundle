@@ -124,6 +124,20 @@ class Street
      */
     public function getFullName()
     {
-        return join(' ', array($this->type, $this->additionalName, $this->name));
+        $fullName = array();
+
+        if (!empty($this->type)) {
+            $fullName[] = $this->type;
+        }
+
+        if (!empty($this->additionalName)) {
+            $fullName[] = $this->additionalName;
+        }
+
+        if (!empty($this->name !== null)) {
+            $fullName[] = $this->name;
+        }
+
+        return join(' ', $fullName);
     }
 }
