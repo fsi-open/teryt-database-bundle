@@ -63,7 +63,9 @@ class StreetsNodeConverter extends NodeConverter
      */
     private function getAdditionalName()
     {
-        return trim((string) $this->node->col[self::ADDITIONAL_NAME_CHILD_NODE]);
+        $additionalName = trim((string) $this->node->col[self::ADDITIONAL_NAME_CHILD_NODE]);
+
+        return $additionalName ?: null;
     }
 
     /**
