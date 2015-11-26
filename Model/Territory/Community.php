@@ -84,4 +84,12 @@ class Community extends Territory
     {
         return $this->places;
     }
+
+    /**
+     * @return string
+     */
+    public function getFullName()
+    {
+        return sprintf('%s (%s)', $this->name, $this->type->getName());
+    }
 }
