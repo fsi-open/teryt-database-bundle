@@ -155,4 +155,12 @@ class Place
     {
         return $this->childPlaces;
     }
+
+    /**
+     * @return string
+     */
+    public function getFullName()
+    {
+        return sprintf('%s (%s)', $this->name, $this->type->getName());
+    }
 }

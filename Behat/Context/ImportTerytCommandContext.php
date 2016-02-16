@@ -209,7 +209,7 @@ class ImportTerytCommandContext implements KernelAwareContext
             expect($entity->getId())->toBe((int) $row['Identity']);
             expect($entity->getName())->toBe($row['Name']);
             expect($entity->getType())->toBe($row['Type']);
-            expect($entity->getAdditionalName())->toBe($row['Additional name']);
+            expect((string) $entity->getAdditionalName())->toBe($row['Additional name']);
             expect($entity->getPlace()->getName())->toBe($row['Place']);
         }
     }

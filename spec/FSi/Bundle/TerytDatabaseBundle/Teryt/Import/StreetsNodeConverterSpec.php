@@ -80,7 +80,7 @@ EOT;
             ->willReturn($street);
 
         $street->setName('Księżycowa')->shouldBeCalled()->willReturn($street);
-        $street->setAdditionalName('')->shouldBeCalled()->willReturn($street);
+        $street->setAdditionalName(null)->shouldBeCalled()->willReturn($street);
         $street->setType('ul.')->shouldBeCalled()->willReturn($street);
 
         $this->beConstructedWith(new \SimpleXMLElement($xml), $om);
