@@ -12,20 +12,20 @@
     ],
     "require": {
         "php": ">=5.4",
-        "symfony/symfony": "~2.3",
-        "guzzle/guzzle": "3.7.*",
-        "hobnob/xml-stream-reader": "1.0.*",
-        "doctrine/doctrine-fixtures-bundle":    "2.2.*"
+        "symfony/symfony": "^2.3.39",
+        "guzzle/guzzle": "^3.7",
+        "hobnob/xml-stream-reader": "^1.0",
+        "doctrine/doctrine-fixtures-bundle": "^2.2"
     },
     "require-dev": {
         "ext-pdo_sqlite": "*",
-        "doctrine/doctrine-bundle": "1.2.*",
-        "doctrine/orm": ">=2.2.3,<2.4-dev",
-        "behat/behat": "~3.0",
-        "behat/symfony2-extension": "~2.0",
-        "behat/mink-extension": "*",
-        "behat/mink-browserkit-driver": "*",
-        "phpspec/phpspec": "2.0.*@dev",
+        "doctrine/doctrine-bundle": "^1.2",
+        "doctrine/orm": "^2.2.3",
+        "behat/behat": "^3.0",
+        "behat/symfony2-extension": "^2.0",
+        "behat/mink-extension": "^2.0",
+        "behat/mink-browserkit-driver": "^1.0",
+        "phpspec/phpspec": "^2.0",
         "bossa/phpspec2-expect": "dev-master"
     },
     "config": {
