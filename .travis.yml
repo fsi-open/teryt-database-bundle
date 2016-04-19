@@ -12,7 +12,8 @@ sudo:
 before_install:
   - phpenv config-rm xdebug.ini
   - composer self-update
-  - composer --prefer-dist update
+  - composer validate
+  - composer --prefer-source update
 
 script:
   - bin/phpspec run -f pretty
