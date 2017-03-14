@@ -3,6 +3,7 @@
 namespace FSi\Bundle\TerytDatabaseBundle\Behat\Context\Console;
 
 use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\StreamOutput;
@@ -51,9 +52,10 @@ class ApplicationTester
 
         $inputStream = $this->getInputStream();
         rewind($inputStream);
-        $this->application->getHelperSet()
-            ->get('dialog')
-            ->setInputStream($inputStream);
+
+        /** @var QuestionHelper $questionHelper */
+        $questionHelper = $this->application->getHelperSet()->get('question');
+        $questionHelper->setInputStream($inputStream);
 
         return $this->application->doRun($this->input, $this->output);
     }

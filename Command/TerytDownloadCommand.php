@@ -11,8 +11,8 @@ namespace FSi\Bundle\TerytDatabaseBundle\Command;
 
 use FSi\Bundle\TerytDatabaseBundle\Teryt\DownloadPageParser;
 use Guzzle\Common\Event;
-use Guzzle\Http\Client;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -45,18 +45,18 @@ abstract class TerytDownloadCommand extends ContainerAwareCommand
         $target = $this->getDownloadTargetFolder($input);
         $request = $this->createDownloadHttpRequest($input, $target);
 
-        $progressHelper = $this->getHelperSet()->get('progress');
-        $progressHelper->start($output, 100);
+        $progressBar = new ProgressBar($output, 100);
+        $progressBar->start();
 
         $request->getEventDispatcher()->addListener(
             'curl.callback.progress',
-            $this->getDownloadProgressCallbackFunction($output, $progressHelper)
+            $this->getDownloadProgressCallbackFunction($output, $progressBar)
         );
 
         $request->send();
 
-        $progressHelper->setCurrent(100, true);
-        $progressHelper->finish();
+        $progressBar->setProgress(100);
+        $progressBar->finish();
 
         $output->writeln("");
 
@@ -108,14 +108,15 @@ abstract class TerytDownloadCommand extends ContainerAwareCommand
 
     /**
      * @param OutputInterface $output
-     * @param $progressHelper
+     * @param ProgressBar $progressBar
+     *
      * @return callable
      */
-    protected function getDownloadProgressCallbackFunction(OutputInterface $output, $progressHelper)
+    protected function getDownloadProgressCallbackFunction(OutputInterface $output, ProgressBar $progressBar)
     {
         $fileSize = $this->getFileRoundedSize();
 
-        return function (Event $event) use ($output, $fileSize, $progressHelper) {
+        return function (Event $event) use ($output, $fileSize, $progressBar) {
             if (version_compare(curl_version()['version'], '7.32') === 1) {
                 $downloaded = $event['upload_size'];
             } else {
@@ -132,7 +133,7 @@ abstract class TerytDownloadCommand extends ContainerAwareCommand
                 return;
             }
 
-            $progressHelper->setCurrent((int)$percent, true);
+            $progressBar->setProgress((int) $percent);
         };
     }
 }
