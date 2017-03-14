@@ -37,7 +37,6 @@
     "autoload": {
         "psr-4": { "FSi\\Bundle\\TerytDatabaseBundle\\": "" }
     },
-    "target-dir" : "FSi/Bundle/TerytDatabaseBundle",
     "extra": {
         "branch-alias": {
             "dev-master": "1.0-dev"
