@@ -13,7 +13,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Hobnob\XmlStreamReader\Parser;
 use SimpleXMLElement;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Helper\ProgressHelper;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -23,6 +23,11 @@ abstract class TerytImportCommand extends ContainerAwareCommand
 
     /** @var resource */
     protected $handle;
+
+    /**
+     * @var ProgressBar
+     */
+    private $progressBar;
 
     /**
      * @param SimpleXMLElement $node
@@ -41,12 +46,14 @@ abstract class TerytImportCommand extends ContainerAwareCommand
         }
 
         $xmlParser = $this->createXmlParser();
-        $this->getProgressHelper()->start($output, filesize($xmlFile));
+
+        $this->progressBar = new ProgressBar($output, filesize($xmlFile));
+        $this->progressBar->start();
 
         $this->importXmlFile($xmlParser, $xmlFile);
 
         $this->flushAndClear();
-        $this->getProgressHelper()->finish();
+        $this->progressBar->finish();
 
         return 0;
     }
@@ -98,7 +105,7 @@ abstract class TerytImportCommand extends ContainerAwareCommand
 
     private function updateProgressHelper()
     {
-        $this->getProgressHelper()->setCurrent(ftell($this->handle), false);
+        $this->progressBar->setProgress(ftell($this->handle));
     }
 
     private function flushAndClear()
@@ -124,13 +131,5 @@ abstract class TerytImportCommand extends ContainerAwareCommand
     private function getObjectManager()
     {
         return $this->getContainer()->get('doctrine')->getManager();
-    }
-
-    /**
-     * @return ProgressHelper
-     */
-    private function getProgressHelper()
-    {
-        return $this->getHelperSet()->get('progress');
     }
 }
