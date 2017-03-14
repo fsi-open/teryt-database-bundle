@@ -117,7 +117,7 @@ abstract class TerytDownloadCommand extends ContainerAwareCommand
         $fileSize = $this->getFileRoundedSize();
 
         return function (Event $event) use ($output, $fileSize, $progressBar) {
-            if (version_compare(curl_version()['version'], '7.32') === 1) {
+            if (version_compare(curl_version()['version'], '7.32', '<=')) {
                 $downloaded = $event['upload_size'];
             } else {
                 $downloaded = $event['downloaded'];
