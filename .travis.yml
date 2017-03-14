@@ -5,17 +5,14 @@ sudo: false
 matrix:
     include:
         - php: 7.0
-          env: SYMFONY_VERSION='2.7.*'
+          env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable'
         - php: 7.0
-          env: SYMFONY_VERSION='2.8.*'
-        - php: 7.0
-          env: SYMFONY_VERSION='3.2.*'
 
 before_install:
     - composer self-update
-    - composer --no-update require symfony/symfony:${SYMFONY_VERSION}
 
-install: composer update
+install:
+    - composer update $COMPOSER_FLAGS
 
 script:
   - bin/phpspec run -f pretty
