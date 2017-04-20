@@ -1,19 +1,19 @@
-#Teryt Database Bundle
+# Teryt Database Bundle
 
-Teryt is Poland territorial division database available at http://www.stat.gov.pl/broker/access/prefile/listPreFiles.jspa as a xml files.
-This bundle adds commands that download files from teryt page, parse xml files and insert data into database.
+Teryt is Poland territorial division database available at http://www.stat.gov.pl/broker/access/prefile/listPreFiles.jspa as a set of XML files.
+This bundle adds commands that download, parse and import the XML files from the Teryt page into your database.
 
 ## Installation
 
-Add to your composer.json file following line
+Add to your `composer.json` file following line
 
-```
+```json
 "require": {
-    "fsi/teryt-database-bundle": "1.0.*@dev"
+    "fsi/teryt-database-bundle": "2.0.*@dev"
 }
 ```
 
-Register bundles in AppKernel.php
+Register bundles in `AppKernel.php`
 
 ```php
 public function registerBundles()
@@ -29,7 +29,7 @@ public function registerBundles()
 
 From now commands should be available in your application.
 
-## Download xml files from teryt page
+## Download XML files from teryt page
 
 ```
 $ cd project
@@ -39,14 +39,14 @@ $ php app/console teryt:download:places
 $ php app/console teryt:download:streets
 ```
 
-All above commands have additional argument ``--target``. This allows you to download files in other place than
+All above commands have an additional argument ``--target``, that allows you to download files in a place other than
 ``"%kernel.root_dir%/teryt/`` (default download target folder).
 
-## Import data from xml files to database
+## Import data from XML files to database
 
-First you need to unzip downloaded .zip files.
+First you need to unzip the downloaded .zip files.
 
-```
+```bash
 $ cd project/app/teryt
 $ unzip territorial-division.zip
 $ unzip places-dictionary.zip
@@ -54,9 +54,9 @@ $ unzip places.zip
 $ unzip streets.zip
 ```
 
-It is important to execute following commands in given order:
+It is important to execute following commands in the given order:
 
-```
+```bash
 $ cd project
 $ php app/console doctrine:schema:update --force
 $ php app/console doctrine:fixtures:load
