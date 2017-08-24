@@ -10,40 +10,34 @@
 namespace FSi\Bundle\TerytDatabaseBundle\Command;
 
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class TerytDownloadPlacesDictionaryDatabaseCommand extends TerytDownloadCommand
 {
     protected function configure()
     {
         $this->setName('teryt:download:places-dictionary')
-            ->setDescription('Download teryt places dictionary database files')
+            ->setDescription('Download teryt places dictionary (WMRODZ) database files')
             ->addArgument(
                 'target',
                 InputArgument::OPTIONAL,
                 'Default target path where downloader will save teryt database file'
-            )->addArgument(
+            )
+            ->addArgument(
                 'filename',
                 InputArgument::OPTIONAL,
-                'Default places dictionary file name',
-                'places-dictionary'
+                'Default target file where downloader will save teryt database file',
+                'places-dictionary.zip'
             );
     }
 
-    /**
-     * @return string
-     */
-    protected function getFileDownloadUrl()
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
-        return $this->getTerytPageParser()
-            ->getPlacesDictionaryFileUrl($this->getContainer()->getParameter('fsi_teryt_db.files_list_page'));
-    }
-
-    /**
-     * @return int
-     */
-    protected function getFileRoundedSize()
-    {
-        return $this->getTerytPageParser()
-            ->getPlacesDictionaryFileRoundedSize($this->getContainer()->getParameter('fsi_teryt_db.files_list_page'));
+        $this->saveFile(
+            $this->getApiClient()->getPlacesDictionaryData(),
+            $input->getArgument('target') ?? $this->getDefaultTargetPath(),
+            $input->getArgument('filename')
+        );
     }
 }

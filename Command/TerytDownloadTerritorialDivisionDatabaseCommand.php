@@ -10,40 +10,34 @@
 namespace FSi\Bundle\TerytDatabaseBundle\Command;
 
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class TerytDownloadTerritorialDivisionDatabaseCommand extends TerytDownloadCommand
 {
     protected function configure()
     {
         $this->setName('teryt:download:territorial-division')
-            ->setDescription('Download teryt territorial division database files')
+            ->setDescription('Download teryt territorial division (TERC) database files')
             ->addArgument(
                 'target',
                 InputArgument::OPTIONAL,
                 'Default target path where downloader will save teryt database file'
-            )->addArgument(
+            )
+            ->addArgument(
                 'filename',
                 InputArgument::OPTIONAL,
-                'Default territorial division file name',
-                'territorial-division'
+                'Default target file where downloader will save teryt database file',
+                'territorial-division.zip'
             );
     }
 
-    /**
-     * @return string
-     */
-    protected function getFileDownloadUrl()
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
-        return $this->getTerytPageParser()
-            ->getTerritorialDivisionFileUrl($this->getContainer()->getParameter('fsi_teryt_db.files_list_page'));
-    }
-
-    /**
-     * @return int
-     */
-    protected function getFileRoundedSize()
-    {
-        return $this->getTerytPageParser()
-            ->getTerritorialDivisionFileRoundedSize($this->getContainer()->getParameter('fsi_teryt_db.files_list_page'));
+        $this->saveFile(
+            $this->getApiClient()->getTerritorialDivisionData(),
+            $input->getArgument('target') ?? $this->getDefaultTargetPath(),
+            $input->getArgument('filename')
+        );
     }
 }
