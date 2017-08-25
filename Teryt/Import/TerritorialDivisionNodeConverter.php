@@ -10,21 +10,16 @@
 namespace FSi\Bundle\TerytDatabaseBundle\Teryt\Import;
 
 use FSi\Bundle\TerytDatabaseBundle\Entity\Community;
+use FSi\Bundle\TerytDatabaseBundle\Entity\CommunityType;
 use FSi\Bundle\TerytDatabaseBundle\Entity\District;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Province;
 use FSi\Bundle\TerytDatabaseBundle\Exception\TerritorialDivisionNodeConverterException;
 
 class TerritorialDivisionNodeConverter extends NodeConverter
 {
-    const WOJ_CHILD_NODE = 0;
-    const POW_CHILD_NODE = 1;
-    const GMI_CHILD_NODE = 2;
-    const TYPE_CHILD_NODE = 3;
-    const NAZWA_CHILD_NODE = 4;
-
     /**
-     * @throws \FSi\Bundle\TerytDatabaseBundle\Exception\TerritorialDivisionNodeConverterException
-     * @return \FSi\Bundle\TerytDatabaseBundle\Entity\Community|\FSi\Bundle\TerytDatabaseBundle\Entity\District|\FSi\Bundle\TerytDatabaseBundle\Entity\Province
+     * @throws TerritorialDivisionNodeConverterException
+     * @return Community|District|Province
      */
     public function convertToEntity()
     {
@@ -68,7 +63,7 @@ class TerritorialDivisionNodeConverter extends NodeConverter
     }
 
     /**
-     * @return \FSi\Bundle\TerytDatabaseBundle\Entity\Province
+     * @return Province
      */
     private function convertToProvince()
     {
@@ -79,11 +74,11 @@ class TerritorialDivisionNodeConverter extends NodeConverter
     }
 
     /**
-     * @return \FSi\Bundle\TerytDatabaseBundle\Entity\District
+     * @return District
      */
     private function convertToDistrict()
     {
-        $province = $this->findOneBy('FSiTerytDbBundle:Province', array(
+        $province = $this->findOneBy(Province::class, array(
             'code' => $this->getProvinceCode()
         ));
 
@@ -93,70 +88,72 @@ class TerritorialDivisionNodeConverter extends NodeConverter
     }
 
     /**
-     * @return \FSi\Bundle\TerytDatabaseBundle\Entity\Community
+     * @return Community
      */
     private function convertToCommunity()
     {
-        $district = $this->findOneBy('FSiTerytDbBundle:District', array(
-            'code' => (int) sprintf("%1d%02d", $this->getProvinceCode(), $this->getDistrictCode())
+        $district = $this->findOneBy(District::class, array(
+            'code' => (int) sprintf('%1d%02d', $this->getProvinceCode(), $this->getDistrictCode())
         ));
 
-        $type = $this->findOneBy('FSiTerytDbBundle:CommunityType', array(
-            'type' => (int) $this->node->col[self::TYPE_CHILD_NODE]
+        $type = $this->findOneBy(CommunityType::class, array(
+            'type' => (int) $this->node->rodz->__toString()
         ));
 
-        return $this->createCommunityEntity()
-            ->setName($this->getTerritoryName())
-            ->setType($type)
-            ->setDistrict($district);
+        $community = $this->createCommunityEntity();
+        $community->setName($this->getTerritoryName());
+        $community->setType($type);
+        $community->setDistrict($district);
+
+        return $community;
     }
 
     /**
-     * @return \FSi\Bundle\TerytDatabaseBundle\Entity\Province
+     * @return Province
      */
     private function createProvinceEntity()
     {
-        return $this->findOneBy('FSiTerytDbBundle:Province', array(
+        return $this->findOneBy(Province::class, array(
             'code' => $this->getProvinceCode()
         )) ?: new Province($this->getProvinceCode());
     }
 
     /**
-     * @return \FSi\Bundle\TerytDatabaseBundle\Entity\District
+     * @return District
      */
     private function createDistrictEntity()
     {
         $districtCode = (int) sprintf('%d%02d', $this->getProvinceCode(), $this->getDistrictCode());
 
-        return $this->findOneBy('FSiTerytDbBundle:District', array(
+        return $this->findOneBy(District::class, array(
             'code' => $districtCode
         )) ?: new District($districtCode);
     }
 
     /**
-     * @return \FSi\Bundle\TerytDatabaseBundle\Entity\Community
+     * @return Community
      */
     private function createCommunityEntity()
     {
         $communityCode = (int) sprintf(
-            "%d%02d%02d%1d",
+            '%d%02d%02d%1d',
             $this->getProvinceCode(),
             $this->getDistrictCode(),
             $this->getCommunityCode(),
             $this->getCommunityType()
         );
 
-        return $this->findOneBy('FSiTerytDbBundle:Community', array(
+        return $this->findOneBy(Community::class, array(
             'code' => $communityCode
         )) ?: new Community($communityCode);
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getDistrictCode()
     {
-        return (int) $this->node->col[self::POW_CHILD_NODE];
+        return (int) $this->node->pow->__toString();
     }
 
     /**
@@ -164,15 +161,15 @@ class TerritorialDivisionNodeConverter extends NodeConverter
      */
     private function hasProvinceCode()
     {
-        return !empty($this->node->col[self::WOJ_CHILD_NODE]);
+        return !empty(trim($this->node->woj->__toString()));
     }
 
     /**
-     * @return string
+     * @return int
      */
     private function getProvinceCode()
     {
-        return (int) $this->node->col[self::WOJ_CHILD_NODE];
+        return (int) $this->node->woj->__toString();
     }
 
     /**
@@ -180,7 +177,7 @@ class TerritorialDivisionNodeConverter extends NodeConverter
      */
     public function hasDistrictCode()
     {
-        return !empty($this->node->col[self::POW_CHILD_NODE]);
+        return !empty(trim($this->node->pow->__toString()));
     }
 
     /**
@@ -188,15 +185,15 @@ class TerritorialDivisionNodeConverter extends NodeConverter
      */
     public function hasCommunityCode()
     {
-        return !empty($this->node->col[self::GMI_CHILD_NODE]);
+        return !empty(trim($this->node->gmi->__toString()));
     }
 
     /**
-     * @return string
+     * @return int
      */
     private function getCommunityCode()
     {
-        return (int) $this->node->col[self::GMI_CHILD_NODE];
+        return (int) $this->node->gmi->__toString();
     }
 
     /**
@@ -204,14 +201,14 @@ class TerritorialDivisionNodeConverter extends NodeConverter
      */
     private function getTerritoryName()
     {
-        return (string) $this->node->col[self::NAZWA_CHILD_NODE];
+        return (string) $this->node->nazwa;
     }
 
     /**
-     * @return string
+     * @return int
      */
     private function getCommunityType()
     {
-        return (int) $this->node->col[self::TYPE_CHILD_NODE];
+        return (int) $this->node->rodz->__toString();
     }
 }

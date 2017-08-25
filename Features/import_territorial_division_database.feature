@@ -11,13 +11,16 @@ Feature: Parse territorial division xml file and import data into database
     <teryt>
       <catalog name="TERC" type="all" date="2013-01-01">
         <row>
-          <col name="WOJ">02</col>
-          <col name="POW"/>
-          <col name="GMI"/>
-          <col name="RODZ"/>
-          <col name="NAZWA">DOLNOŚLĄSKIE</col>
-          <col name="NAZDOD">województwo</col>
-          <col name="STAN_NA">2013-01-01</col>
+          <WOJ>02</WOJ>
+          <POW>
+          </POW>
+          <GMI>
+          </GMI>
+          <RODZ>
+          </RODZ>
+          <NAZWA>DOLNOŚLĄSKIE</NAZWA>
+          <NAZDOD>województwo</NAZDOD>
+          <STAN_NA>2013-01-01</STAN_NA>
         </row>
       </catalog>
     </teryt>
@@ -35,13 +38,16 @@ Feature: Parse territorial division xml file and import data into database
     <teryt>
       <catalog name="TERC" type="all" date="2013-01-01">
         <row>
-          <col name="WOJ">02</col>
-          <col name="POW"/>
-          <col name="GMI"/>
-          <col name="RODZ"/>
-          <col name="NAZWA">Dolnośląskie</col>
-          <col name="NAZDOD">województwo</col>
-          <col name="STAN_NA">2013-01-01</col>
+          <WOJ>02</WOJ>
+          <POW>
+          </POW>
+          <GMI>
+          </GMI>
+          <RODZ>
+          </RODZ>
+          <NAZWA>Dolnośląskie</NAZWA>
+          <NAZDOD>województwo</NAZDOD>
+          <STAN_NA>2013-01-01</STAN_NA>
         </row>
       </catalog>
     </teryt>
@@ -61,13 +67,15 @@ Feature: Parse territorial division xml file and import data into database
     <teryt>
       <catalog name="TERC" type="all" date="2013-01-01">
         <row>
-          <col name="WOJ">02</col>
-          <col name="POW">01</col>
-          <col name="GMI"/>
-          <col name="RODZ"/>
-          <col name="NAZWA">bolesławiecki</col>
-          <col name="NAZDOD">powiat</col>
-          <col name="STAN_NA">2013-01-01</col>
+          <WOJ>02</WOJ>
+          <POW>01</POW>
+          <GMI>
+          </GMI>
+          <RODZ>
+          </RODZ>
+          <NAZWA>bolesławiecki</NAZWA>
+          <NAZDOD>powiat</NAZDOD>
+          <STAN_NA>2013-01-01</STAN_NA>
         </row>
       </catalog>
     </teryt>
@@ -88,13 +96,15 @@ Feature: Parse territorial division xml file and import data into database
     <teryt>
       <catalog name="TERC" type="all" date="2013-01-01">
         <row>
-          <col name="WOJ">02</col>
-          <col name="POW">01</col>
-          <col name="GMI"/>
-          <col name="RODZ"/>
-          <col name="NAZWA">bolesławiecki</col>
-          <col name="NAZDOD">powiat</col>
-          <col name="STAN_NA">2013-01-01</col>
+          <WOJ>02</WOJ>
+          <POW>01</POW>
+          <GMI>
+          </GMI>
+          <RODZ>
+          </RODZ>
+          <NAZWA>bolesławiecki</NAZWA>
+          <NAZDOD>powiat</NAZDOD>
+          <STAN_NA>2013-01-01</STAN_NA>
         </row>
       </catalog>
     </teryt>
@@ -118,13 +128,13 @@ Feature: Parse territorial division xml file and import data into database
     <teryt>
       <catalog name="TERC" type="all" date="2013-01-01">
         <row>
-          <col name="WOJ">02</col>
-          <col name="POW">01</col>
-          <col name="GMI">01</col>
-          <col name="RODZ">1</col>
-          <col name="NAZWA">Bolesławiec</col>
-          <col name="NAZDOD">gmina miejska</col>
-          <col name="STAN_NA">2013-01-01</col>
+          <WOJ>02</WOJ>
+          <POW>01</POW>
+          <GMI>01</GMI>
+          <RODZ>1</RODZ>
+          <NAZWA>Bolesławiec</NAZWA>
+          <NAZDOD>gmina miejska</NAZDOD>
+          <STAN_NA>2013-01-01</STAN_NA>
         </row>
       </catalog>
     </teryt>
@@ -148,13 +158,13 @@ Feature: Parse territorial division xml file and import data into database
     <teryt>
       <catalog name="TERC" type="all" date="2013-01-01">
         <row>
-          <col name="WOJ">02</col>
-          <col name="POW">01</col>
-          <col name="GMI">01</col>
-          <col name="RODZ">1</col>
-          <col name="NAZWA">BOLESŁAWIEC</col>
-          <col name="NAZDOD">gmina miejska</col>
-          <col name="STAN_NA">2013-01-01</col>
+          <WOJ>02</WOJ>
+          <POW>01</POW>
+          <GMI>01</GMI>
+          <RODZ>1</RODZ>
+          <NAZWA>BOLESŁAWIEC</NAZWA>
+          <NAZDOD>gmina miejska</NAZDOD>
+          <STAN_NA>2013-01-01</STAN_NA>
         </row>
       </catalog>
     </teryt>

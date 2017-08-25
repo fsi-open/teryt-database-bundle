@@ -39,7 +39,7 @@ class Territory
 
     /**
      * @param string $name
-     * @return Territory
+     * @return self
      */
     public function setName($name)
     {

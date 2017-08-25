@@ -10,16 +10,16 @@ Feature: Parse places xml file and import data into database
     <teryt>
       <catalog name="SIMC" type="all" date="2013-03-06">
         <row>
-          <col name="WOJ">04</col>
-          <col name="POW">11</col>
-          <col name="GMI">05</col>
-          <col name="RODZ_GMI">5</col>
-          <col name="RM">01</col>
-          <col name="MZ">1</col>
-          <col name="NAZWA">Rzeczyca</col>
-          <col name="SYM">0867650</col>
-          <col name="SYMPOD">0867650</col>
-          <col name="STAN_NA">2013-03-06</col>
+          <WOJ>04</WOJ>
+          <POW>11</POW>
+          <GMI>05</GMI>
+          <RODZ_GMI>5</RODZ_GMI>
+          <RM>01</RM>
+          <MZ>1</MZ>
+          <NAZWA>Rzeczyca</NAZWA>
+          <SYM>0867650</SYM>
+          <SYMPOD>0867650</SYMPOD>
+          <STAN_NA>2013-03-06</STAN_NA>
         </row>
       </catalog>
     </teryt>
@@ -45,28 +45,28 @@ Feature: Parse places xml file and import data into database
     <teryt>
       <catalog name="SIMC" type="all" date="2013-03-06">
         <row>
-          <col name="WOJ">04</col>
-          <col name="POW">11</col>
-          <col name="GMI">05</col>
-          <col name="RODZ_GMI">5</col>
-          <col name="RM">01</col>
-          <col name="MZ">1</col>
-          <col name="NAZWA">Rzeczyca Górna</col>
-          <col name="SYM">0867643</col>
-          <col name="SYMPOD">0867643</col>
-          <col name="STAN_NA">2013-03-06</col>
+          <WOJ>04</WOJ>
+          <POW>11</POW>
+          <GMI>05</GMI>
+          <RODZ_GMI>5</RODZ_GMI>
+          <RM>01</RM>
+          <MZ>1</MZ>
+          <NAZWA>Rzeczyca Górna</NAZWA>
+          <SYM>0867643</SYM>
+          <SYMPOD>0867643</SYMPOD>
+          <STAN_NA>2013-03-06</STAN_NA>
         </row>
         <row>
-          <col name="WOJ">04</col>
-          <col name="POW">11</col>
-          <col name="GMI">05</col>
-          <col name="RODZ_GMI">5</col>
-          <col name="RM">01</col>
-          <col name="MZ">1</col>
-          <col name="NAZWA">Rzeczyca</col>
-          <col name="SYM">0867650</col>
-          <col name="SYMPOD">0867643</col>
-          <col name="STAN_NA">2013-03-06</col>
+          <WOJ>04</WOJ>
+          <POW>11</POW>
+          <GMI>05</GMI>
+          <RODZ_GMI>5</RODZ_GMI>
+          <RM>01</RM>
+          <MZ>1</MZ>
+          <NAZWA>Rzeczyca</NAZWA>
+          <SYM>0867650</SYM>
+          <SYMPOD>0867643</SYMPOD>
+          <STAN_NA>2013-03-06</STAN_NA>
         </row>
       </catalog>
     </teryt>
