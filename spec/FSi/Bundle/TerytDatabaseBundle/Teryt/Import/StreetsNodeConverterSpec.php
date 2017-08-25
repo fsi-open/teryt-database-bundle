@@ -23,16 +23,17 @@ class StreetsNodeConverterSpec extends ObjectBehavior
     {
         $xml = <<<EOT
 <row>
-    <col name="WOJ">02</col>
-    <col name="POW">23</col>
-    <col name="GMI">09</col>
-    <col name="RODZ_GMI">2</col>
-    <col name="SYM">0884849</col>
-    <col name="SYM_UL">10268</col>
-    <col name="CECHA">ul.</col>
-    <col name="NAZWA_1">Księżycowa </col>
-    <col name="NAZWA_2"/>
-    <col name="STAN_NA">2013-10-10</col>
+    <woj>02</woj>
+    <pow>23</pow>
+    <gmi>09</gmi>
+    <rodz_gmi>2</rodz_gmi>
+    <sym>0884849</sym>
+    <sym_ul>10268</sym_ul>
+    <cecha>ul.</cecha>
+    <nazwa_1>Księżycowa </nazwa_1>
+    <nazwa_2>
+    </nazwa_2>
+    <stan_na>2013-10-10</stan_na>
 </row>
 EOT;
         $place = new Place(884849);
@@ -56,16 +57,17 @@ EOT;
     ) {
         $xml = <<<EOT
 <row>
-    <col name="WOJ">02</col>
-    <col name="POW">23</col>
-    <col name="GMI">09</col>
-    <col name="RODZ_GMI">2</col>
-    <col name="SYM">0884849</col>
-    <col name="SYM_UL">10268</col>
-    <col name="CECHA">ul.</col>
-    <col name="NAZWA_1">Księżycowa </col>
-    <col name="NAZWA_2"/>
-    <col name="STAN_NA">2013-10-10</col>
+    <woj>02</woj>
+    <pow>23</pow>
+    <gmi>09</gmi>
+    <rodz_gmi>2</rodz_gmi>
+    <sym>0884849</sym>
+    <sym_ul>10268</sym_ul>
+    <cecha>ul.</cecha>
+    <nazwa_1>Księżycowa </nazwa_1>
+    <nazwa_2>
+    </nazwa_2>
+    <stan_na>2013-10-10</stan_na>
 </row>
 EOT;
         $place = new Place(884849);

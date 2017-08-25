@@ -24,16 +24,16 @@ class PlacesNodeConverterSpec extends ObjectBehavior
     {
         $xml = <<<EOT
 <row>
-    <col name="WOJ">04</col>
-    <col name="POW">11</col>
-    <col name="GMI">05</col>
-    <col name="RODZ_GMI">5</col>
-    <col name="RM">01</col>
-    <col name="MZ">1</col>
-    <col name="NAZWA">Rzeczyca</col>
-    <col name="SYM">0867650</col>
-    <col name="SYMPOD">0867650</col>
-    <col name="STAN_NA">2013-03-06</col>
+    <woj>04</woj>
+    <pow>11</pow>
+    <gmi>05</gmi>
+    <rodz_gmi>5</rodz_gmi>
+    <rm>01</rm>
+    <mz>1</mz>
+    <nazwa>Rzeczyca</nazwa>
+    <sym>0867650</sym>
+    <sympod>0867650</sympod>
+    <stan_na>2013-03-06</stan_na>
 </row>
 EOT;
 
@@ -64,16 +64,16 @@ EOT;
     ) {
         $xml = <<<EOT
 <row>
-    <col name="WOJ">04</col>
-    <col name="POW">11</col>
-    <col name="GMI">05</col>
-    <col name="RODZ_GMI">5</col>
-    <col name="RM">01</col>
-    <col name="MZ">1</col>
-    <col name="NAZWA">Rzeczyca</col>
-    <col name="SYM">0867650</col>
-    <col name="SYMPOD">0867650</col>
-    <col name="STAN_NA">2013-03-06</col>
+    <woj>04</woj>
+    <pow>11</pow>
+    <gmi>05</gmi>
+    <rodz_gmi>5</rodz_gmi>
+    <rm>01</rm>
+    <mz>1</mz>
+    <nazwa>Rzeczyca</nazwa>
+    <sym>0867650</sym>
+    <sympod>0867650</sympod>
+    <stan_na>2013-03-06</stan_na>
 </row>
 EOT;
 
@@ -108,16 +108,16 @@ EOT;
     ) {
         $xml = <<<EOT
 <row>
-    <col name="WOJ">04</col>
-    <col name="POW">11</col>
-    <col name="GMI">05</col>
-    <col name="RODZ_GMI">5</col>
-    <col name="RM">01</col>
-    <col name="MZ">1</col>
-    <col name="NAZWA">Rzeczyca</col>
-    <col name="SYM">0867650</col>
-    <col name="SYMPOD">0867643</col>
-    <col name="STAN_NA">2013-03-06</col>
+    <woj>04</woj>
+    <pow>11</pow>
+    <gmi>05</gmi>
+    <rodz_gmi>5</rodz_gmi>
+    <rm>01</rm>
+    <mz>1</mz>
+    <nazwa>Rzeczyca</nazwa>
+    <sym>0867650</sym>
+    <sympod>0867643</sympod>
+    <stan_na>2013-03-06</stan_na>
 </row>
 EOT;
 
