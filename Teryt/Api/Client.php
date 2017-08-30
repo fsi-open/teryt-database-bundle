@@ -75,14 +75,7 @@ class Client
 
     private function makeCall($functionName, array $args)
     {
-        $defaultSocketTimeout = ini_get('default_socket_timeout');
-        ini_set('default_socket_timeout', 30);
-
-        $response = $this->soapClient->__soapCall($functionName, [$args]);
-
-        ini_set('default_socket_timeout', $defaultSocketTimeout);
-
-        return $response;
+        return $this->soapClient->__soapCall($functionName, [$args]);
     }
 
     private function prepareTempFile($data) : SplTempFileObject
