@@ -100,6 +100,10 @@ class TerritorialDivisionNodeConverter extends NodeConverter
             'type' => (int) $this->node->rodz->__toString()
         ));
 
+        if (!$type) {
+            throw new \RuntimeException(sprintf('Unable to find community type "%s"', $this->node->rodz));
+        }
+
         $community = $this->createCommunityEntity();
         $community->setName($this->getTerritoryName());
         $community->setType($type);

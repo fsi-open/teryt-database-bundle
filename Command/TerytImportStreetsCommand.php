@@ -35,4 +35,12 @@ class TerytImportStreetsCommand extends TerytImportCommand
     {
         return new StreetsNodeConverter($node, $om);
     }
+
+    /**
+     * @return string
+     */
+    protected function getRecordXPath()
+    {
+        return '/ulic/catalog/row';
+    }
 }

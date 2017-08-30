@@ -7,7 +7,7 @@ Feature: Parse places xml file and import data into database
     Given "places.xml" file have following content:
     """
     <?xml version="1.0" encoding="UTF-8"?>
-    <teryt>
+    <simc>
       <catalog name="SIMC" type="all" date="2013-03-06">
         <row>
           <WOJ>04</WOJ>
@@ -22,7 +22,7 @@ Feature: Parse places xml file and import data into database
           <STAN_NA>2013-03-06</STAN_NA>
         </row>
       </catalog>
-    </teryt>
+    </simc>
     """
     And following province was already imported
       | Code | Name               |
@@ -42,7 +42,7 @@ Feature: Parse places xml file and import data into database
     Given "places.xml" file have following content:
     """
     <?xml version="1.0" encoding="UTF-8"?>
-    <teryt>
+    <simc>
       <catalog name="SIMC" type="all" date="2013-03-06">
         <row>
           <WOJ>04</WOJ>
@@ -69,7 +69,7 @@ Feature: Parse places xml file and import data into database
           <STAN_NA>2013-03-06</STAN_NA>
         </row>
       </catalog>
-    </teryt>
+    </simc>
     """
     And following province was already imported
       | Code | Name               |

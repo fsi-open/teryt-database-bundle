@@ -36,6 +36,11 @@ abstract class TerytImportCommand extends ContainerAwareCommand
      */
     abstract public function getNodeConverter(SimpleXMLElement $node, ObjectManager $om);
 
+    /**
+     * @return string
+     */
+    abstract protected function getRecordXPath();
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $xmlFile = $input->getArgument('file');
@@ -67,7 +72,7 @@ abstract class TerytImportCommand extends ContainerAwareCommand
         $xmlParser = new Parser();
 
         return $xmlParser->registerCallback(
-            '/teryt/catalog/row',
+            $this->getRecordXPath(),
             $this->getNodeParserCallbackFunction()
         );
     }
