@@ -25,7 +25,7 @@ doctrine:
         auto_mapping: true
 
 fsi_teryt_db:
-    teryt_ws1_api:
+    api:
         url: "https://uslugaterytws1test.stat.gov.pl/wsdl/terytws1.wsdl"
         username: "TestPubliczny"
         password: "1234abcd"

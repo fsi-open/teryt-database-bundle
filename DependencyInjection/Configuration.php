@@ -27,7 +27,7 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->arrayNode('teryt_ws1_api')
+                ->arrayNode('api')
                     ->children()
                         ->scalarNode('url')->end()
                         ->scalarNode('username')->end()

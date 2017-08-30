@@ -1,7 +1,7 @@
 # Teryt Database Bundle
 
-Teryt is Poland territorial division database available at http://www.stat.gov.pl/broker/access/prefile/listPreFiles.jspa as a set of XML files.
-This bundle adds commands that download, parse and import the XML files from the Teryt page into your database.
+Teryt is Poland territorial division database available at http://eteryt.stat.gov.pl
+This bundle adds commands that download files from teryt API, parse xml files and insert data into database.
 
 ## Installation
 
@@ -9,7 +9,7 @@ Add to your `composer.json` file following line
 
 ```json
 "require": {
-    "fsi/teryt-database-bundle": "2.0.*@dev"
+    "fsi/teryt-database-bundle": "^3.0"
 }
 ```
 
@@ -25,6 +25,16 @@ public function registerBundles()
         // ...
     );
 }
+```
+
+Add following configuration:
+
+```yaml
+fsi_teryt_db:
+    api:
+        url: "https://uslugaterytws1.stat.gov.pl/wsdl/terytws1.wsdl"
+        username: "<your username>"
+        password: "<your password>"
 ```
 
 From now commands should be available in your application.
