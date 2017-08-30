@@ -7,7 +7,7 @@ Feature: Parse places dictionary xml file and import data into database
     Given "places-dictionary.xml" file have following content:
     """
     <?xml version="1.0" encoding="UTF-8"?>
-    <teryt>
+    <simc>
       <catalog name="SIMC" type="all" date="2013-02-28">
         <row>
           <RM>01</RM>
@@ -25,7 +25,7 @@ Feature: Parse places dictionary xml file and import data into database
           <STAN_NA>2013-02-28</STAN_NA>
         </row>
       </catalog>
-    </teryt>
+    </simc>
     """
     And places dictionary table in database is empty
     When I successfully run console command "teryt:import:places-dictionary" with argument "--file=teryt/places-dictionary.xml"
@@ -39,7 +39,7 @@ Feature: Parse places dictionary xml file and import data into database
     Given "places-dictionary.xml" file have following content:
     """
     <?xml version="1.0" encoding="UTF-8"?>
-    <teryt>
+    <simc>
       <catalog name="SIMC" type="all" date="2013-02-28">
         <row>
           <RM>01</RM>
@@ -57,7 +57,7 @@ Feature: Parse places dictionary xml file and import data into database
           <STAN_NA>2013-02-28</STAN_NA>
         </row>
       </catalog>
-    </teryt>
+    </simc>
     """
     And places dictionary table in database is empty
     Then following places dictionary exist in database

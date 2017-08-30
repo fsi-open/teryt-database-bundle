@@ -8,7 +8,7 @@ Feature: Parse streets xml file and import data into database
     Given "streets.xml" file have following content:
     """
     <?xml version="1.0" encoding="UTF-8"?>
-    <teryt>
+    <ulic>
       <catalog name="ULIC" type="all" date="2013-10-10">
         <row>
           <WOJ>02</WOJ>
@@ -36,7 +36,7 @@ Feature: Parse streets xml file and import data into database
           <STAN_NA>2013-10-10</STAN_NA>
         </row>
       </catalog>
-    </teryt>
+    </ulic>
     """
     And following province was already imported
       | Code | Name         |
@@ -64,7 +64,7 @@ Feature: Parse streets xml file and import data into database
     Given "streets.xml" file have following content:
     """
     <?xml version="1.0" encoding="UTF-8"?>
-    <teryt>
+    <ulic>
       <catalog name="ULIC" type="all" date="2013-10-10">
         <row>
           <WOJ>02</WOJ>
@@ -79,7 +79,7 @@ Feature: Parse streets xml file and import data into database
           <STAN_NA>2013-10-10</STAN_NA>
         </row>
       </catalog>
-    </teryt>
+    </ulic>
     """
     And following province was already imported
       | Code | Name         |

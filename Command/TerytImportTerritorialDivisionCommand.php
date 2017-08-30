@@ -37,4 +37,12 @@ class TerytImportTerritorialDivisionCommand extends TerytImportCommand
     {
         return new TerritorialDivisionNodeConverter($node, $om);
     }
+
+    /**
+     * @return string
+     */
+    protected function getRecordXPath()
+    {
+        return '/teryt/catalog/row';
+    }
 }

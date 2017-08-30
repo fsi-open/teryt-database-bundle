@@ -35,4 +35,12 @@ class TerytImportPlacesDictionaryCommand extends TerytImportCommand
     {
         return new PlacesDictionaryNodeConverter($node, $om);
     }
+
+    /**
+     * @return string
+     */
+    protected function getRecordXPath()
+    {
+        return '/simc/catalog/row';
+    }
 }

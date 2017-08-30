@@ -29,12 +29,19 @@ abstract class TerytImportCommand extends ContainerAwareCommand
      */
     private $progressBar;
 
+    private $recordsCount = 0;
+
     /**
      * @param SimpleXMLElement $node
      * @param \Doctrine\Common\Persistence\ObjectManager $om
      * @return \FSi\Bundle\TerytDatabaseBundle\Teryt\Import\NodeConverter
      */
     abstract public function getNodeConverter(SimpleXMLElement $node, ObjectManager $om);
+
+    /**
+     * @return string
+     */
+    abstract protected function getRecordXPath();
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -55,6 +62,8 @@ abstract class TerytImportCommand extends ContainerAwareCommand
         $this->flushAndClear();
         $this->progressBar->finish();
 
+        $output->writeln(sprintf("\nImported %d records.", $this->recordsCount));
+
         return 0;
     }
 
@@ -67,7 +76,7 @@ abstract class TerytImportCommand extends ContainerAwareCommand
         $xmlParser = new Parser();
 
         return $xmlParser->registerCallback(
-            '/teryt/catalog/row',
+            $this->getRecordXPath(),
             $this->getNodeParserCallbackFunction()
         );
     }
@@ -83,6 +92,7 @@ abstract class TerytImportCommand extends ContainerAwareCommand
             $this->convertNodeToPersistedEntity($node);
             $this->updateProgressHelper();
 
+            $this->recordsCount++;
             $counter--;
             if (!$counter) {
                 $counter = static::FLUSH_FREQUENCY;
