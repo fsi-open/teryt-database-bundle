@@ -9,19 +9,12 @@
 
 namespace FSi\Bundle\TerytDatabaseBundle\Teryt\Import;
 
+use FSi\Bundle\TerytDatabaseBundle\Entity\Community;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Place;
+use FSi\Bundle\TerytDatabaseBundle\Entity\PlaceType;
 
 class PlacesNodeConverter extends NodeConverter
 {
-    const WOJ_CHILD_NODE = 0;
-    const POW_CHILD_NODE = 1;
-    const GMI_CHILD_NODE = 2;
-    const COMMUNITY_TYPE_CHILD_NODE = 3;
-    const TYPE_CHILD_NODE = 4;
-    const NAME_CHILD_NODE = 6;
-    const ID_CHILD_NODE = 7;
-    const ID_PARENT_NODE = 8;
-
     public function convertToEntity()
     {
         $placeEntity = $this->createPlaceEntity();
@@ -34,61 +27,61 @@ class PlacesNodeConverter extends NodeConverter
     }
 
     /**
-     * @return \FSi\Bundle\TerytDatabaseBundle\Entity\Place
+     * @return Place
      */
     private function createPlaceEntity()
     {
-        return $this->findOneBy('FSiTerytDbBundle:Place', array(
+        return $this->findOneBy(Place::class, array(
             'id' => $this->getPlaceId()
         )) ?: new Place($this->getPlaceId());
     }
 
     /**
-     * @return string
+     * @return int
      */
     private function getDistrictCode()
     {
-        return (int) $this->node->col[self::POW_CHILD_NODE];
+        return (int) $this->node->pow->__toString();
     }
 
     /**
-     * @return string
+     * @return int
      */
     private function getProvinceCode()
     {
-        return (int) $this->node->col[self::WOJ_CHILD_NODE];
+        return (int) $this->node->woj->__toString();
     }
 
     /**
-     * @return string
+     * @return int
      */
     private function getCommunityCode()
     {
-        return (int) $this->node->col[self::GMI_CHILD_NODE];
+        return (int) $this->node->gmi->__toString();
     }
 
     /**
-     * @return string
+     * @return int
      */
     private function getPlaceDictionaryType()
     {
-        return (int) $this->node->col[self::TYPE_CHILD_NODE];
+        return (int) $this->node->rm->__toString();
     }
 
     /**
-     * @return string
+     * @return int
      */
     private function getPlaceId()
     {
-        return (int) $this->node->col[self::ID_CHILD_NODE];
+        return (int) $this->node->sym->__toString();
     }
 
     /**
-     * @return string
+     * @return int
      */
     private function getParentPlaceId()
     {
-        return (int) $this->node->col[self::ID_PARENT_NODE];
+        return (int) $this->node->sympod->__toString();
     }
 
     /**
@@ -96,44 +89,44 @@ class PlacesNodeConverter extends NodeConverter
      */
     private function getPlaceName()
     {
-        return (string) $this->node->col[self::NAME_CHILD_NODE];
+        return (string) $this->node->nazwa->__toString();
     }
 
     /**
-     * @return \FSi\Bundle\TerytDatabaseBundle\Entity\Community
+     * @return Community
      */
     private function getPlaceCommunity()
     {
-        return $this->findOneBy('FSiTerytDbBundle:Community', array(
+        return $this->findOneBy(Community::class, array(
             'code' => (int) sprintf(
                 "%d%02d%02d%1d",
                 $this->getProvinceCode(),
                 $this->getDistrictCode(),
                 $this->getCommunityCode(),
-                $this->node->col[self::COMMUNITY_TYPE_CHILD_NODE]
+                $this->node->rodz_gmi->__toString()
             )
         ));
     }
 
     /**
-     * @return \FSi\Bundle\TerytDatabaseBundle\Entity\PlaceType
+     * @return PlaceType
      */
     private function getPlaceType()
     {
-        return $this->findOneBy('FSiTerytDbBundle:PlaceType', array(
+        return $this->findOneBy(PlaceType::class, array(
             'type' => $this->getPlaceDictionaryType()
         ));
     }
 
     /**
-     * @return \FSi\Bundle\TerytDatabaseBundle\Entity\Place
+     * @return Place
      */
     private function getParentPlace()
     {
         if ($this->getParentPlaceId() && ($this->getParentPlaceId() !== $this->getPlaceId())) {
-            return $this->findOneBy('FSiTerytDbBundle:Place', array(
+            return $this->findOneBy(Place::class, [
                 'id' => $this->getParentPlaceId()
-            ));
+            ]);
         }
 
         return null;

@@ -11,28 +11,29 @@ Feature: Parse streets xml file and import data into database
     <teryt>
       <catalog name="ULIC" type="all" date="2013-10-10">
         <row>
-          <col name="WOJ">02</col>
-          <col name="POW">23</col>
-          <col name="GMI">09</col>
-          <col name="RODZ_GMI">2</col>
-          <col name="SYM">0884849</col>
-          <col name="SYM_UL">10268</col>
-          <col name="CECHA">ul.</col>
-          <col name="NAZWA_1">Księżycowa</col>
-          <col name="NAZWA_2"/>
-          <col name="STAN_NA">2013-10-10</col>
+          <WOJ>02</WOJ>
+          <POW>23</POW>
+          <GMI>09</GMI>
+          <RODZ_GMI>2</RODZ_GMI>
+          <SYM>0884849</SYM>
+          <SYM_UL>10268</SYM_UL>
+          <CECHA>ul.</CECHA>
+          <NAZWA_1>Księżycowa</NAZWA_1>
+          <NAZWA_2>
+          </NAZWA_2>
+          <STAN_NA>2013-10-10</STAN_NA>
         </row>
         <row>
-          <col name="WOJ">02</col>
-          <col name="POW">61</col>
-          <col name="GMI">01</col>
-          <col name="RODZ_GMI">1</col>
-          <col name="SYM">0935802</col>
-          <col name="SYM_UL">14018</col>
-          <col name="CECHA">ul.</col>
-          <col name="NAZWA_1">Narutowicza</col>
-          <col name="NAZWA_2">Gabriela </col>
-          <col name="STAN_NA">2013-10-10</col>
+          <WOJ>02</WOJ>
+          <POW>61</POW>
+          <GMI>01</GMI>
+          <RODZ_GMI>1</RODZ_GMI>
+          <SYM>0935802</SYM>
+          <SYM_UL>14018</SYM_UL>
+          <CECHA>ul.</CECHA>
+          <NAZWA_1>Narutowicza</NAZWA_1>
+          <NAZWA_2>Gabriela </NAZWA_2>
+          <STAN_NA>2013-10-10</STAN_NA>
         </row>
       </catalog>
     </teryt>
@@ -66,16 +67,16 @@ Feature: Parse streets xml file and import data into database
     <teryt>
       <catalog name="ULIC" type="all" date="2013-10-10">
         <row>
-          <col name="WOJ">02</col>
-          <col name="POW">61</col>
-          <col name="GMI">01</col>
-          <col name="RODZ_GMI">1</col>
-          <col name="SYM">0935802</col>
-          <col name="SYM_UL">14018</col>
-          <col name="CECHA">ul.</col>
-          <col name="NAZWA_1">Narutowicza</col>
-          <col name="NAZWA_2">Gabriela </col>
-          <col name="STAN_NA">2013-10-10</col>
+          <WOJ>02</WOJ>
+          <POW>61</POW>
+          <GMI>01</GMI>
+          <RODZ_GMI>1</RODZ_GMI>
+          <SYM>0935802</SYM>
+          <SYM_UL>14018</SYM_UL>
+          <CECHA>ul.</CECHA>
+          <NAZWA_1>Narutowicza</NAZWA_1>
+          <NAZWA_2>Gabriela </NAZWA_2>
+          <STAN_NA>2013-10-10</STAN_NA>
         </row>
       </catalog>
     </teryt>

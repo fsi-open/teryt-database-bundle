@@ -1,8 +1,5 @@
 Feature: Download Teryt database xml files
 
-  Background:
-    Given Urls to Teryt database files are available at "http://www.stat.gov.pl/broker/access/prefile/listPreFiles.jspa"
-
   Scenario: Download teryt streets database
     When I successfully run console command "teryt:download:streets"
     Then "streets.zip" file should be downloaded into "Fixtures/Project/app/teryt" folder

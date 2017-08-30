@@ -10,6 +10,8 @@
 namespace FSi\Bundle\TerytDatabaseBundle\Command;
 
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class TerytDownloadStreetsDatabaseCommand extends TerytDownloadCommand
 {
@@ -21,29 +23,21 @@ class TerytDownloadStreetsDatabaseCommand extends TerytDownloadCommand
                 'target',
                 InputArgument::OPTIONAL,
                 'Default target path where downloader will save teryt database file'
-            )->addArgument(
+            )
+            ->addArgument(
                 'filename',
                 InputArgument::OPTIONAL,
-                'Default streets file name',
-                'streets'
+                'Default target file where downloader will save teryt database file',
+                'streets.zip'
             );
     }
 
-    /**
-     * @return string
-     */
-    protected function getFileDownloadUrl()
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
-        return $this->getTerytPageParser()
-            ->getStreetsFileUrl($this->getContainer()->getParameter('fsi_teryt_db.files_list_page'));
-    }
-
-    /**
-     * @return int
-     */
-    protected function getFileRoundedSize()
-    {
-        return $this->getTerytPageParser()
-            ->getStreetsFileRoundedSize($this->getContainer()->getParameter('fsi_teryt_db.files_list_page'));
+        $this->saveFile(
+            $this->getApiClient()->getStreetsData(),
+            $input->getArgument('target') ?? $this->getDefaultTargetPath(),
+            $input->getArgument('filename')
+        );
     }
 }

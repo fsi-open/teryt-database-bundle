@@ -33,7 +33,7 @@ class Community extends Territory
     /**
      * @param int $code
      */
-    function __construct($code)
+    public function __construct($code)
     {
         parent::__construct($code);
         $this->places = new ArrayCollection();
@@ -41,7 +41,7 @@ class Community extends Territory
 
     /**
      * @param District $district
-     * @return Community
+     * @return self
      */
     public function setDistrict(District $district)
     {
@@ -60,7 +60,7 @@ class Community extends Territory
 
     /**
      * @param CommunityType $type
-     * @return Community
+     * @return self
      */
     public function setType(CommunityType $type)
     {

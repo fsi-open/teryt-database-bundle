@@ -10,5 +10,11 @@
 
     <services>
         <service id="fsi_teryt_db.http_client" class="%fsi_teryt_db.http_client.class%" />
+
+        <service id="fsi_teryt_db.api_client" class="FSi\Bundle\TerytDatabaseBundle\Teryt\Api\Client">
+            <argument type="string">%fsi_teryt_db.api.url%</argument>
+            <argument type="string">%fsi_teryt_db.api.username%</argument>
+            <argument type="string">%fsi_teryt_db.api.password%</argument>
+        </service>
     </services>
 </container>

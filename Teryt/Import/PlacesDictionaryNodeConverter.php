@@ -14,9 +14,6 @@ use SimpleXMLElement;
 
 class PlacesDictionaryNodeConverter extends NodeConverter
 {
-    const TYPE_CHILD_NODE = 0;
-    const TYPE_NAME_CHILD_NODE = 1;
-
     public function convertToEntity()
     {
         $placeType = $this->createPlaceTypeEntity();
@@ -30,17 +27,17 @@ class PlacesDictionaryNodeConverter extends NodeConverter
      */
     private function createPlaceTypeEntity()
     {
-        return $this->findOneBy('FSiTerytDbBundle:PlaceType', array(
+        return $this->findOneBy(PlaceType::class, array(
             'type' => $this->getPlaceType()
         )) ?: new PlaceType($this->getPlaceType());
     }
 
     /**
-     * @return SimpleXMLElement
+     * @return int
      */
     private function getPlaceType()
     {
-        return (int) $this->node->col[self::TYPE_CHILD_NODE];
+        return (int) $this->node->rm->__toString();
     }
 
     /**
@@ -48,6 +45,6 @@ class PlacesDictionaryNodeConverter extends NodeConverter
      */
     private function getPlaceName()
     {
-        return trim((string) $this->node->col[self::TYPE_NAME_CHILD_NODE]);
+        return trim((string) $this->node->nazwa_rm->__toString());
     }
 }

@@ -26,13 +26,16 @@ class TerritorialDivisionNodeConverterSpec extends ObjectBehavior
     {
         $xml = <<<EOT
 <row>
-    <col name="WOJ">02</col>
-    <col name="POW"/>
-    <col name="GMI"/>
-    <col name="RODZ"/>
-    <col name="NAZWA">DOLNOŚLĄSKIE</col>
-    <col name="NAZDOD">województwo</col>
-    <col name="STAN_NA">2013-01-01</col>
+    <woj>02</woj>
+    <pow>
+    </pow>
+    <gmi>
+    </gmi>
+    <rodz>
+    </rodz>
+    <nazwa>DOLNOŚLĄSKIE</nazwa>
+    <nazdod>województwo</nazdod>
+    <stan_na>2013-01-01</stan_na>
 </row>
 EOT;
 
@@ -48,16 +51,19 @@ EOT;
     ) {
         $xml = <<<EOT
 <row>
-    <col name="WOJ">02</col>
-    <col name="POW"/>
-    <col name="GMI"/>
-    <col name="RODZ"/>
-    <col name="NAZWA">Dolnośląskie</col>
-    <col name="NAZDOD">województwo</col>
-    <col name="STAN_NA">2013-01-01</col>
+    <woj>02</woj>
+    <pow>
+    </pow>
+    <gmi>
+    </gmi>
+    <rodz>
+    </rodz>
+    <nazwa>Dolnośląskie</nazwa>
+    <nazdod>województwo</nazdod>
+    <stan_na>2013-01-01</stan_na>
 </row>
 EOT;
-        $om->getRepository('FSiTerytDbBundle:Province')
+        $om->getRepository(Province::class)
             ->shouldBeCalled()
             ->willReturn($or);
 
@@ -75,13 +81,15 @@ EOT;
     {
         $xml = <<<EOT
 <row>
-    <col name="WOJ">02</col>
-    <col name="POW">01</col>
-    <col name="GMI"/>
-    <col name="RODZ"/>
-    <col name="NAZWA">bolesławiecki</col>
-    <col name="NAZDOD">powiat</col>
-    <col name="STAN_NA">2013-01-01</col>
+    <woj>02</woj>
+    <pow>01</pow>
+    <gmi>
+    </gmi>
+    <rodz>
+    </rodz>
+    <nazwa>bolesławiecki</nazwa>
+    <nazdod>powiat</nazdod>
+    <stan_na>2013-01-01</stan_na>
 </row>
 EOT;
         $province = new Province(2);
@@ -102,13 +110,15 @@ EOT;
     ) {
         $xml = <<<EOT
 <row>
-    <col name="WOJ">02</col>
-    <col name="POW">01</col>
-    <col name="GMI"/>
-    <col name="RODZ"/>
-    <col name="NAZWA">bolesławiecki</col>
-    <col name="NAZDOD">powiat</col>
-    <col name="STAN_NA">2013-01-01</col>
+    <woj>02</woj>
+    <pow>01</pow>
+    <gmi>
+    </gmi>
+    <rodz>
+    </rodz>
+    <nazwa>bolesławiecki</nazwa>
+    <nazdod>powiat</nazdod>
+    <stan_na>2013-01-01</stan_na>
 </row>
 EOT;
 
@@ -132,13 +142,13 @@ EOT;
     {
         $xml = <<<EOT
 <row>
-    <col name="WOJ">02</col>
-    <col name="POW">01</col>
-    <col name="GMI">01</col>
-    <col name="RODZ">1</col>
-    <col name="NAZWA">Bolesławiec</col>
-    <col name="NAZDOD">gmina miejska</col>
-    <col name="STAN_NA">2013-01-01</col>
+    <woj>02</woj>
+    <pow>01</pow>
+    <gmi>01</gmi>
+    <rodz>1</rodz>
+    <nazwa>Bolesławiec</nazwa>
+    <nazdod>gmina miejska</nazdod>
+    <stan_na>2013-01-01</stan_na>
 </row>
 EOT;
         $district = new District(201);
@@ -169,13 +179,13 @@ EOT;
     ) {
         $xml = <<<EOT
 <row>
-    <col name="WOJ">02</col>
-    <col name="POW">01</col>
-    <col name="GMI">01</col>
-    <col name="RODZ">1</col>
-    <col name="NAZWA">Bolesławiec</col>
-    <col name="NAZDOD">gmina miejska</col>
-    <col name="STAN_NA">2013-01-01</col>
+    <woj>02</woj>
+    <pow>01</pow>
+    <gmi>01</gmi>
+    <rodz>1</rodz>
+    <nazwa>Bolesławiec</nazwa>
+    <nazdod>gmina miejska</nazdod>
+    <stan_na>2013-01-01</stan_na>
 </row>
 EOT;
         $district = new District(201);

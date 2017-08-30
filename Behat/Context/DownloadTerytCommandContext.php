@@ -3,6 +3,7 @@
 namespace FSi\Bundle\TerytDatabaseBundle\Behat\Context;
 
 use Behat\Symfony2Extension\Context\KernelAwareContext;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 class DownloadTerytCommandContext implements KernelAwareContext
@@ -17,7 +18,7 @@ class DownloadTerytCommandContext implements KernelAwareContext
      */
     protected $fixturesPath;
 
-    function __construct($fixturesPath)
+    public function __construct($fixturesPath)
     {
         $this->fixturesPath = $fixturesPath;
     }
@@ -25,14 +26,6 @@ class DownloadTerytCommandContext implements KernelAwareContext
     public function setKernel(KernelInterface $kernel)
     {
         $this->kernel = $kernel;
-    }
-
-    /**
-     * @Given /^Urls to Teryt database files are available at "([^"]*)"$/
-     */
-    public function urlsToTerytDatabaseFilesAreAvailableAt($terytFilesPageAdr)
-    {
-        expect($this->kernel->getContainer()->getParameter('fsi_teryt_db.files_list_page'))->toBe($terytFilesPageAdr);
     }
 
     /**
@@ -55,13 +48,7 @@ class DownloadTerytCommandContext implements KernelAwareContext
             return;
         }
 
-        foreach (new \DirectoryIterator($terytDownloadPath) as $file) {
-            if ($file->isDot()) {
-                continue;
-            }
-            unlink($terytDownloadPath . DIRECTORY_SEPARATOR . $file->getFilename());
-        }
-
-        rmdir($terytDownloadPath);
+        $fileSystem = new Filesystem();
+        $fileSystem->remove($terytDownloadPath);
     }
 }

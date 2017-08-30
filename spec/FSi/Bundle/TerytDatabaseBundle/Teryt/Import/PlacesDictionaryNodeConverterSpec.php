@@ -22,9 +22,9 @@ class PlacesDictionaryNodeConverterSpec extends ObjectBehavior
     {
         $xml = <<<EOT
 <row>
-  <col name="RM">02</col>
-  <col name="NAZWA_RM">kolonia                 </col>
-  <col name="STAN_NA">2013-02-28</col>
+  <rm>02</rm>
+  <nazwa_rm>kolonia                 </nazwa_rm>
+  <stan_na>2013-02-28</stan_na>
 </row>
 EOT;
 
@@ -40,9 +40,9 @@ EOT;
     ){
         $xml = <<<EOT
 <row>
-  <col name="RM">02</col>
-  <col name="NAZWA_RM">kolonia                 </col>
-  <col name="STAN_NA">2013-02-28</col>
+  <rm>02</rm>
+  <nazwa_rm>kolonia                 </nazwa_rm>
+  <stan_na>2013-02-28</stan_na>
 </row>
 EOT;
 

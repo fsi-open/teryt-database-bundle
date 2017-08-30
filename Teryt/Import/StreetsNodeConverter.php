@@ -9,16 +9,11 @@
 
 namespace FSi\Bundle\TerytDatabaseBundle\Teryt\Import;
 
+use FSi\Bundle\TerytDatabaseBundle\Entity\Place;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Street;
 
 class StreetsNodeConverter extends NodeConverter
 {
-    const PLACE_CHILD_NODE = 4;
-    const ID_CHILD_NODE = 5;
-    const TYPE_CHILD_NODE = 6;
-    const NAME_CHILD_NODE = 7;
-    const ADDITIONAL_NAME_CHILD_NODE = 8;
-
     public function convertToEntity()
     {
         $streetEntity = $this->createStreetEntity();
@@ -30,7 +25,7 @@ class StreetsNodeConverter extends NodeConverter
     }
 
     /**
-     * @return \FSi\Bundle\TerytDatabaseBundle\Entity\Street
+     * @return Street
      */
     private function createStreetEntity()
     {
@@ -47,7 +42,7 @@ class StreetsNodeConverter extends NodeConverter
      */
     private function getStreetId()
     {
-        return (int) $this->node->col[self::ID_CHILD_NODE];
+        return (int) $this->node->sym_ul->__toString();
     }
 
     /**
@@ -55,7 +50,7 @@ class StreetsNodeConverter extends NodeConverter
      */
     private function getName()
     {
-        return trim((string) $this->node->col[self::NAME_CHILD_NODE]);
+        return trim((string) $this->node->nazwa_1);
     }
 
     /**
@@ -63,7 +58,7 @@ class StreetsNodeConverter extends NodeConverter
      */
     private function getAdditionalName()
     {
-        $additionalName = trim((string) $this->node->col[self::ADDITIONAL_NAME_CHILD_NODE]);
+        $additionalName = trim((string) $this->node->nazwa_2);
 
         return $additionalName ?: null;
     }
@@ -73,16 +68,16 @@ class StreetsNodeConverter extends NodeConverter
      */
     private function getStreetType()
     {
-        return (string) $this->node->col[self::TYPE_CHILD_NODE];
+        return (string) $this->node->cecha;
     }
 
     /**
-     * @return \FSi\Bundle\TerytDatabaseBundle\Entity\Place
+     * @return Place
      */
     private function getPlace()
     {
-        return $this->om->getRepository('FSiTerytDbBundle:Place')->findOneBy(array(
-            'id' => (int) $this->node->col[self::PLACE_CHILD_NODE]
+        return $this->om->getRepository(Place::class)->findOneBy(array(
+            'id' => (int) $this->node->sym->__toString()
         ));
     }
 }

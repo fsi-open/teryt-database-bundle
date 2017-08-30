@@ -27,7 +27,13 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->scalarNode('files_list_page')->defaultValue('http://www.stat.gov.pl/broker/access/prefile/listPreFiles.jspa')->end()
+                ->arrayNode('api')
+                    ->children()
+                        ->scalarNode('url')->end()
+                        ->scalarNode('username')->end()
+                        ->scalarNode('password')->end()
+                    ->end()
+                ->end()
             ->end();
 
         return $treeBuilder;

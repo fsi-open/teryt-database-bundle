@@ -9,131 +9,35 @@
 
 namespace FSi\Bundle\TerytDatabaseBundle\Command;
 
-use FSi\Bundle\TerytDatabaseBundle\Teryt\DownloadPageParser;
-use Guzzle\Common\Event;
+use FSi\Bundle\TerytDatabaseBundle\Teryt\Api\Client;
+use SplTempFileObject;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Helper\ProgressBar;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 abstract class TerytDownloadCommand extends ContainerAwareCommand
 {
-    /**
-     * @return string
-     */
-    abstract protected function getFileDownloadUrl();
-
-    /**
-     * @return int
-     */
-    abstract protected function getFileRoundedSize();
-
-    /**
-     * @return DownloadPageParser
-     */
-    protected function getTerytPageParser()
-    {
-        if (!isset($this->terytPageParser)) {
-            $this->terytPageParser = new DownloadPageParser($this->getContainer()->get('fsi_teryt_db.http_client'));
-        }
-
-        return $this->terytPageParser;
-    }
-
-    protected function execute(InputInterface $input, OutputInterface $output)
-    {
-        $target = $this->getDownloadTargetFolder($input);
-        $request = $this->createDownloadHttpRequest($input, $target);
-
-        $progressBar = new ProgressBar($output, 100);
-        $progressBar->start();
-
-        $request->getEventDispatcher()->addListener(
-            'curl.callback.progress',
-            $this->getDownloadProgressCallbackFunction($output, $progressBar)
-        );
-
-        $request->send();
-
-        $progressBar->setProgress(100);
-        $progressBar->finish();
-
-        $output->writeln("");
-
-        return 0;
-    }
-
     protected function getDefaultTargetPath()
     {
         return $this->getContainer()->getParameter('kernel.root_dir') . '/teryt';
     }
 
-    /**
-     * @param InputInterface $input
-     * @return mixed|string
-     */
-    private function getDownloadTargetFolder(InputInterface $input)
+    protected function getApiClient() : Client
     {
-        $target = $input->getArgument('target');
-        if (!isset($target)) {
-            $target = $this->getDefaultTargetPath();
-        }
-
-        if (!file_exists($target)) {
-            mkdir($target);
-            return $target;
-        }
-
-        return $target;
+        return $this->getContainer()->get('fsi_teryt_db.api_client');
     }
 
-    /**
-     * @param InputInterface $input
-     * @param $target
-     * @return mixed
-     */
-    protected function createDownloadHttpRequest(InputInterface $input, $target)
+    protected function saveFile(SplTempFileObject $file, string $path, string $fileName)
     {
-        $client = $this->getContainer()->get('fsi_teryt_db.http_client');
-
-        $request = $client->get($this->getFileDownloadUrl(), null, array(
-            'connect_timeout' => 10,
-            'save_to' => sprintf('%s/%s.zip', $target, $input->getArgument('filename')),
-        ));
-
-        $request->getCurlOptions()->set('progress', true);
-
-        return $request;
+        $filesystem = new Filesystem();
+        $filesystem->dumpFile(sprintf('%s/%s', $path, $fileName), $file->fread($this->getFileSize($file)));
     }
 
-    /**
-     * @param OutputInterface $output
-     * @param ProgressBar $progressBar
-     *
-     * @return callable
-     */
-    protected function getDownloadProgressCallbackFunction(OutputInterface $output, ProgressBar $progressBar)
+    private function getFileSize(SplTempFileObject $file) : int
     {
-        $fileSize = $this->getFileRoundedSize();
+        $file->fseek(0, SEEK_END);
+        $size = $file->ftell();
+        $file->fseek(0, SEEK_SET);
 
-        return function (Event $event) use ($output, $fileSize, $progressBar) {
-            if (version_compare(curl_version()['version'], '7.32', '<=')) {
-                $downloaded = $event['upload_size'];
-            } else {
-                $downloaded = $event['downloaded'];
-            }
-
-            if ($downloaded === 0 || $fileSize == 0) {
-                return;
-            }
-
-            $percent = ($downloaded / $fileSize) * 100;
-
-            if ($percent > 100) {
-                return;
-            }
-
-            $progressBar->setProgress((int) $percent);
-        };
+        return $size;
     }
 }

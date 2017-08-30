@@ -10,19 +10,19 @@ Feature: Parse places dictionary xml file and import data into database
     <teryt>
       <catalog name="SIMC" type="all" date="2013-02-28">
         <row>
-          <col name="RM">01</col>
-          <col name="NAZWA_RM">wieś                    </col>
-          <col name="STAN_NA">2013-02-28</col>
+          <RM>01</RM>
+          <NAZWA_RM>wieś          </NAZWA_RM>
+          <STAN_NA>2013-02-28</STAN_NA>
         </row>
         <row>
-          <col name="RM">02</col>
-          <col name="NAZWA_RM">kolonia                 </col>
-          <col name="STAN_NA">2013-02-28</col>
+          <RM>02</RM>
+          <NAZWA_RM>kolonia</NAZWA_RM>
+          <STAN_NA>2013-02-28</STAN_NA>
         </row>
         <row>
-          <col name="RM">03</col>
-          <col name="NAZWA_RM">przysiółek              </col>
-          <col name="STAN_NA">2013-02-28</col>
+          <RM>03</RM>
+          <NAZWA_RM>przysiółek</NAZWA_RM>
+          <STAN_NA>2013-02-28</STAN_NA>
         </row>
       </catalog>
     </teryt>
@@ -42,19 +42,19 @@ Feature: Parse places dictionary xml file and import data into database
     <teryt>
       <catalog name="SIMC" type="all" date="2013-02-28">
         <row>
-          <col name="RM">01</col>
-          <col name="NAZWA_RM">wieś                    </col>
-          <col name="STAN_NA">2013-02-28</col>
+          <RM>01</RM>
+          <NAZWA_RM>wieś</NAZWA_RM>
+          <STAN_NA>2013-02-28</STAN_NA>
         </row>
         <row>
-          <col name="RM">02</col>
-          <col name="NAZWA_RM">kolonia                 </col>
-          <col name="STAN_NA">2013-02-28</col>
+          <RM>02</RM>
+          <NAZWA_RM>kolonia</NAZWA_RM>
+          <STAN_NA>2013-02-28</STAN_NA>
         </row>
         <row>
-          <col name="RM">03</col>
-          <col name="NAZWA_RM">przysiółek              </col>
-          <col name="STAN_NA">2013-02-28</col>
+          <RM>03</RM>
+          <NAZWA_RM>przysiółek</NAZWA_RM>
+          <STAN_NA>2013-02-28</STAN_NA>
         </row>
       </catalog>
     </teryt>

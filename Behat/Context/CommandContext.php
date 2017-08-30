@@ -31,7 +31,7 @@ class CommandContext implements KernelAwareContext
      */
     protected $fixturesPath;
 
-    function __construct($fixturesPath)
+    public function __construct($fixturesPath)
     {
         $this->fixturesPath = $fixturesPath;
     }
@@ -51,8 +51,6 @@ class CommandContext implements KernelAwareContext
      */
     public function iRunConsoleCommand($command)
     {
-        $this->prepareCommandEnv($command);
-
         $application = new Application($this->kernel);
         $tester = new ApplicationTester($application);
 
@@ -128,58 +126,6 @@ class CommandContext implements KernelAwareContext
     public function getLastCommandOutput()
     {
         return $this->lastCommandOutput;
-    }
-
-    /**
-     * @param $command
-     */
-    private function prepareCommandEnv($command)
-    {
-        if (strpos($command, 'teryt:download') !== false) {
-            $this->prepareHttpResponses($command);
-        }
-    }
-
-    private function prepareHttpResponses($command)
-    {
-        $mock = $this->createGuzzleMockPlugin();
-
-        $fileUrlResponse = new Response(200);
-        $terytPageFixturesPath = $this->fixturesPath . '/TerytPage';
-
-        switch ($command) {
-            case 'teryt:download:streets':
-                $fileUrlResponse->setBody(file_get_contents($terytPageFixturesPath . DIRECTORY_SEPARATOR . 'streets.zip'));
-            case 'teryt:download:places':
-                $fileUrlResponse->setBody(file_get_contents($terytPageFixturesPath . DIRECTORY_SEPARATOR . 'places.zip'));
-                break;
-            case 'teryt:download:places-dictionary':
-                $fileUrlResponse->setBody(file_get_contents($terytPageFixturesPath . DIRECTORY_SEPARATOR . 'places-dictionary.zip'));
-                break;
-            case 'teryt:download:territorial-division':
-                $fileUrlResponse->setBody(file_get_contents($terytPageFixturesPath . DIRECTORY_SEPARATOR . 'territorial-division.zip'));
-                break;
-            default:
-                throw new \InvalidArgumentException(sprintf("Unknown command \"%s\"", $command));
-                break;
-        }
-
-        $mock->addResponse($fileUrlResponse);
-        $this->kernel->getContainer()->get('fsi_teryt_db.http_client')->addSubscriber($mock);
-    }
-
-    /**
-     * @return MockPlugin
-     */
-    private function createGuzzleMockPlugin()
-    {
-        $terytPageFixturesPath = $this->fixturesPath . '/TerytPage';
-        $mock = new MockPlugin();
-        $downloadPageResponse = new Response(200);
-        $downloadPageResponse->setBody(file_get_contents($terytPageFixturesPath . DIRECTORY_SEPARATOR . 'listTerytFiles.html'));
-        $mock->addResponse($downloadPageResponse);
-
-        return $mock;
     }
 
     /**
