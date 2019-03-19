@@ -41,5 +41,7 @@ class TerytDownloadStreetsDatabaseCommand extends TerytDownloadCommand
             $input->getArgument('target') ?? $this->getDefaultTargetPath(),
             $input->getArgument('filename')
         );
+
+        return 0;
     }
 }
