@@ -14,22 +14,26 @@ namespace spec\FSi\Bundle\TerytDatabaseBundle\Teryt\Import;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Community;
+use FSi\Bundle\TerytDatabaseBundle\Entity\CommunityType;
+use FSi\Bundle\TerytDatabaseBundle\Entity\District;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Place;
-use FSi\Bundle\TerytDatabaseBundle\Model\Place\Type;
+use FSi\Bundle\TerytDatabaseBundle\Entity\PlaceType;
+use FSi\Bundle\TerytDatabaseBundle\Entity\Province;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
+use SimpleXMLElement;
 
 class PlacesNodeConverterSpec extends ObjectBehavior
 {
-    function let(ObjectManager $om, ObjectRepository $or)
+    function let(ObjectManager $om, ObjectRepository $or): void
     {
         // It is not possible to mock internal classes with final constructor
-        $this->beConstructedWith(new \SimpleXMLElement('<row></row>'), $om);
+        $this->beConstructedWith(new SimpleXMLElement('<row></row>'), $om);
         $om->getRepository(Argument::type('string'))->willReturn($or);
         $or->findOneBy(Argument::type('array'))->willReturn();
     }
 
-    function it_converts_node_to_place_entry(ObjectManager $om, ObjectRepository $or)
+    function it_converts_node_to_place_entry(ObjectManager $om, ObjectRepository $or): void
     {
         $xml = <<<EOT
 <row>
@@ -46,31 +50,27 @@ class PlacesNodeConverterSpec extends ObjectBehavior
 </row>
 EOT;
 
-        $community = new Community(41105);
+        $community = new Community(
+            new District(new Province(1, 'województwo'), 1, 'Powiat'),
+            41105,
+            'Gmina',
+            new CommunityType(1, 'Gmina wiejska')
+        );
 
-        $placeType = new Type(1);
-        $placeType->setName('miasto');
+        $placeType = new PlaceType(1, 'miasto');
 
-        $or->findOneBy(array(
-            'code' => 411055
-        ))->shouldBeCalled()->willReturn($community);
+        $or->findOneBy(['code' => 411055])->shouldBeCalled()->willReturn($community);
+        $or->findOneBy(['type' => 1])->shouldBeCalled()->willReturn($placeType);
 
-        $or->findOneBy(array(
-            'type' => 1
-        ))->shouldBeCalled()->willReturn($placeType);
+        $place = new Place(867650, 'Rzeczyca', $placeType, $community);
 
-        $place = new Place(867650);
-        $place->setName('Rzeczyca')
-            ->setType($placeType)
-            ->setCommunity($community);
-
-        $this->beConstructedWith(new \SimpleXMLElement($xml), $om);
+        $this->beConstructedWith(new SimpleXMLElement($xml), $om);
         $this->convertToEntity()->shouldBeLike($place);
     }
 
     function it_converts_node_to_place_with_updating_existing_one(
         ObjectManager $om, ObjectRepository $or, Place $place
-    ) {
+    ): void {
         $xml = <<<EOT
 <row>
     <woj>04</woj>
@@ -86,35 +86,31 @@ EOT;
 </row>
 EOT;
 
-        $community = new Community(41105);
+        $community = new Community(
+            new District(new Province(1, 'województwo'), 1, 'Powiat'),
+            41105,
+            'Gmina',
+            new CommunityType(1, 'Gmina wiejska')
+        );
 
-        $placeType = new Type(1);
-        $placeType->setName('miasto');
+        $placeType = new PlaceType(1, 'miasto');
 
-        $or->findOneBy(array(
-            'id' => 867650
-        ))->shouldBeCalled()->willReturn($place);
+        $or->findOneBy(['id' => 867650])->shouldBeCalled()->willReturn($place);
+        $or->findOneBy(['code' => 411055])->shouldBeCalled()->willReturn($community);
+        $or->findOneBy(['type' => '01'])->shouldBeCalled()->willReturn($placeType);
 
-        $or->findOneBy(array(
-            'code' => 411055
-        ))->shouldBeCalled()->willReturn($community);
+        $place->setName('Rzeczyca')->shouldBeCalled();
+        $place->setType($placeType)->shouldBeCalled();
+        $place->setCommunity($community)->shouldBeCalled();
+        $place->setParentPlace(null)->shouldBeCalled();
 
-        $or->findOneBy(array(
-            'type' => '01'
-        ))->shouldBeCalled()->willReturn($placeType);
-
-        $place->setName('Rzeczyca')->shouldBeCalled()->willReturn($place);
-        $place->setType($placeType)->shouldBeCalled()->willReturn($place);
-        $place->setCommunity($community)->shouldBeCalled()->willReturn($place);
-        $place->setParentPlace(null)->shouldBeCalled()->willReturn($place);
-
-        $this->beConstructedWith(new \SimpleXMLElement($xml), $om);
+        $this->beConstructedWith(new SimpleXMLElement($xml), $om);
         $this->convertToEntity()->shouldBeLike($place->getWrappedObject());
     }
 
     function it_updates_parent_place_in_existing_place(
         ObjectManager $om, ObjectRepository $or, Place $place, Place $parentPlace
-    ) {
+    ): void {
         $xml = <<<EOT
 <row>
     <woj>04</woj>
@@ -130,33 +126,26 @@ EOT;
 </row>
 EOT;
 
-        $community = new Community(41105);
+        $community = new Community(
+            new District(new Province(1, 'województwo'), 1, 'Powiat'),
+            41105,
+            'Gmina',
+            new CommunityType(1, 'Gmina wiejska')
+        );
 
-        $placeType = new Type(1);
-        $placeType->setName('miasto');
+        $placeType = new PlaceType(1, 'miasto');
 
-        $or->findOneBy(array(
-            'id' => 867650
-        ))->shouldBeCalled()->willReturn($place);
+        $or->findOneBy(['id' => 867650])->shouldBeCalled()->willReturn($place);
+        $or->findOneBy(['id' => 867643])->shouldBeCalled()->willReturn($parentPlace);
+        $or->findOneBy(['code' => 411055])->shouldBeCalled()->willReturn($community);
+        $or->findOneBy(['type' => 1])->shouldBeCalled()->willReturn($placeType);
 
-        $or->findOneBy(array(
-            'id' => 867643
-        ))->shouldBeCalled()->willReturn($parentPlace);
+        $place->setName('Rzeczyca')->shouldBeCalled();
+        $place->setType($placeType)->shouldBeCalled();
+        $place->setCommunity($community)->shouldBeCalled();
+        $place->setParentPlace($parentPlace)->shouldBeCalled();
 
-        $or->findOneBy(array(
-            'code' => 411055
-        ))->shouldBeCalled()->willReturn($community);
-
-        $or->findOneBy(array(
-            'type' => 1
-        ))->shouldBeCalled()->willReturn($placeType);
-
-        $place->setName('Rzeczyca')->shouldBeCalled()->willReturn($place);
-        $place->setType($placeType)->shouldBeCalled()->willReturn($place);
-        $place->setCommunity($community)->shouldBeCalled()->willReturn($place);
-        $place->setParentPlace($parentPlace)->shouldBeCalled()->willReturn($place);
-
-        $this->beConstructedWith(new \SimpleXMLElement($xml), $om);
+        $this->beConstructedWith(new SimpleXMLElement($xml), $om);
         $this->convertToEntity()->shouldBeLike($place->getWrappedObject());
     }
 }

@@ -16,4 +16,5 @@ install:
 
 script:
   - bin/phpspec run -f pretty
+  - bin/phpstan analyze --level 5
   - bin/behat --no-snippets --verbose

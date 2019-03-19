@@ -12,20 +12,21 @@ declare(strict_types=1);
 namespace FSi\Bundle\TerytDatabaseBundle\Teryt\Import;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use SimpleXMLElement;
 
 abstract class NodeConverter
 {
     /**
-     * @var \SimpleXMLElement
+     * @var SimpleXMLElement
      */
     protected $node;
 
     /**
-     * @var \Doctrine\Common\Persistence\ObjectManager
+     * @var ObjectManager
      */
     protected $om;
 
-    public function __construct(\SimpleXMLElement $node, ObjectManager $om)
+    public function __construct(SimpleXMLElement $node, ObjectManager $om)
     {
         $this->node = $node;
         $this->om = $om;

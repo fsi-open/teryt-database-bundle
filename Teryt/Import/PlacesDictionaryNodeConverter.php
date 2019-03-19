@@ -12,40 +12,29 @@ declare(strict_types=1);
 namespace FSi\Bundle\TerytDatabaseBundle\Teryt\Import;
 
 use FSi\Bundle\TerytDatabaseBundle\Entity\PlaceType;
-use SimpleXMLElement;
 
 class PlacesDictionaryNodeConverter extends NodeConverter
 {
-    public function convertToEntity()
+    public function convertToEntity(): PlaceType
     {
-        $placeType = $this->createPlaceTypeEntity();
-        $placeType->setName($this->getPlaceName());
+        /** @var PlaceType|null $placeType */
+        $placeType = $this->findOneBy(PlaceType::class, ['type' => $this->getPlaceType()]);
+
+        if ($placeType === null) {
+            return new PlaceType($this->getPlaceType(), $this->getPlaceTypeName());
+        }
+
+        $placeType->setName($this->getPlaceTypeName());
 
         return $placeType;
     }
 
-    /**
-     * @return PlaceType
-     */
-    private function createPlaceTypeEntity()
-    {
-        return $this->findOneBy(PlaceType::class, array(
-            'type' => $this->getPlaceType()
-        )) ?: new PlaceType($this->getPlaceType());
-    }
-
-    /**
-     * @return int
-     */
-    private function getPlaceType()
+    private function getPlaceType(): int
     {
         return (int) $this->node->rm->__toString();
     }
 
-    /**
-     * @return string
-     */
-    private function getPlaceName()
+    private function getPlaceTypeName(): string
     {
         return trim((string) $this->node->nazwa_rm->__toString());
     }

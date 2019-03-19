@@ -34,12 +34,14 @@ class TerytDownloadTerritorialDivisionDatabaseCommand extends TerytDownloadComma
             );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): ?int
     {
         $this->saveFile(
             $this->getApiClient()->getTerritorialDivisionData(),
             $input->getArgument('target') ?? $this->getDefaultTargetPath(),
             $input->getArgument('filename')
         );
+
+        return 0;
     }
 }

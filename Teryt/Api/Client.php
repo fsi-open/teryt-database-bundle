@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace FSi\Bundle\TerytDatabaseBundle\Teryt\Api;
 
+use DateTime;
 use SoapClient;
 use SplTempFileObject;
 
@@ -68,7 +69,7 @@ class Client
     private function getFile($functionName): SplTempFileObject
     {
         $response = $this->makeCall($functionName, [
-            'DataStanu' => (new \DateTime())->format('Y-m-d')
+            'DataStanu' => (new DateTime())->format('Y-m-d')
         ]);
 
         $resultKey = $functionName . 'Result';

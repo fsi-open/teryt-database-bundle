@@ -12,36 +12,26 @@ declare(strict_types=1);
 namespace FSi\Bundle\TerytDatabaseBundle\Command;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use FSi\Bundle\TerytDatabaseBundle\Teryt\Import\NodeConverter;
 use FSi\Bundle\TerytDatabaseBundle\Teryt\Import\PlacesDictionaryNodeConverter;
+use SimpleXMLElement;
 use Symfony\Component\Console\Input\InputArgument;
 
 class TerytImportPlacesDictionaryCommand extends TerytImportCommand
 {
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName('teryt:import:places-dictionary')
             ->setDescription('Import places dictionary data from xml to database')
-            ->addArgument(
-                'file',
-                InputArgument::REQUIRED,
-                'Places dictionary xml file'
-            );
+            ->addArgument('file', InputArgument::REQUIRED, 'Places dictionary xml file');
     }
 
-    /**
-     * @param \SimpleXMLElement $node
-     * @param \Doctrine\Common\Persistence\ObjectManager $om
-     * @return \FSi\Bundle\TerytDatabaseBundle\Teryt\Import\NodeConverter
-     */
-    public function getNodeConverter(\SimpleXMLElement $node, ObjectManager $om)
+    public function getNodeConverter(SimpleXMLElement $node, ObjectManager $om): NodeConverter
     {
         return new PlacesDictionaryNodeConverter($node, $om);
     }
 
-    /**
-     * @return string
-     */
-    protected function getRecordXPath()
+    protected function getRecordXPath(): string
     {
         return '/simc/catalog/row';
     }

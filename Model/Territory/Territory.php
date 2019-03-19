@@ -23,37 +23,23 @@ class Territory
      */
     protected $name;
 
-    /**
-     * @param int $code
-     */
-    public function __construct($code)
+    public function __construct(int $code, string $name)
     {
         $this->code = $code;
+        $this->name = $name;
     }
 
-    /**
-     * @return int
-     */
-    public function getCode()
+    public function getCode(): int
     {
         return $this->code;
     }
 
-    /**
-     * @param string $name
-     * @return self
-     */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
-
-        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }

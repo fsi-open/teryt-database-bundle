@@ -39,7 +39,7 @@ class TerytSoapClient extends SoapClient
         $this->digest = $digest;
     }
 
-    public function __doRequest($request, $location, $action, $version, $one_way = 0)
+    public function __doRequest($request, $location, $action, $version, $one_way = 0): string
     {
         $doc = new DOMDocument('1.0');
         $doc->loadXML($request);

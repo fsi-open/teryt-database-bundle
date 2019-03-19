@@ -12,38 +12,28 @@ declare(strict_types=1);
 namespace FSi\Bundle\TerytDatabaseBundle\Command;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use FSi\Bundle\TerytDatabaseBundle\Teryt\Import\NodeConverter;
 use FSi\Bundle\TerytDatabaseBundle\Teryt\Import\TerritorialDivisionNodeConverter;
+use SimpleXMLElement;
 use Symfony\Component\Console\Input\InputArgument;
 
 class TerytImportTerritorialDivisionCommand extends TerytImportCommand
 {
-    const FLUSH_FREQUENCY = 1;
+    public const FLUSH_FREQUENCY = 1;
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName('teryt:import:territorial-division')
             ->setDescription('Import teryt territorial division data from xml to database')
-            ->addArgument(
-                'file',
-                InputArgument::REQUIRED,
-                'Territorial division xml file'
-            );
+            ->addArgument('file', InputArgument::REQUIRED, 'Territorial division xml file');
     }
 
-    /**
-     * @param \SimpleXMLElement $node
-     * @param \Doctrine\Common\Persistence\ObjectManager $om
-     * @return \FSi\Bundle\TerytDatabaseBundle\Teryt\Import\NodeConverter
-     */
-    public function getNodeConverter(\SimpleXMLElement $node, ObjectManager $om)
+    public function getNodeConverter(SimpleXMLElement $node, ObjectManager $om): NodeConverter
     {
         return new TerritorialDivisionNodeConverter($node, $om);
     }
 
-    /**
-     * @return string
-     */
-    protected function getRecordXPath()
+    protected function getRecordXPath(): string
     {
         return '/teryt/catalog/row';
     }
