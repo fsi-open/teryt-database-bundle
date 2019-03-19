@@ -11,11 +11,12 @@ declare(strict_types=1);
 
 namespace FSi\Bundle\TerytDatabaseBundle\DataFixtures\ORM;
 
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use FSi\Bundle\TerytDatabaseBundle\Entity\CommunityType;
 
-class LoadCommunityTypeData implements ORMFixtureInterface
+class LoadCommunityTypeData implements ORMFixtureInterface, FixtureGroupInterface
 {
     protected $communityTypes = [
         1 => 'gmina miejska',
@@ -26,6 +27,11 @@ class LoadCommunityTypeData implements ORMFixtureInterface
         8 => 'dzielnica w m.st. Warszawa',
         9 => 'delegatura gminy miejskiej'
     ];
+
+    public static function getGroups(): array
+    {
+        return ['teryt'];
+    }
 
     public function load(ObjectManager $manager): void
     {
