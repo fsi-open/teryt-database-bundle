@@ -1,11 +1,18 @@
 <?php
 
+/**
+ * (c) FSi sp. z o.o. <info@fsi.pl>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
 namespace FSi\Bundle\TerytDatabaseBundle\Behat\Context;
 
 use Behat\Symfony2Extension\Context\KernelAwareContext;
 use FSi\Bundle\TerytDatabaseBundle\Behat\Context\Console\ApplicationTester;
-use Guzzle\Http\Message\Response;
-use Guzzle\Plugin\Mock\MockPlugin;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\HttpKernel\KernelInterface;
 

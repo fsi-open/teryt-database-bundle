@@ -1,12 +1,21 @@
 <?php
 
+/**
+ * (c) FSi sp. z o.o. <info@fsi.pl>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
 namespace FSi\Bundle\TerytDatabaseBundle\DataFixtures\ORM;
 
-use Doctrine\Common\DataFixtures\FixtureInterface;
+use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use FSi\Bundle\TerytDatabaseBundle\Entity\CommunityType;
 
-class LoadCommunityTypeData implements FixtureInterface
+class LoadCommunityTypeData implements ORMFixtureInterface
 {
     protected $communityTypes = array(
         1 => 'gmina miejska',

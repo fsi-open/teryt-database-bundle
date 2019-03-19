@@ -7,10 +7,11 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace FSi\Bundle\TerytDatabaseBundle;
 
 use FSi\Bundle\TerytDatabaseBundle\DependencyInjection\FSITerytDbExtension;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**

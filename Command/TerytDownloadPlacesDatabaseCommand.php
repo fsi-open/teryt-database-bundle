@@ -7,6 +7,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace FSi\Bundle\TerytDatabaseBundle\Command;
 
 use Symfony\Component\Console\Input\InputArgument;
@@ -15,7 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class TerytDownloadPlacesDatabaseCommand extends TerytDownloadCommand
 {
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName('teryt:download:places')
             ->setDescription('Download teryt places (SIMC) database files')
@@ -32,7 +34,7 @@ class TerytDownloadPlacesDatabaseCommand extends TerytDownloadCommand
             );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $this->saveFile(
             $this->getApiClient()->getPlacesData(),

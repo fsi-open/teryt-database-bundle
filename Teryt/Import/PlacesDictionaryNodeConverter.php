@@ -7,6 +7,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace FSi\Bundle\TerytDatabaseBundle\Teryt\Import;
 
 use FSi\Bundle\TerytDatabaseBundle\Entity\PlaceType;

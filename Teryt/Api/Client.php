@@ -7,8 +7,11 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace FSi\Bundle\TerytDatabaseBundle\Teryt\Api;
 
+use SoapClient;
 use SplTempFileObject;
 
 class Client
@@ -29,7 +32,7 @@ class Client
     private $password;
 
     /**
-     * @var \SoapClient
+     * @var SoapClient
      */
     private $soapClient;
 
@@ -42,17 +45,17 @@ class Client
         $this->initClient();
     }
 
-    public function getTerritorialDivisionData() : SplTempFileObject
+    public function getTerritorialDivisionData(): SplTempFileObject
     {
         return $this->getFile('PobierzKatalogTERC');
     }
 
-    public function getPlacesData() : SplTempFileObject
+    public function getPlacesData(): SplTempFileObject
     {
         return $this->getFile('PobierzKatalogSIMC');
     }
 
-    public function getStreetsData() : SplTempFileObject
+    public function getStreetsData(): SplTempFileObject
     {
         return $this->getFile('PobierzKatalogULIC');
     }
@@ -62,7 +65,7 @@ class Client
         return $this->getFile('PobierzKatalogWMRODZ');
     }
 
-    private function getFile($functionName) : SplTempFileObject
+    private function getFile($functionName): SplTempFileObject
     {
         $response = $this->makeCall($functionName, [
             'DataStanu' => (new \DateTime())->format('Y-m-d')
@@ -78,7 +81,7 @@ class Client
         return $this->soapClient->__soapCall($functionName, [$args]);
     }
 
-    private function prepareTempFile($data) : SplTempFileObject
+    private function prepareTempFile($data): SplTempFileObject
     {
         $tempXml = new SplTempFileObject();
         $tempXml->fwrite(base64_decode($data));
@@ -86,13 +89,14 @@ class Client
         return $tempXml;
     }
 
-    private function initClient()
+    private function initClient(): void
     {
         $this->soapClient = new TerytSoapClient($this->url, [
             'soap_version' => SOAP_1_1,
             'exceptions' => true,
             'cache_wsdl' => WSDL_CACHE_BOTH,
         ]);
+
         $this->soapClient->addUserToken($this->username, $this->password);
     }
 }
