@@ -21,12 +21,10 @@ class Province extends Territory
      */
     protected $districts;
 
-    /**
-     * @param int $code
-     */
-    public function __construct($code)
+    public function __construct(int $code, string $name)
     {
-        parent::__construct($code);
+        parent::__construct($code, $name);
+
         $this->districts = new ArrayCollection();
     }
 

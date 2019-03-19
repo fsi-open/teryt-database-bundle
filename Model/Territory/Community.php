@@ -32,49 +32,26 @@ class Community extends Territory
      */
     protected $places;
 
-    /**
-     * @param int $code
-     */
-    public function __construct($code)
+    public function __construct(District $district, int $code, string $name, CommunityType $type)
     {
-        parent::__construct($code);
+        parent::__construct($code, $name);
+
+        $this->district = $district;
+        $this->type = $type;
         $this->places = new ArrayCollection();
     }
 
-    /**
-     * @param District $district
-     * @return self
-     */
-    public function setDistrict(District $district)
-    {
-        $this->district = $district;
-
-        return $this;
-    }
-
-    /**
-     * @return District
-     */
-    public function getDistrict()
+    public function getDistrict(): District
     {
         return $this->district;
     }
 
-    /**
-     * @param CommunityType $type
-     * @return self
-     */
-    public function setType(CommunityType $type)
+    public function setType(CommunityType $type): void
     {
         $this->type = $type;
-
-        return $this;
     }
 
-    /**
-     * @return CommunityType
-     */
-    public function getType()
+    public function getType(): CommunityType
     {
         return $this->type;
     }
@@ -87,11 +64,8 @@ class Community extends Territory
         return $this->places;
     }
 
-    /**
-     * @return string
-     */
-    public function getFullName()
+    public function getFullName(): string
     {
-        return sprintf('%s (%s)', $this->name, $this->type->getName());
+        return sprintf('%s (%s)', $this->getName(), $this->type->getName());
     }
 }

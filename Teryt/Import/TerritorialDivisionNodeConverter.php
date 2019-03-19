@@ -16,6 +16,7 @@ use FSi\Bundle\TerytDatabaseBundle\Entity\CommunityType;
 use FSi\Bundle\TerytDatabaseBundle\Entity\District;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Province;
 use FSi\Bundle\TerytDatabaseBundle\Exception\TerritorialDivisionNodeConverterException;
+use RuntimeException;
 
 class TerritorialDivisionNodeConverter extends NodeConverter
 {
@@ -37,110 +38,73 @@ class TerritorialDivisionNodeConverter extends NodeConverter
             return $this->convertToCommunity();
         }
 
-        throw new TerritorialDivisionNodeConverterException();
+        throw new TerritorialDivisionNodeConverterException('Unknown territory type');
     }
 
-    /**
-     * @return bool
-     */
-    private function isProvinceNode()
+    private function isProvinceNode(): bool
     {
         return $this->hasProvinceCode() && !$this->hasDistrictCode();
     }
 
-    /**
-     * @return bool
-     */
-    private function isDistrict()
+    private function isDistrict(): bool
     {
         return $this->hasProvinceCode() && $this->hasDistrictCode() && !$this->hasCommunityCode();
     }
 
-    /**
-     * @return bool
-     */
-    public function isCommunity()
+    public function isCommunity(): bool
     {
         return $this->hasProvinceCode() && $this->hasDistrictCode() && $this->hasCommunityCode();
     }
 
-    /**
-     * @return Province
-     */
-    private function convertToProvince()
+    private function convertToProvince(): Province
     {
-        $provinceEntity = $this->createProvinceEntity();
+        /** @var Province|null $provinceEntity */
+        $provinceEntity = $this->findOneBy(Province::class, ['code' => $this->getProvinceCode()]);
+        if ($provinceEntity === null) {
+            return new Province($this->getProvinceCode(), $this->getTerritoryName());
+        }
+
         $provinceEntity->setName($this->getTerritoryName());
 
         return $provinceEntity;
     }
 
-    /**
-     * @return District
-     */
-    private function convertToDistrict()
+    private function convertToDistrict(): District
     {
-        $province = $this->findOneBy(Province::class, array(
-            'code' => $this->getProvinceCode()
-        ));
-
-        return $this->createDistrictEntity()
-            ->setName($this->getTerritoryName())
-            ->setProvince($province);
-    }
-
-    /**
-     * @return Community
-     */
-    private function convertToCommunity()
-    {
-        $district = $this->findOneBy(District::class, array(
-            'code' => (int) sprintf('%1d%02d', $this->getProvinceCode(), $this->getDistrictCode())
-        ));
-
-        $type = $this->findOneBy(CommunityType::class, array(
-            'type' => (int) $this->node->rodz->__toString()
-        ));
-
-        if (!$type) {
-            throw new \RuntimeException(sprintf('Unable to find community type "%s"', $this->node->rodz));
+        /** @var Province|null $province */
+        $province = $this->findOneBy(Province::class, ['code' => $this->getProvinceCode()]);
+        if ($province === null) {
+            throw new RuntimeException(sprintf('Unable to find province "%s"', $this->getProvinceCode()));
         }
 
-        $community = $this->createCommunityEntity();
-        $community->setName($this->getTerritoryName());
-        $community->setType($type);
-        $community->setDistrict($district);
-
-        return $community;
-    }
-
-    /**
-     * @return Province
-     */
-    private function createProvinceEntity()
-    {
-        return $this->findOneBy(Province::class, array(
-            'code' => $this->getProvinceCode()
-        )) ?: new Province($this->getProvinceCode());
-    }
-
-    /**
-     * @return District
-     */
-    private function createDistrictEntity()
-    {
         $districtCode = (int) sprintf('%d%02d', $this->getProvinceCode(), $this->getDistrictCode());
+        /** @var District|null $district */
+        $district = $this->findOneBy(District::class, ['code' => $districtCode]);
 
-        return $this->findOneBy(District::class, array(
-            'code' => $districtCode
-        )) ?: new District($districtCode);
+        if ($district === null) {
+            return new District($province, $districtCode, $this->getTerritoryName());
+        }
+
+        $district->setName($this->getTerritoryName());
+
+        return $district;
     }
 
-    /**
-     * @return Community
-     */
-    private function createCommunityEntity()
+    private function convertToCommunity(): Community
     {
+        $districtCode = (int) sprintf('%1d%02d', $this->getProvinceCode(), $this->getDistrictCode());
+        /** @var District|null $district */
+        $district = $this->findOneBy(District::class, ['code' => $districtCode]);
+        if ($district === null) {
+            throw new RuntimeException(sprintf('Unable to find district "%s"', $districtCode));
+        }
+
+        /** @var CommunityType|null $type */
+        $type = $this->findOneBy(CommunityType::class, ['type' => (int) $this->node->rodz->__toString()]);
+        if ($type === null) {
+            throw new RuntimeException(sprintf('Unable to find community type "%s"', $this->node->rodz->__toString()));
+        }
+
         $communityCode = (int) sprintf(
             '%d%02d%02d%1d',
             $this->getProvinceCode(),
@@ -148,72 +112,55 @@ class TerritorialDivisionNodeConverter extends NodeConverter
             $this->getCommunityCode(),
             $this->getCommunityType()
         );
+        /** @var Community|null $community */
+        $community = $this->findOneBy(Community::class, ['code' => $communityCode]);
 
-        return $this->findOneBy(Community::class, array(
-            'code' => $communityCode
-        )) ?: new Community($communityCode);
+        if ($community === null) {
+            return new Community($district, $communityCode, $this->getTerritoryName(), $type);
+        }
+
+        $community->setName($this->getTerritoryName());
+        $community->setType($type);
+
+        return $community;
     }
 
-    /**
-     * @return int
-     */
-    public function getDistrictCode()
+    public function getDistrictCode(): int
     {
         return (int) $this->node->pow->__toString();
     }
 
-    /**
-     * @return bool
-     */
-    private function hasProvinceCode()
+    private function hasProvinceCode(): bool
     {
         return !empty(trim($this->node->woj->__toString()));
     }
 
-    /**
-     * @return int
-     */
-    private function getProvinceCode()
+    private function getProvinceCode(): int
     {
         return (int) $this->node->woj->__toString();
     }
 
-    /**
-     * @return bool
-     */
-    public function hasDistrictCode()
+    public function hasDistrictCode(): bool
     {
         return !empty(trim($this->node->pow->__toString()));
     }
 
-    /**
-     * @return bool
-     */
-    public function hasCommunityCode()
+    public function hasCommunityCode(): bool
     {
         return !empty(trim($this->node->gmi->__toString()));
     }
 
-    /**
-     * @return int
-     */
-    private function getCommunityCode()
+    private function getCommunityCode(): int
     {
         return (int) $this->node->gmi->__toString();
     }
 
-    /**
-     * @return string
-     */
-    private function getTerritoryName()
+    private function getTerritoryName(): string
     {
         return (string) $this->node->nazwa;
     }
 
-    /**
-     * @return int
-     */
-    private function getCommunityType()
+    private function getCommunityType(): int
     {
         return (int) $this->node->rodz->__toString();
     }

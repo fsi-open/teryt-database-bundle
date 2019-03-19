@@ -16,18 +16,19 @@ use Doctrine\Common\Persistence\ObjectRepository;
 use FSi\Bundle\TerytDatabaseBundle\Entity\PlaceType;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
+use SimpleXMLElement;
 
 class PlacesDictionaryNodeConverterSpec extends ObjectBehavior
 {
-    function let(ObjectManager $om, ObjectRepository $or)
+    function let(ObjectManager $om, ObjectRepository $or): void
     {
         // It is not possible to mock internal classes with final constructor
-        $this->beConstructedWith(new \SimpleXMLElement('<row></row>'), $om);
+        $this->beConstructedWith(new SimpleXMLElement('<row></row>'), $om);
         $om->getRepository(Argument::type('string'))->willReturn($or);
         $or->findOneBy(Argument::type('array'))->willReturn();
     }
 
-    function it_converts_node_to_places_dictionary_entry(ObjectManager $om)
+    function it_converts_node_to_places_dictionary_entry(ObjectManager $om): void
     {
         $xml = <<<EOT
 <row>
@@ -37,16 +38,15 @@ class PlacesDictionaryNodeConverterSpec extends ObjectBehavior
 </row>
 EOT;
 
-        $placeType = new PlaceType(2);
-        $placeType->setName('kolonia');
+        $placeType = new PlaceType(2, 'kolonia');
 
-        $this->beConstructedWith(new \SimpleXMLElement($xml), $om);
+        $this->beConstructedWith(new SimpleXMLElement($xml), $om);
         $this->convertToEntity()->shouldBeLike($placeType);
     }
 
     function it_converts_node_to_places_dictionary_entry_with_updating_existing_one(
         ObjectManager $om, ObjectRepository $or, PlaceType $placeType
-    ){
+    ): void {
         $xml = <<<EOT
 <row>
   <rm>02</rm>
@@ -55,13 +55,11 @@ EOT;
 </row>
 EOT;
 
-        $or->findOneBy(array(
-            'type' => 2
-        ))->shouldBeCalled()->willReturn($placeType);
+        $or->findOneBy(['type' => 2])->shouldBeCalled()->willReturn($placeType);
 
-        $placeType->setName('kolonia')->shouldBeCalled()->willReturn($placeType);
+        $placeType->setName('kolonia')->shouldBeCalled();
 
-        $this->beConstructedWith(new \SimpleXMLElement($xml), $om);
+        $this->beConstructedWith(new SimpleXMLElement($xml), $om);
         $this->convertToEntity()->shouldBeLike($placeType);
     }
 }

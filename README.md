@@ -18,12 +18,12 @@ Register bundles in `AppKernel.php`
 ```php
 public function registerBundles()
 {
-    return array(
+    return [
         // ...
         new FSi\Bundle\TerytDatabaseBundle\FSiTerytDbBundle(),
         new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
         // ...
-    );
+    ];
 }
 ```
 

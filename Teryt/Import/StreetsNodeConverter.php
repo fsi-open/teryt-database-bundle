@@ -16,70 +16,59 @@ use FSi\Bundle\TerytDatabaseBundle\Entity\Street;
 
 class StreetsNodeConverter extends NodeConverter
 {
-    public function convertToEntity()
+    public function convertToEntity(): Street
     {
-        $streetEntity = $this->createStreetEntity();
-        $streetEntity->setName($this->getName())
-            ->setAdditionalName($this->getAdditionalName())
-            ->setType($this->getStreetType());
+        $place = $this->getPlace();
+
+        /** @var Street|null $streetEntity */
+        $streetEntity = $this->findOneBy('FSiTerytDbBundle:Street', [
+            'id' => $this->getStreetId(),
+            'place' => $place
+        ]);
+
+        if ($streetEntity === null) {
+            return new Street(
+                $place,
+                $this->getStreetId(),
+                $this->getStreetType(),
+                $this->getAdditionalName(),
+                $this->getName()
+            );
+        }
+
+        $streetEntity->setType($this->getStreetType());
+        $streetEntity->setName($this->getName());
+        $streetEntity->setAdditionalName($this->getAdditionalName());
 
         return $streetEntity;
     }
 
-    /**
-     * @return Street
-     */
-    private function createStreetEntity()
-    {
-        $place = $this->getPlace();
-
-        return $this->findOneBy('FSiTerytDbBundle:Street', array(
-            'id' => $this->getStreetId(),
-            'place' => $place
-        )) ?: new Street($place, $this->getStreetId());
-    }
-
-    /**
-     * @return string
-     */
-    private function getStreetId()
+    private function getStreetId(): int
     {
         return (int) $this->node->sym_ul->__toString();
     }
 
-    /**
-     * @return string
-     */
-    private function getName()
+    private function getName(): string
     {
         return trim((string) $this->node->nazwa_1);
     }
 
-    /**
-     * @return string
-     */
-    private function getAdditionalName()
+    private function getAdditionalName(): ?string
     {
         $additionalName = trim((string) $this->node->nazwa_2);
 
         return $additionalName ?: null;
     }
 
-    /**
-     * @return string
-     */
-    private function getStreetType()
+    private function getStreetType(): string
     {
         return (string) $this->node->cecha;
     }
 
-    /**
-     * @return Place
-     */
-    private function getPlace()
+    private function getPlace(): Place
     {
-        return $this->om->getRepository(Place::class)->findOneBy(array(
+        return $this->om->getRepository(Place::class)->findOneBy([
             'id' => (int) $this->node->sym->__toString()
-        ));
+        ]);
     }
 }

@@ -43,7 +43,7 @@ class Place
     protected $streets;
 
     /**
-     * @var Place
+     * @var Place|null
      */
     protected $parentPlace;
 
@@ -52,76 +52,47 @@ class Place
      */
     protected $childPlaces;
 
-    /**
-     * @param int $id
-     */
-    function __construct($id)
+    public function __construct(int $id, string $name, Type $type, Community $community)
     {
         $this->id = $id;
+        $this->name = $name;
+        $this->type = $type;
+        $this->community = $community;
         $this->streets = new ArrayCollection();
         $this->childPlaces = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param Community $community
-     * @return Place
-     */
-    public function setCommunity(Community $community)
+    public function setCommunity(Community $community): void
     {
         $this->community = $community;
-
-        return $this;
     }
 
-    /**
-     * @return Community
-     */
-    public function getCommunity()
+    public function getCommunity(): Community
     {
         return $this->community;
     }
 
-    /**
-     * @param string $name
-     * @return Place
-     */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
-        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @param Type $type
-     * @return Place
-     */
-    public function setType(Type $type)
+    public function setType(Type $type): void
     {
         $this->type = $type;
-
-        return $this;
     }
 
-    /**
-     * @return Type
-     */
-    public function getType()
+    public function getType(): Type
     {
         return $this->type;
     }
@@ -129,23 +100,17 @@ class Place
     /**
      * @return Collection|Street[]
      */
-    public function getStreets()
+    public function getStreets(): Collection
     {
         return $this->streets;
     }
 
-    /**
-     * @return Place
-     */
-    public function getParentPlace()
+    public function getParentPlace(): ?Place
     {
         return $this->parentPlace;
     }
 
-    /**
-     * @param Place $parentPlace
-     */
-    public function setParentPlace(Place $parentPlace = null)
+    public function setParentPlace(?Place $parentPlace): void
     {
         $this->parentPlace = $parentPlace;
     }
@@ -153,15 +118,12 @@ class Place
     /**
      * @return Collection|Place[]
      */
-    public function getChildPlaces()
+    public function getChildPlaces(): Collection
     {
         return $this->childPlaces;
     }
 
-    /**
-     * @return string
-     */
-    public function getFullName()
+    public function getFullName(): string
     {
         return sprintf('%s (%s)', $this->name, $this->type->getName());
     }

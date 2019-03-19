@@ -1,17 +1,17 @@
 default:
   suites:
     default:
-      paths: [ %paths.base%/Features ]
+      paths: [ '%paths.base%/Features' ]
       contexts:
         - FSi\Bundle\TerytDatabaseBundle\Behat\Context\CommandContext:
-            fixturesPath: %paths.base%/Behat/Fixtures
+            fixturesPath: '%paths.base%/Behat/Fixtures'
         - FSi\Bundle\TerytDatabaseBundle\Behat\Context\DataContext
         - FSi\Bundle\TerytDatabaseBundle\Behat\Context\DownloadTerytCommandContext:
-            fixturesPath: %paths.base%/Behat/Fixtures
+            fixturesPath: '%paths.base%/Behat/Fixtures'
         - FSi\Bundle\TerytDatabaseBundle\Behat\Context\CommandContext:
-            fixturesPath: %paths.base%/Behat/Fixtures
+            fixturesPath: '%paths.base%/Behat/Fixtures'
         - FSi\Bundle\TerytDatabaseBundle\Behat\Context\ImportTerytCommandContext:
-            fixturesPath: %paths.base%/Behat/Fixtures
+            fixturesPath: '%paths.base%/Behat/Fixtures'
   extensions:
     Behat\Symfony2Extension:
       kernel:

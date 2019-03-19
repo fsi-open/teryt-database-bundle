@@ -14,7 +14,15 @@ namespace FSi\Bundle\TerytDatabaseBundle\Behat\Context;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Symfony2Extension\Context\KernelAwareContext;
+use Doctrine\ORM\EntityRepository;
+use FSi\Bundle\TerytDatabaseBundle\Entity\District;
+use FSi\Bundle\TerytDatabaseBundle\Entity\Place;
+use FSi\Bundle\TerytDatabaseBundle\Entity\PlaceType;
+use FSi\Bundle\TerytDatabaseBundle\Entity\Province;
+use FSi\Bundle\TerytDatabaseBundle\Entity\Street;
 use Symfony\Component\HttpKernel\KernelInterface;
+use FSi\Bundle\TerytDatabaseBundle\Entity\Community;
+use FSi\Bundle\TerytDatabaseBundle\Entity\CommunityType;
 
 class ImportTerytCommandContext implements KernelAwareContext
 {
@@ -28,17 +36,12 @@ class ImportTerytCommandContext implements KernelAwareContext
      */
     protected $fixturesPath;
 
-    function __construct($fixturesPath)
+    public function __construct($fixturesPath)
     {
         $this->fixturesPath = $fixturesPath;
     }
 
-    /**
-     * Sets Kernel instance.
-     *
-     * @param KernelInterface $kernel HttpKernel instance
-     */
-    public function setKernel(KernelInterface $kernel)
+    public function setKernel(KernelInterface $kernel): void
     {
         $this->kernel = $kernel;
     }
@@ -46,14 +49,14 @@ class ImportTerytCommandContext implements KernelAwareContext
     /**
      * @Given /^"([^"]*)" file have following content:$/
      */
-    public function xmlFileHaveFollowingContent($fileName, PyStringNode $fileContent)
+    public function xmlFileHaveFollowingContent(string $fileName, PyStringNode $fileContent): void
     {
-        $targetFolder = sprintf("%s/Project/app/teryt", $this->fixturesPath);
-        if (!file_exists($targetFolder)) {
-            mkdir($targetFolder);
+        $targetFolder = sprintf('%s/Project/app/teryt', $this->fixturesPath);
+        if (!file_exists($targetFolder) && !mkdir($targetFolder) && !is_dir($targetFolder)) {
+            throw new \RuntimeException(sprintf('Directory "%s" was not created', $targetFolder));
         }
 
-        $filePath = sprintf("%s/%s", $targetFolder, $fileName);
+        $filePath = sprintf('%s/%s', $targetFolder, $fileName);
         file_put_contents($filePath, $fileContent->getRaw());
         expect(file_exists($filePath))->toBe(true);
     }
@@ -61,67 +64,63 @@ class ImportTerytCommandContext implements KernelAwareContext
     /**
      * @Given /^there are no provinces in database$/
      */
-    public function thereAreNoProvincesInDatabase()
+    public function thereAreNoProvincesInDatabase(): void
     {
-        expect($this->getProvinceRepository()
-            ->findAll())->toBe(array());
+        expect($this->getProvinceRepository()->findAll())->toBe([]);
     }
 
     /**
      * @Given /^there are no districts in database$/
      */
-    public function thereAreNoDistrictsInDatabase()
+    public function thereAreNoDistrictsInDatabase(): void
     {
-        expect($this->getDistrictRepository()
-            ->findAll())->toBe(array());
+        expect($this->getDistrictRepository()->findAll())->toBe([]);
     }
 
     /**
      * @Given /^there are no communities in database$/
      */
-    public function thereAreNoCommunitiesInDatabase()
+    public function thereAreNoCommunitiesInDatabase(): void
     {
-        expect($this->getCommunityRepository()
-            ->findAll())->toBe(array());
+        expect($this->getCommunityRepository()->findAll())->toBe([]);
     }
 
     /**
      * @Given /^places dictionary table in database is empty$/
      */
-    public function placesDictionaryTableInDatabaseIsEmpty()
+    public function placesDictionaryTableInDatabaseIsEmpty(): void
     {
-        expect($this->getPlaceTypeRepository()
-            ->findAll())->toBe(array());
+        expect($this->getPlaceTypeRepository()->findAll())->toBe([]);
     }
 
     /**
      * @Given /^places table in database is empty$/
      */
-    public function placesTableInDatabaseIsEmpty()
+    public function placesTableInDatabaseIsEmpty(): void
     {
-        expect($this->getPlaceRepository()
-            ->findAll())->toBe(array());
+        expect($this->getPlaceRepository()->findAll())->toBe([]);
     }
 
     /**
      * @Given /^there are no streets in database$/
      */
-    public function thereAreNoStreetsInDatabase()
+    public function thereAreNoStreetsInDatabase(): void
     {
         expect($this->getStreetRepository()
-            ->findAll())->toBe(array());
+            ->findAll())->toBe([]);
     }
 
     /**
      * @Then /^following province should exist in database$/
      */
-    public function followingProvinceShouldExistInDatabase(TableNode $table)
+    public function followingProvinceShouldExistInDatabase(TableNode $table): void
     {
         $tableHash = $table->getHash();
 
         foreach ($tableHash as $row) {
+            /** @var Province|null $entity */
             $entity = $this->getProvinceRepository()->findOneByCode($row['Code']);
-            expect($entity)->toBeAnInstanceOf('FSi\Bundle\TerytDatabaseBundle\Entity\Province');
+            expect($entity)->toBeAnInstanceOf(Province::class);
             expect($entity->getName())->toBe($row['Name']);
         }
     }
@@ -129,13 +128,14 @@ class ImportTerytCommandContext implements KernelAwareContext
     /**
      * @Then /^following district should exist in database$/
      */
-    public function followingDistrictShouldExistInDatabase(TableNode $table)
+    public function followingDistrictShouldExistInDatabase(TableNode $table): void
     {
         $tableHash = $table->getHash();
 
         foreach ($tableHash as $row) {
+            /** @var District|null $entity */
             $entity = $this->getDistrictRepository()->findOneByCode($row['Code']);
-            expect($entity)->toBeAnInstanceOf('FSi\Bundle\TerytDatabaseBundle\Entity\District');
+            expect($entity)->toBeAnInstanceOf(District::class);
             expect($entity->getName())->toBe($row['Name']);
             expect($entity->getProvince()->getName())->toBe($row['Province']);
         }
@@ -144,13 +144,14 @@ class ImportTerytCommandContext implements KernelAwareContext
     /**
      * @Then /^following communities should exist in database$/
      */
-    public function followingCommunitiesShouldExistInDatabase(TableNode $table)
+    public function followingCommunitiesShouldExistInDatabase(TableNode $table): void
     {
         $tableHash = $table->getHash();
 
         foreach ($tableHash as $row) {
+            /** @var Community|null $entity */
             $entity = $this->getCommunityRepository()->findOneByCode($row['Code']);
-            expect($entity)->toBeAnInstanceOf('FSi\Bundle\TerytDatabaseBundle\Entity\Community');
+            expect($entity)->toBeAnInstanceOf(Community::class);
             expect($entity->getName())->toBe($row['Name']);
             expect($entity->getDistrict()->getName())->toBe($row['District']);
             expect($entity->getType()->getName())->toBe($row['Community type']);
@@ -160,13 +161,14 @@ class ImportTerytCommandContext implements KernelAwareContext
     /**
      * @Then /^following community types should exist in database$/
      */
-    public function followingCommunityTypesShouldExistInDatabase(TableNode $table)
+    public function followingCommunityTypesShouldExistInDatabase(TableNode $table): void
     {
         $tableHash = $table->getHash();
 
         foreach ($tableHash as $row) {
+            /** @var CommunityType|null $entity */
             $entity = $this->getCommunityTypeRepository()->findOneByType($row['Type']);
-            expect($entity)->toBeAnInstanceOf('FSi\Bundle\TerytDatabaseBundle\Entity\CommunityType');
+            expect($entity)->toBeAnInstanceOf(CommunityType::class);
             expect($entity->getName())->toBe($row['Name']);
         }
     }
@@ -174,13 +176,14 @@ class ImportTerytCommandContext implements KernelAwareContext
     /**
      * @Then /^places dictionary table in database should have following records$/
      */
-    public function placesDictionaryTableInDatabaseShouldHaveFollowingRecords(TableNode $table)
+    public function placesDictionaryTableInDatabaseShouldHaveFollowingRecords(TableNode $table): void
     {
         $tableHash = $table->getHash();
 
         foreach ($tableHash as $row) {
+            /** @var PlaceType|null $entity */
             $entity = $this->getPlaceTypeRepository()->findOneByType($row['Type']);
-            expect($entity)->toBeAnInstanceOf('FSi\Bundle\TerytDatabaseBundle\Entity\PlaceType');
+            expect($entity)->toBeAnInstanceOf(PlaceType::class);
             expect($entity->getName())->toBe($row['Name']);
         }
     }
@@ -188,13 +191,14 @@ class ImportTerytCommandContext implements KernelAwareContext
     /**
      * @Then /^places table in database should have following records$/
      */
-    public function placesTableInDatabaseShouldHaveFollowingRecords(TableNode $table)
+    public function placesTableInDatabaseShouldHaveFollowingRecords(TableNode $table): void
     {
         $tableHash = $table->getHash();
 
         foreach ($tableHash as $row) {
+            /** @var Place|null $entity */
             $entity = $this->getPlaceRepository()->findOneById($row['Identity']);
-            expect($entity)->toBeAnInstanceOf('FSi\Bundle\TerytDatabaseBundle\Entity\Place');
+            expect($entity)->toBeAnInstanceOf(Place::class);
             expect($entity->getName())->toBe($row['Name']);
             expect($entity->getType()->getName())->toBe($row['Place type']);
             expect($entity->getCommunity()->getName())->toBe($row['Community']);
@@ -207,13 +211,13 @@ class ImportTerytCommandContext implements KernelAwareContext
     /**
      * @Then /^following streets should exist in database$/
      */
-    public function followingStreetsShouldExistInDatabase(TableNode $table)
+    public function followingStreetsShouldExistInDatabase(TableNode $table): void
     {
         $tableHash = $table->getHash();
 
         foreach ($tableHash as $row) {
             $entity = $this->getStreetRepository()->findOneById($row['Identity']);
-            expect($entity)->toBeAnInstanceOf('FSi\Bundle\TerytDatabaseBundle\Entity\Street');
+            expect($entity)->toBeAnInstanceOf(Street::class);
             expect($entity->getId())->toBe((int) $row['Identity']);
             expect($entity->getName())->toBe($row['Name']);
             expect($entity->getType())->toBe($row['Type']);
@@ -222,81 +226,66 @@ class ImportTerytCommandContext implements KernelAwareContext
         }
     }
 
-    /**
-     * @return mixed
-     */
-    private function getProvinceRepository()
+    private function getProvinceRepository(): EntityRepository
     {
         return $this->kernel
             ->getContainer()
             ->get('doctrine')
             ->getManager()
-            ->getRepository('FSiTerytDbBundle:Province');
+            ->getRepository(Province::class);
     }
 
-    /**
-     * @return mixed
-     */
-    private function getDistrictRepository()
+    private function getDistrictRepository(): EntityRepository
     {
         return $this->kernel
             ->getContainer()
             ->get('doctrine')
             ->getManager()
-            ->getRepository('FSiTerytDbBundle:District');
+            ->getRepository(District::class);
     }
 
-    /**
-     * @return mixed
-     */
-    private function getCommunityRepository()
+    private function getCommunityRepository(): EntityRepository
     {
         return $this->kernel
             ->getContainer()
             ->get('doctrine')
             ->getManager()
-            ->getRepository('FSiTerytDbBundle:Community');
+            ->getRepository(Community::class);
     }
 
-    /**
-     * @return mixed
-     */
-    private function getPlaceTypeRepository()
+    private function getPlaceTypeRepository(): EntityRepository
     {
         return $this->kernel
             ->getContainer()
             ->get('doctrine')
             ->getManager()
-            ->getRepository('FSiTerytDbBundle:PlaceType');
+            ->getRepository(PlaceType::class);
     }
 
-    /**
-     * @return mixed
-     */
-    private function getCommunityTypeRepository()
+    private function getCommunityTypeRepository(): EntityRepository
     {
         return $this->kernel
             ->getContainer()
             ->get('doctrine')
             ->getManager()
-            ->getRepository('FSiTerytDbBundle:CommunityType');
+            ->getRepository(CommunityType::class);
     }
 
-    private function getPlaceRepository()
+    private function getPlaceRepository(): EntityRepository
     {
         return $this->kernel
             ->getContainer()
             ->get('doctrine')
             ->getManager()
-            ->getRepository('FSiTerytDbBundle:Place');
+            ->getRepository(Place::class);
     }
 
-    private function getStreetRepository()
+    private function getStreetRepository(): EntityRepository
     {
         return $this->kernel
             ->getContainer()
             ->get('doctrine')
             ->getManager()
-            ->getRepository('FSiTerytDbBundle:Street');
+            ->getRepository(Street::class);
     }
 }

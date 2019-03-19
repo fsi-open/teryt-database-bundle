@@ -14,28 +14,27 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 
 class AppKernel extends Kernel
 {
-    public function registerBundles()
+    public function registerBundles(): array
     {
-        return array(
+        return [
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new FSi\Bundle\TerytDatabaseBundle\FSiTerytDbBundle(),
             new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
-        );
+        ];
     }
 
-
-    public function registerContainerConfiguration(LoaderInterface $loader)
+    public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load(sprintf('%s/config/config_%s.yml', __DIR__, $this->getEnvironment()));
     }
 
-    public function getCacheDir()
+    public function getCacheDir(): string
     {
         return sys_get_temp_dir() . '/FSiTerytDbBundle/cache';
     }
 
-    public function getLogDir()
+    public function getLogDir(): string
     {
         return sys_get_temp_dir() . '/FSiTerytDbBundle/logs';
     }

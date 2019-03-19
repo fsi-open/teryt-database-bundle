@@ -20,18 +20,19 @@ use FSi\Bundle\TerytDatabaseBundle\Entity\Province;
 use FSi\Bundle\TerytDatabaseBundle\Exception\TerritorialDivisionNodeConverterException;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
+use SimpleXMLElement;
 
 class TerritorialDivisionNodeConverterSpec extends ObjectBehavior
 {
-    function let(ObjectManager $om, ObjectRepository $or)
+    function let(ObjectManager $om, ObjectRepository $or): void
     {
         // It is not possible to mock internal classes with final constructor
-        $this->beConstructedWith(new \SimpleXMLElement('<row></row>'), $om);
+        $this->beConstructedWith(new SimpleXMLElement('<row></row>'), $om);
         $om->getRepository(Argument::type('string'))->willReturn($or);
         $or->findOneBy(Argument::type('array'))->willReturn();
     }
 
-    function it_converts_node_to_province(ObjectManager $om, ObjectRepository $or)
+    function it_converts_node_to_province(ObjectManager $om): void
     {
         $xml = <<<EOT
 <row>
@@ -48,16 +49,16 @@ class TerritorialDivisionNodeConverterSpec extends ObjectBehavior
 </row>
 EOT;
 
-        $expectedProvince = new Province(2);
+        $expectedProvince = new Province(2, 'województwo');
         $expectedProvince->setName('DOLNOŚLĄSKIE');
 
-        $this->beConstructedWith(new \SimpleXMLElement($xml), $om);
+        $this->beConstructedWith(new SimpleXMLElement($xml), $om);
         $this->convertToEntity()->shouldBeLike($expectedProvince);
     }
 
     function it_converts_node_to_province_with_updating_existing_one(
         ObjectManager $om, ObjectRepository $or, Province $province
-    ) {
+    ): void {
         $xml = <<<EOT
 <row>
     <woj>02</woj>
@@ -76,17 +77,15 @@ EOT;
             ->shouldBeCalled()
             ->willReturn($or);
 
-        $or->findOneBy(array(
-            'code' => 2
-        ))->shouldBeCalled()->willReturn($province);
+        $or->findOneBy(['code' => 2])->shouldBeCalled()->willReturn($province);
 
         $province->setName('Dolnośląskie')->shouldBeCalled();
 
-        $this->beConstructedWith(new \SimpleXMLElement($xml), $om);
+        $this->beConstructedWith(new SimpleXMLElement($xml), $om);
         $this->convertToEntity()->shouldBeLike($province);
     }
 
-    function it_converts_node_to_district(ObjectManager $om, ObjectRepository $or)
+    function it_converts_node_to_district(ObjectManager $om, ObjectRepository $or): void
     {
         $xml = <<<EOT
 <row>
@@ -101,22 +100,18 @@ EOT;
     <stan_na>2013-01-01</stan_na>
 </row>
 EOT;
-        $province = new Province(2);
-        $or->findOneBy(array(
-            'code' => 2
-        ))->shouldBeCalled()->willReturn($province);
+        $province = new Province(2, 'województwo');
+        $or->findOneBy(['code' => 2])->shouldBeCalled()->willReturn($province);
 
-        $expectedDistrict = new District(201);
-        $expectedDistrict->setName('bolesławiecki')
-            ->setProvince($province);
+        $expectedDistrict = new District($province, 201, 'bolesławiecki');
 
-        $this->beConstructedWith(new \SimpleXMLElement($xml), $om);
+        $this->beConstructedWith(new SimpleXMLElement($xml), $om);
         $this->convertToEntity()->shouldBeLike($expectedDistrict);
     }
 
     function it_converts_node_to_district_with_updating_existing_one(
         ObjectManager $om, ObjectRepository $or, District $district
-    ) {
+    ): void {
         $xml = <<<EOT
 <row>
     <woj>02</woj>
@@ -131,23 +126,19 @@ EOT;
 </row>
 EOT;
 
-        $or->findOneBy(array(
-            'code' => 201
-        ))->shouldBeCalled()->willReturn($district);
+        $or->findOneBy(['code' => 201])->shouldBeCalled()->willReturn($district);
 
-        $province = new Province(2);
-        $or->findOneBy(array(
-            'code' => 2
-        ))->shouldBeCalled()->willReturn($province);
+        $province = new Province(2, 'województwo');
 
-        $district->setName('bolesławiecki')->shouldBeCalled()->willReturn($district);
-        $district->setProvince($province)->shouldBeCalled()->willReturn($district);
+        $or->findOneBy(['code' => 2])->shouldBeCalled()->willReturn($province);
 
-        $this->beConstructedWith(new \SimpleXMLElement($xml), $om);
+        $district->setName('bolesławiecki')->shouldBeCalled();
+
+        $this->beConstructedWith(new SimpleXMLElement($xml), $om);
         $this->convertToEntity()->shouldBeLike($district);
     }
 
-    function it_converts_node_to_community(ObjectManager $om, ObjectRepository $or)
+    function it_converts_node_to_community(ObjectManager $om, ObjectRepository $or): void
     {
         $xml = <<<EOT
 <row>
@@ -160,32 +151,22 @@ EOT;
     <stan_na>2013-01-01</stan_na>
 </row>
 EOT;
-        $district = new District(201);
-        $district->setName('Bolesławiec');
+        $district = new District(new Province(1, 'województwo'), 201, 'Bolesławiec');
 
-        $communityType = new CommunityType(1);
-        $communityType->setName('gmina miejska');
+        $communityType = new CommunityType(1, 'gmina miejska');
 
-        $or->findOneBy(array(
-            'code' => 201
-        ))->shouldBeCalled()->willReturn($district);
+        $or->findOneBy(['code' => 201])->shouldBeCalled()->willReturn($district);
+        $or->findOneBy(['type' => 1])->shouldBeCalled()->willReturn($communityType);
 
-        $or->findOneBy(array(
-            'type' => 1
-        ))->shouldBeCalled()->willReturn($communityType);
+        $expectedCommunity = new Community($district, 201011, 'Bolesławiec', $communityType);
 
-        $expectedCommunity = new Community(201011);
-        $expectedCommunity->setName('Bolesławiec')
-            ->setType($communityType)
-            ->setDistrict($district);
-
-        $this->beConstructedWith(new \SimpleXMLElement($xml), $om);
+        $this->beConstructedWith(new SimpleXMLElement($xml), $om);
         $this->convertToEntity()->shouldBeLike($expectedCommunity);
     }
 
     function it_converts_node_to_community_with_updating_existing_one(
         ObjectManager $om, ObjectRepository $or, Community $community
-    ) {
+    ): void {
         $xml = <<<EOT
 <row>
     <woj>02</woj>
@@ -197,37 +178,26 @@ EOT;
     <stan_na>2013-01-01</stan_na>
 </row>
 EOT;
-        $district = new District(201);
-        $district->setName('Bolesławiec');
+        $district = new District(new Province(1, 'województwo'), 201, 'Bolesławiec');
 
-        $communityType = new CommunityType(1);
-        $communityType->setName('gmina miejska');
+        $communityType = new CommunityType(1, 'gmina miejska');
 
-        $or->findOneBy(array(
-            'code' => 201
-        ))->shouldBeCalled()->willReturn($district);
+        $or->findOneBy(['code' => 201])->shouldBeCalled()->willReturn($district);
+        $or->findOneBy(['type' => 1])->shouldBeCalled()->willReturn($communityType);
+        $or->findOneBy(['code' => 201011])->shouldBeCalled()->willReturn($community);
 
-        $or->findOneBy(array(
-            'type' => 1
-        ))->shouldBeCalled()->willReturn($communityType);
+        $community->setName('Bolesławiec')->shouldBeCalled();
+        $community->setType($communityType)->shouldBeCalled();
 
-        $or->findOneBy(array(
-            'code' => 201011
-        ))->shouldBeCalled()->willReturn($community);
-
-        $community->setName('Bolesławiec')->shouldBeCalled()->willReturn($community);
-        $community->setType($communityType)->shouldBeCalled()->willReturn($community);
-        $community->setDistrict($district)->shouldBeCalled()->willReturn($community);
-
-        $this->beConstructedWith(new \SimpleXMLElement($xml), $om);
+        $this->beConstructedWith(new SimpleXMLElement($xml), $om);
         $this->convertToEntity()->shouldBeLike($community);
     }
 
-    function it_throws_exception_when_cant_convert_node_to_entity(ObjectManager $om)
+    function it_throws_exception_when_cant_convert_node_to_entity(ObjectManager $om): void
     {
-        $this->beConstructedWith(new \SimpleXMLElement('<row></row>'), $om);
+        $this->beConstructedWith(new SimpleXMLElement('<row></row>'), $om);
 
-        $exception = new TerritorialDivisionNodeConverterException();
-        $this->shouldThrow($exception)->during('convertToEntity', array());
+        $exception = new TerritorialDivisionNodeConverterException('Unknown territory type');
+        $this->shouldThrow($exception)->during('convertToEntity', []);
     }
 }

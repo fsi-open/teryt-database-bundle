@@ -32,7 +32,7 @@ class DownloadTerytCommandContext implements KernelAwareContext
         $this->fixturesPath = $fixturesPath;
     }
 
-    public function setKernel(KernelInterface $kernel)
+    public function setKernel(KernelInterface $kernel): void
     {
         $this->kernel = $kernel;
     }
@@ -40,7 +40,7 @@ class DownloadTerytCommandContext implements KernelAwareContext
     /**
      * @Then /^"([^"]*)" file should be downloaded into "([^"]*)" folder$/
      */
-    public function fileShouldBeDownloadedIntoFolder($fileName, $targetFilesPath)
+    public function fileShouldBeDownloadedIntoFolder(string $fileName, string $targetFilesPath): void
     {
         $downloadPath = realpath( __DIR__ . '/../' . $targetFilesPath);
         $filePath = $downloadPath . '/' . $fileName;
@@ -50,7 +50,7 @@ class DownloadTerytCommandContext implements KernelAwareContext
     /**
      * @AfterScenario
      */
-    public function afterScenario()
+    public function afterScenario(): void
     {
         $terytDownloadPath = $this->fixturesPath . '/Project/app/teryt';
         if (!file_exists($terytDownloadPath)) {

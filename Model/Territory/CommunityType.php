@@ -31,38 +31,24 @@ class CommunityType
      */
     protected $communities;
 
-    /**
-     * @param int $type
-     */
-    public function __construct($type)
+    public function __construct(int $type, string $name)
     {
         $this->type = $type;
+        $this->name = $name;
         $this->communities = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
-    public function getType()
+    public function getType(): int
     {
         return $this->type;
     }
 
-    /**
-     * @param string $name
-     * @return CommunityType
-     */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
-
-        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }

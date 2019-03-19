@@ -17,7 +17,7 @@ use FSi\Bundle\TerytDatabaseBundle\Entity\CommunityType;
 
 class LoadCommunityTypeData implements ORMFixtureInterface
 {
-    protected $communityTypes = array(
+    protected $communityTypes = [
         1 => 'gmina miejska',
         2 => 'gmina wiejska',
         3 => 'gmina miejsko-wiejska',
@@ -25,16 +25,12 @@ class LoadCommunityTypeData implements ORMFixtureInterface
         5 => 'obszar wiejski w gminie miejsko-wiejskiej',
         8 => 'dzielnica w m.st. Warszawa',
         9 => 'delegatura gminy miejskiej'
-    );
+    ];
 
-    /**
-     * {@inheritDoc}
-     */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         foreach ($this->communityTypes as $type => $name)  {
-            $communityTypeEntity = new CommunityType($type);
-            $communityTypeEntity->setName($name);
+            $communityTypeEntity = new CommunityType($type, $name);
 
             $manager->persist($communityTypeEntity);
             $manager->flush();

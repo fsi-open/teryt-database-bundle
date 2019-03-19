@@ -22,10 +22,10 @@ class WSASoap
     const WSANS = 'http://www.w3.org/2005/08/addressing';
     const WSAPFX = 'wsa';
     private $soapNS, $soapPFX;
-    private $soapDoc = null;
-    private $envelope = null;
-    private $SOAPXPath = null;
-    private $header = null;
+    private $soapDoc;
+    private $envelope;
+    private $SOAPXPath;
+    private $header;
 
     public function __construct(DOMDocument $doc)
     {

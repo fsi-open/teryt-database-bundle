@@ -13,6 +13,7 @@ namespace FSi\Bundle\TerytDatabaseBundle\Command;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\ObjectManager;
+use FSi\Bundle\TerytDatabaseBundle\Teryt\Import\NodeConverter;
 use Hobnob\XmlStreamReader\Parser;
 use SimpleXMLElement;
 use Symfony\Component\Console\Command\Command;
@@ -22,7 +23,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class TerytImportCommand extends Command
 {
-    const FLUSH_FREQUENCY = 2000;
+    public const FLUSH_FREQUENCY = 2000;
 
     /**
      * @var ManagerRegistry
@@ -46,19 +47,11 @@ abstract class TerytImportCommand extends Command
 
     private $recordsCount = 0;
 
-    /**
-     * @param SimpleXMLElement $node
-     * @param ObjectManager $om
-     * @return \FSi\Bundle\TerytDatabaseBundle\Teryt\Import\NodeConverter
-     */
-    abstract public function getNodeConverter(SimpleXMLElement $node, ObjectManager $om);
+    abstract public function getNodeConverter(SimpleXMLElement $node, ObjectManager $om): NodeConverter;
 
-    /**
-     * @return string
-     */
-    abstract protected function getRecordXPath();
+    abstract protected function getRecordXPath(): string;
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $xmlFile = $input->getArgument('file');
 
@@ -82,11 +75,7 @@ abstract class TerytImportCommand extends Command
         return 0;
     }
 
-    /**
-     * @return Parser
-     * @throws \Exception
-     */
-    private function createXmlParser()
+    private function createXmlParser(): Parser
     {
         $xmlParser = new Parser();
 
@@ -96,10 +85,7 @@ abstract class TerytImportCommand extends Command
         );
     }
 
-    /**
-     * @return callable
-     */
-    private function getNodeParserCallbackFunction()
+    private function getNodeParserCallbackFunction(): callable
     {
         $counter = static::FLUSH_FREQUENCY;
 
@@ -109,43 +95,33 @@ abstract class TerytImportCommand extends Command
 
             $this->recordsCount++;
             $counter--;
-            if (!$counter) {
+            if ($counter === 0) {
                 $counter = static::FLUSH_FREQUENCY;
                 $this->flushAndClear();
             }
         };
     }
 
-    /**
-     * @param SimpleXMLElement $node
-     */
-    private function convertNodeToPersistedEntity(SimpleXMLElement $node)
+    private function convertNodeToPersistedEntity(SimpleXMLElement $node): void
     {
         $om = $this->getObjectManager();
-        $converter = $this->getNodeConverter($node, $om);
-        $om->persist(
-            $converter->convertToEntity()
-        );
+        $om->persist($this->getNodeConverter($node, $om)->convertToEntity());
     }
 
-    private function updateProgressHelper()
+    private function updateProgressHelper(): void
     {
         $this->progressBar->setProgress(ftell($this->handle));
     }
 
-    private function flushAndClear()
+    private function flushAndClear(): void
     {
         $this->getObjectManager()->flush();
         $this->getObjectManager()->clear();
     }
 
-    /**
-     * @param Parser $xmlParser
-     * @param string $xmlFile
-     */
-    private function importXmlFile(Parser $xmlParser, $xmlFile)
+    private function importXmlFile(Parser $xmlParser, string $xmlFile): void
     {
-        $this->handle = fopen($xmlFile, 'r');
+        $this->handle = fopen($xmlFile, 'rb');
         $xmlParser->parse($this->handle);
         fclose($this->handle);
     }

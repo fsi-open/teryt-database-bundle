@@ -38,102 +38,65 @@ class Street
      */
     protected $place;
 
-    /**
-     * @param Place $place
-     * @param int $id
-     */
-    public function __construct(Place $place, $id)
+    public function __construct(Place $place, int $id, string $type, ?string $additionalName, string $name)
     {
         $this->place = $place;
         $this->id = $id;
+        $this->type = $type;
+        $this->additionalName = $additionalName;
+        $this->name = $name;
     }
 
-    /**
-     * @return Place
-     */
-    public function getPlace()
+    public function getPlace(): Place
     {
         return $this->place;
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param string $additionalName
-     * @return Street
-     */
-    public function setAdditionalName($additionalName)
+    public function setAdditionalName(?string $additionalName): void
     {
         $this->additionalName = $additionalName;
-
-        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getAdditionalName()
+    public function getAdditionalName(): ?string
     {
         return $this->additionalName;
     }
 
-    /**
-     * @param string $name
-     * @return Street
-     */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
-
-        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $type
-     * @return Street
-     */
-    public function setType($type)
+    public function setType(string $type): void
     {
         $this->type = $type;
-
-        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
 
-    /**
-     * @return string
-     */
-    public function getFullName()
+    public function getFullName(): string
     {
-        $fullName = array($this->type);
+        $fullName = [$this->type];
 
-        if (!empty($this->additionalName)) {
+        if ($this->additionalName !== null) {
             $fullName[] = $this->additionalName;
         }
 
         $fullName[] = $this->name;
 
-        return join(' ', $fullName);
+        return implode(' ', $fullName);
     }
 }

@@ -43,12 +43,7 @@ class CommandContext implements KernelAwareContext
         $this->fixturesPath = $fixturesPath;
     }
 
-    /**
-     * Sets Kernel instance.
-     *
-     * @param KernelInterface $kernel HttpKernel instance
-     */
-    public function setKernel(KernelInterface $kernel)
+    public function setKernel(KernelInterface $kernel): void
     {
         $this->kernel = $kernel;
     }
@@ -56,29 +51,31 @@ class CommandContext implements KernelAwareContext
     /**
      * @When /^I successfully run console command "([^"]*)"$/
      */
-    public function iRunConsoleCommand($command)
+    public function iRunConsoleCommand(string $command): void
     {
         $application = new Application($this->kernel);
         $tester = new ApplicationTester($application);
 
-        expect($tester->run($command))->toBe(0);
+        expect($tester->run([$command]))->toBe(0);
         $this->lastCommandOutput = $tester->getDisplay(true);
     }
 
     /**
      * @When /^I run console command "([^"]*)" with argument "--([^"]*)=([^"]*)"$/
      */
-    public function iRunConsoleCommandWithArgument($command, $argument, $value = 1)
+    public function iRunConsoleCommandWithArgument(string $command, string $argument, string $value = ''): void
     {
         $application = new Application($this->kernel);
         $tester = new ApplicationTester($application);
 
         $value = $this->prepareValue($argument, $value);
 
-        $this->lastCommandExitCode = $tester->run(array(
+        $this->lastCommandExitCode = $tester->run(
+            [
             $command,
             $argument => $value
-        ));
+            ]
+        );
 
         $this->lastCommandOutput = $tester->getDisplay(true);
     }
@@ -86,15 +83,15 @@ class CommandContext implements KernelAwareContext
     /**
      * @When /^I unsuccessfully run console command "([^"]*)" with argument "--([^"]*)=([^"]*)"$/
      */
-    public function iUnsuccessfullyRunConsoleCommandWithArgument($command, $argument, $value)
+    public function iUnsuccessfullyRunConsoleCommandWithArgument(string $command, string $argument, string $value): void
     {
         $application = new Application($this->kernel);
         $tester = new ApplicationTester($application);
 
-        expect($tester->run(array(
+        expect($tester->run([
             $command,
             $argument => $value
-        )))->toBe(1);
+        ]))->toBe(1);
 
         $this->lastCommandOutput = $tester->getDisplay(true);
     }
@@ -103,17 +100,17 @@ class CommandContext implements KernelAwareContext
     /**
      * @When /^I successfully run console command "([^"]*)" with argument "--([^"]*)=([^"]*)"$/
      */
-    public function iSuccessfullyRunConsoleCommandWithArgument($command, $argument, $value)
+    public function iSuccessfullyRunConsoleCommandWithArgument(string $command, string $argument, string $value): void
     {
         $application = new Application($this->kernel);
         $tester = new ApplicationTester($application);
 
         $value = $this->prepareValue($argument, $value);
 
-        expect($tester->run(array(
+        expect($tester->run([
             $command,
             $argument => $value
-        )))->toBe(0);
+        ]))->toBe(0);
 
         $this->lastCommandOutput = $tester->getDisplay(true);
     }
@@ -122,30 +119,20 @@ class CommandContext implements KernelAwareContext
      * @Then /^I should see "([^"]*)" console output$/
      * @Given /^I should see "([^"]*)" output at console$/
      */
-    public function iShouldSeeOutputAtConsole($consoleOutput)
+    public function iShouldSeeOutputAtConsole(string $consoleOutput): void
     {
         expect(trim($this->getLastCommandOutput()))->toBe($consoleOutput);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getLastCommandOutput()
+    public function getLastCommandOutput(): string
     {
         return $this->lastCommandOutput;
     }
 
-    /**
-     * @param $argument
-     * @param $value
-     * @return string
-     */
-    public function prepareValue($argument, $value)
+    public function prepareValue(string $argument, string $value): string
     {
-        switch ($argument) {
-            case 'file':
-                $value = $this->kernel->getRootDir() . DIRECTORY_SEPARATOR . $value;
-                break;
+        if ($argument === 'file') {
+            return $this->kernel->getRootDir() . DIRECTORY_SEPARATOR . $value;
         }
 
         return $value;
