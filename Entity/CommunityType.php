@@ -7,6 +7,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace FSi\Bundle\TerytDatabaseBundle\Entity;
 
 use FSi\Bundle\TerytDatabaseBundle\Model\Territory\CommunityType as BaseCommunityType;
