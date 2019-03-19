@@ -11,28 +11,46 @@ namespace FSi\Bundle\TerytDatabaseBundle\Command;
 
 use FSi\Bundle\TerytDatabaseBundle\Teryt\Api\Client;
 use SplTempFileObject;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Filesystem\Filesystem;
 
-abstract class TerytDownloadCommand extends ContainerAwareCommand
+abstract class TerytDownloadCommand extends Command
 {
-    protected function getDefaultTargetPath()
+    /**
+     * @var Client
+     */
+    private $client;
+
+    /**
+     * @var string
+     */
+    private $rootDir;
+
+    public function __construct(Client $client, string $rootDir)
     {
-        return $this->getContainer()->getParameter('kernel.root_dir') . '/teryt';
+        parent::__construct();
+
+        $this->client = $client;
+        $this->rootDir = $rootDir;
     }
 
-    protected function getApiClient() : Client
+    protected function getDefaultTargetPath(): string
     {
-        return $this->getContainer()->get('fsi_teryt_db.api_client');
+        return $this->rootDir . '/teryt';
     }
 
-    protected function saveFile(SplTempFileObject $file, string $path, string $fileName)
+    protected function getApiClient(): Client
+    {
+        return $this->client;
+    }
+
+    protected function saveFile(SplTempFileObject $file, string $path, string $fileName): void
     {
         $filesystem = new Filesystem();
         $filesystem->dumpFile(sprintf('%s/%s', $path, $fileName), $file->fread($this->getFileSize($file)));
     }
 
-    private function getFileSize(SplTempFileObject $file) : int
+    private function getFileSize(SplTempFileObject $file): int
     {
         $file->fseek(0, SEEK_END);
         $size = $file->ftell();

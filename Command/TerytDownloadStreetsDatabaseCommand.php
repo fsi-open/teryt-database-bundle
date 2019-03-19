@@ -15,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class TerytDownloadStreetsDatabaseCommand extends TerytDownloadCommand
 {
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName('teryt:download:streets')
             ->setDescription('Download teryt streets database files')
@@ -32,7 +32,7 @@ class TerytDownloadStreetsDatabaseCommand extends TerytDownloadCommand
             );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $this->saveFile(
             $this->getApiClient()->getStreetsData(),

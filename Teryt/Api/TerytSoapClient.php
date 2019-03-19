@@ -23,7 +23,7 @@ class TerytSoapClient extends SoapClient
      */
     private $digest;
 
-    public function addUserToken(string $username, string $password, bool $digest = false)
+    public function addUserToken(string $username, string $password, bool $digest = false): void
     {
         $this->username = $username;
         $this->password = $password;

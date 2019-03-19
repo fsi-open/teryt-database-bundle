@@ -4,17 +4,17 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-    <parameters>
-        <parameter key="fsi_teryt_db.http_client.class">Guzzle\Http\Client</parameter>
-    </parameters>
-
     <services>
-        <service id="fsi_teryt_db.http_client" class="%fsi_teryt_db.http_client.class%" />
+        <defaults autowire="true" autoconfigure="true" public="false">
+            <bind key="$rootDir" type="string">%kernel.root_dir%</bind>
+        </defaults>
 
-        <service id="fsi_teryt_db.api_client" class="FSi\Bundle\TerytDatabaseBundle\Teryt\Api\Client">
+        <service id="FSi\Bundle\TerytDatabaseBundle\Teryt\Api\Client">
             <argument type="string">%fsi_teryt_db.api.url%</argument>
             <argument type="string">%fsi_teryt_db.api.username%</argument>
             <argument type="string">%fsi_teryt_db.api.password%</argument>
         </service>
+
+        <prototype namespace="FSi\Bundle\TerytDatabaseBundle\" resource="../../{Command,DataFixtures}/*" />
     </services>
 </container>

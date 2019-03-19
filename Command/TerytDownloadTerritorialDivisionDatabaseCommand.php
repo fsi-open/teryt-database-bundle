@@ -15,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class TerytDownloadTerritorialDivisionDatabaseCommand extends TerytDownloadCommand
 {
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName('teryt:download:territorial-division')
             ->setDescription('Download teryt territorial division (TERC) database files')
@@ -32,7 +32,7 @@ class TerytDownloadTerritorialDivisionDatabaseCommand extends TerytDownloadComma
             );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $this->saveFile(
             $this->getApiClient()->getTerritorialDivisionData(),

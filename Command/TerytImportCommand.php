@@ -9,17 +9,23 @@
 
 namespace FSi\Bundle\TerytDatabaseBundle\Command;
 
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\ObjectManager;
 use Hobnob\XmlStreamReader\Parser;
 use SimpleXMLElement;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-abstract class TerytImportCommand extends ContainerAwareCommand
+abstract class TerytImportCommand extends Command
 {
     const FLUSH_FREQUENCY = 2000;
+
+    /**
+     * @var ManagerRegistry
+     */
+    private $managerRegistry;
 
     /** @var resource */
     protected $handle;
@@ -29,11 +35,18 @@ abstract class TerytImportCommand extends ContainerAwareCommand
      */
     private $progressBar;
 
+    public function __construct(ManagerRegistry $managerRegistry)
+    {
+        parent::__construct();
+
+        $this->managerRegistry = $managerRegistry;
+    }
+
     private $recordsCount = 0;
 
     /**
      * @param SimpleXMLElement $node
-     * @param \Doctrine\Common\Persistence\ObjectManager $om
+     * @param ObjectManager $om
      * @return \FSi\Bundle\TerytDatabaseBundle\Teryt\Import\NodeConverter
      */
     abstract public function getNodeConverter(SimpleXMLElement $node, ObjectManager $om);
@@ -135,11 +148,8 @@ abstract class TerytImportCommand extends ContainerAwareCommand
         fclose($this->handle);
     }
 
-    /**
-     * @return ObjectManager
-     */
-    private function getObjectManager()
+    private function getObjectManager(): ObjectManager
     {
-        return $this->getContainer()->get('doctrine')->getManager();
+        return $this->managerRegistry->getManager();
     }
 }

@@ -12,6 +12,8 @@
     ],
     "require": {
         "php": ">=7.1",
+        "ext-dom": "*",
+        "ext-simplexml": "*",
         "ext-soap": "*",
         "symfony/framework-bundle": "^3.4|^4.0",
         "symfony/console": "^3.4|^4.0",
@@ -20,7 +22,8 @@
         "doctrine/common": "^2.5",
         "hobnob/xml-stream-reader": "^1.0",
         "doctrine/doctrine-fixtures-bundle": "^3.1",
-        "robrichards/wse-php": "^2.0"
+        "robrichards/wse-php": "^2.0",
+        "robrichards/xmlseclibs": "^3.0"
     },
     "require-dev": {
         "ext-pdo_sqlite": "*",

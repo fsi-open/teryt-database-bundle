@@ -2,11 +2,11 @@
 
 namespace FSi\Bundle\TerytDatabaseBundle\DataFixtures\ORM;
 
-use Doctrine\Common\DataFixtures\FixtureInterface;
+use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use FSi\Bundle\TerytDatabaseBundle\Entity\CommunityType;
 
-class LoadCommunityTypeData implements FixtureInterface
+class LoadCommunityTypeData implements ORMFixtureInterface
 {
     protected $communityTypes = array(
         1 => 'gmina miejska',

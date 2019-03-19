@@ -15,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class TerytDownloadPlacesDictionaryDatabaseCommand extends TerytDownloadCommand
 {
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName('teryt:download:places-dictionary')
             ->setDescription('Download teryt places dictionary (WMRODZ) database files')
@@ -32,7 +32,7 @@ class TerytDownloadPlacesDictionaryDatabaseCommand extends TerytDownloadCommand
             );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $this->saveFile(
             $this->getApiClient()->getPlacesDictionaryData(),

@@ -32,7 +32,7 @@ class WSASoap
         $this->locateHeader();
     }
 
-    public function addAction($action)
+    public function addAction(string $action): void
     {
         /* Add the WSA Action */
         $header = $this->locateHeader();
@@ -41,14 +41,14 @@ class WSASoap
         $header->appendChild($nodeAction);
     }
 
-    public function getDoc()
+    public function getDoc(): ?DOMDocument
     {
         return $this->soapDoc;
     }
 
     private function locateHeader()
     {
-        if ($this->header == null) {
+        if ($this->header === null) {
             $headers = $this->SOAPXPath->query('//wssoap:Envelope/wssoap:Header');
             $header = $headers->item(0);
             if (!$header) {
