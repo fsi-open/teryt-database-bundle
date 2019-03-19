@@ -1,0 +1,10 @@
+includes:
+    - vendor/phpstan/phpstan-doctrine/extension.neon
+parameters:
+    paths:
+        - Behat/Context
+        - Command
+        - DataFixtures
+        - Entity
+        - Model
+        - Teryt

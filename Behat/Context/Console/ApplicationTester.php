@@ -27,7 +27,7 @@ class ApplicationTester
     private $application;
 
     /**
-     * @var StringInput $input
+     * @var ArrayInput $input
      */
     private $input;
 
@@ -51,7 +51,7 @@ class ApplicationTester
         $this->input = new ArrayInput($input);
         $this->input->setInteractive(false);
 
-        $this->output = new StreamOutput(fopen('php://memory', 'r+', false));
+        $this->output = new StreamOutput(fopen('php://memory', 'rb+', false));
 
         $this->initializeInputStream();
         rewind($this->inputStream);

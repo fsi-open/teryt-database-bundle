@@ -51,7 +51,7 @@ abstract class TerytImportCommand extends Command
 
     abstract protected function getRecordXPath(): string;
 
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute(InputInterface $input, OutputInterface $output): ?int
     {
         $xmlFile = $input->getArgument('file');
 
