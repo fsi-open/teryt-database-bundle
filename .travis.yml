@@ -1,20 +1,15 @@
 language: php
 
-sudo: false
-
 matrix:
     include:
         - php: 7.1
           env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable'
         - php: 7.3
 
-before_install:
-    - composer self-update
-
 install:
     - composer update $COMPOSER_FLAGS
 
 script:
-  - bin/phpspec run -f pretty
-  - bin/phpstan analyze --level 5
-  - bin/behat --no-snippets --verbose
+  - vendor/bin/phpspec run -f pretty
+  - vendor/bin/phpstan analyze --level 5
+  - vendor/bin/behat --no-snippets --verbose
