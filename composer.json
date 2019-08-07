@@ -2,7 +2,7 @@
     "name": "fsi/teryt-database-bundle",
     "type": "symfony-bundle",
     "description": "Teryt database bundle",
-    "keywords": ["teryt", "bundle", "symfony2", "fsi"],
+    "keywords": ["teryt", "bundle", "symfony", "fsi"],
     "license": "MIT",
     "authors": [
         {
@@ -39,7 +39,7 @@
         "phpstan/phpstan-doctrine": "^0.11.2"
     },
     "config": {
-        "bin-dir": "bin"
+        "bin-dir": "vendor/bin"
     },
     "autoload": {
         "psr-4": { "FSi\\Bundle\\TerytDatabaseBundle\\": "" }
