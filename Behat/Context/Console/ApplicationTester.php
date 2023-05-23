@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace FSi\Bundle\TerytDatabaseBundle\Behat\Context\Console;
 
+use Assert\Assertion;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
-use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -45,12 +45,18 @@ class ApplicationTester
         $this->application = $application;
     }
 
+    /**
+     * @param array<int|string, mixed> $input
+     * @return int
+     */
     public function run(array $input = []): int
     {
         $this->input = new ArrayInput($input);
         $this->input->setInteractive(false);
 
-        $this->output = new StreamOutput(fopen('php://memory', 'rb+', false));
+        $file = fopen('php://memory', 'rb+');
+        Assertion::isResource($file);
+        $this->output = new StreamOutput($file);
 
         $this->initializeInputStream();
         rewind($this->inputStream);
@@ -63,10 +69,12 @@ class ApplicationTester
         rewind($this->output->getStream());
 
         $display = stream_get_contents($this->output->getStream());
+        Assertion::string($display);
 
         if ($normalize) {
             $display = str_replace(PHP_EOL, "\n", $display);
         }
+        Assertion::string($display);
 
         return $display;
     }
@@ -91,7 +99,9 @@ class ApplicationTester
     private function initializeInputStream(): void
     {
         if (null === $this->inputStream) {
-            $this->inputStream = fopen('php://memory', 'r+', false);
+            $file = fopen('php://memory', 'r+');
+            Assertion::isResource($file);
+            $this->inputStream = $file;
         }
     }
 }

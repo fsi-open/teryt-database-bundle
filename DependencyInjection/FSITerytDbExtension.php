@@ -27,7 +27,7 @@ class FSITerytDbExtension extends Extension
         $container->setParameter('fsi_teryt_db.api.username', $config['api']['username']);
         $container->setParameter('fsi_teryt_db.api.password', $config['api']['password']);
 
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
     }
 }

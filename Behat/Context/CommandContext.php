@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace FSi\Bundle\TerytDatabaseBundle\Behat\Context;
 
+use Assert\Assertion;
 use Behat\Symfony2Extension\Context\KernelAwareContext;
 use FSi\Bundle\TerytDatabaseBundle\Behat\Context\Console\ApplicationTester;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -38,7 +39,7 @@ class CommandContext implements KernelAwareContext
      */
     protected $fixturesPath;
 
-    public function __construct($fixturesPath)
+    public function __construct(string $fixturesPath)
     {
         $this->fixturesPath = $fixturesPath;
     }
@@ -56,7 +57,7 @@ class CommandContext implements KernelAwareContext
         $application = new Application($this->kernel);
         $tester = new ApplicationTester($application);
 
-        expect($tester->run([$command]))->toBe(0);
+        Assertion::eq($tester->run([$command]), 0);
         $this->lastCommandOutput = $tester->getDisplay(true);
     }
 
@@ -88,10 +89,10 @@ class CommandContext implements KernelAwareContext
         $application = new Application($this->kernel);
         $tester = new ApplicationTester($application);
 
-        expect($tester->run([
+        Assertion::eq($tester->run([
             $command,
             $argument => $value
-        ]))->toBe(1);
+        ]), 1);
 
         $this->lastCommandOutput = $tester->getDisplay(true);
     }
@@ -107,10 +108,10 @@ class CommandContext implements KernelAwareContext
 
         $value = $this->prepareValue($argument, $value);
 
-        expect($tester->run([
+        Assertion::eq($tester->run([
             $command,
             $argument => $value
-        ]))->toBe(0);
+        ]), 0);
 
         $this->lastCommandOutput = $tester->getDisplay(true);
     }
@@ -121,7 +122,7 @@ class CommandContext implements KernelAwareContext
      */
     public function iShouldSeeOutputAtConsole(string $consoleOutput): void
     {
-        expect(trim($this->getLastCommandOutput()))->toBe($consoleOutput);
+        Assertion::eq(trim($this->getLastCommandOutput()), $consoleOutput);
     }
 
     public function getLastCommandOutput(): string

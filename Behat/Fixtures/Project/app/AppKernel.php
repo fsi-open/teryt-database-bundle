@@ -9,6 +9,8 @@
 
 declare(strict_types=1);
 
+namespace TestApp;
+
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
@@ -17,10 +19,10 @@ class AppKernel extends Kernel
     public function registerBundles(): array
     {
         return [
-            new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
-            new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
-            new FSi\Bundle\TerytDatabaseBundle\FSiTerytDbBundle(),
-            new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
+            new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
+            new \Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
+            new \FSi\Bundle\TerytDatabaseBundle\FSiTerytDbBundle(),
+            new \Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
         ];
     }
 

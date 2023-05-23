@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace FSi\Bundle\TerytDatabaseBundle\Command;
 
+use Assert\Assertion;
 use FSi\Bundle\TerytDatabaseBundle\Teryt\Api\Client;
 use SplTempFileObject;
 use Symfony\Component\Console\Command\Command;
@@ -49,14 +50,18 @@ abstract class TerytDownloadCommand extends Command
     protected function saveFile(SplTempFileObject $file, string $path, string $fileName): void
     {
         $filesystem = new Filesystem();
-        $filesystem->dumpFile(sprintf('%s/%s', $path, $fileName), $file->fread($this->getFileSize($file)));
+        $content = $file->fread($this->getFileSize($file));
+        Assertion::string($content);
+
+        $filesystem->dumpFile(sprintf('%s/%s', $path, $fileName), $content);
     }
 
     private function getFileSize(SplTempFileObject $file): int
     {
         $file->fseek(0, SEEK_END);
         $size = $file->ftell();
-        $file->fseek(0, SEEK_SET);
+        $file->fseek(0);
+        Assertion::integer($size);
 
         return $size;
     }

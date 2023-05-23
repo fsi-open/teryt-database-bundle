@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace spec\FSi\Bundle\TerytDatabaseBundle\Teryt\Import;
 
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectRepository;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Community;
 use FSi\Bundle\TerytDatabaseBundle\Entity\CommunityType;
 use FSi\Bundle\TerytDatabaseBundle\Entity\District;
@@ -25,9 +25,10 @@ use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use SimpleXMLElement;
 
+// phpcs:disable PSR1.Methods.CamelCapsMethodName
 class StreetsNodeConverterSpec extends ObjectBehavior
 {
-    function let(ObjectManager $om, ObjectRepository $or): void
+    public function let(ObjectManager $om, ObjectRepository $or): void
     {
         // It is not possible to mock internal classes with final constructor
         $this->beConstructedWith(new SimpleXMLElement('<row></row>'), $om);
@@ -35,7 +36,7 @@ class StreetsNodeConverterSpec extends ObjectBehavior
         $or->findOneBy(Argument::type('array'))->willReturn();
     }
 
-    function it_converts_node_to_street_entry(ObjectManager $om, ObjectRepository $or): void
+    public function it_converts_node_to_street_entry(ObjectManager $om, ObjectRepository $or): void
     {
         $xml = <<<EOT
 <row>
@@ -68,8 +69,10 @@ EOT;
         $this->convertToEntity()->shouldBeLike($street);
     }
 
-    function it_converts_node_to_street_entry_with_updating_existing_one(
-        ObjectManager $om, ObjectRepository $or, Street $street
+    public function it_converts_node_to_street_entry_with_updating_existing_one(
+        ObjectManager $om,
+        ObjectRepository $or,
+        Street $street
     ): void {
         $xml = <<<EOT
 <row>

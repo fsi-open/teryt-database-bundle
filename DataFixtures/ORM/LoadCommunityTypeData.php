@@ -13,11 +13,14 @@ namespace FSi\Bundle\TerytDatabaseBundle\DataFixtures\ORM;
 
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use FSi\Bundle\TerytDatabaseBundle\Entity\CommunityType;
 
 class LoadCommunityTypeData implements ORMFixtureInterface, FixtureGroupInterface
 {
+    /**
+     * @var array<int, string>
+     */
     protected $communityTypes = [
         1 => 'gmina miejska',
         2 => 'gmina wiejska',
@@ -35,7 +38,7 @@ class LoadCommunityTypeData implements ORMFixtureInterface, FixtureGroupInterfac
 
     public function load(ObjectManager $manager): void
     {
-        foreach ($this->communityTypes as $type => $name)  {
+        foreach ($this->communityTypes as $type => $name) {
             $communityTypeEntity = new CommunityType($type, $name);
 
             $manager->persist($communityTypeEntity);

@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace spec\FSi\Bundle\TerytDatabaseBundle\Teryt\Import;
 
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectRepository;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Community;
 use FSi\Bundle\TerytDatabaseBundle\Entity\CommunityType;
 use FSi\Bundle\TerytDatabaseBundle\Entity\District;
@@ -23,9 +23,10 @@ use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use SimpleXMLElement;
 
+// phpcs:disable PSR1.Methods.CamelCapsMethodName
 class PlacesNodeConverterSpec extends ObjectBehavior
 {
-    function let(ObjectManager $om, ObjectRepository $or): void
+    public function let(ObjectManager $om, ObjectRepository $or): void
     {
         // It is not possible to mock internal classes with final constructor
         $this->beConstructedWith(new SimpleXMLElement('<row></row>'), $om);
@@ -33,7 +34,7 @@ class PlacesNodeConverterSpec extends ObjectBehavior
         $or->findOneBy(Argument::type('array'))->willReturn();
     }
 
-    function it_converts_node_to_place_entry(ObjectManager $om, ObjectRepository $or): void
+    public function it_converts_node_to_place_entry(ObjectManager $om, ObjectRepository $or): void
     {
         $xml = <<<EOT
 <row>
@@ -68,8 +69,10 @@ EOT;
         $this->convertToEntity()->shouldBeLike($place);
     }
 
-    function it_converts_node_to_place_with_updating_existing_one(
-        ObjectManager $om, ObjectRepository $or, Place $place
+    public function it_converts_node_to_place_with_updating_existing_one(
+        ObjectManager $om,
+        ObjectRepository $or,
+        Place $place
     ): void {
         $xml = <<<EOT
 <row>
@@ -108,8 +111,11 @@ EOT;
         $this->convertToEntity()->shouldBeLike($place->getWrappedObject());
     }
 
-    function it_updates_parent_place_in_existing_place(
-        ObjectManager $om, ObjectRepository $or, Place $place, Place $parentPlace
+    public function it_updates_parent_place_in_existing_place(
+        ObjectManager $om,
+        ObjectRepository $or,
+        Place $place,
+        Place $parentPlace
     ): void {
         $xml = <<<EOT
 <row>

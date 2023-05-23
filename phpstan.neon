@@ -1,6 +1,9 @@
 includes:
+    - vendor/phpstan/phpstan-beberlei-assert/extension.neon
     - vendor/phpstan/phpstan-doctrine/extension.neon
+    - vendor/phpstan/phpstan-symfony/extension.neon
 parameters:
+    level: 7
     paths:
         - Behat/Context
         - Command
@@ -8,3 +11,6 @@ parameters:
         - Entity
         - Model
         - Teryt
+    reportUnmatchedIgnoredErrors: false
+    ignoreErrors:
+        - '#Parameter \#5 \$oneWay of method SoapClient::__doRequest\(\) expects \w+, \S+ given\.#'

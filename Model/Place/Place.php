@@ -38,7 +38,7 @@ class Place
     protected $community;
 
     /**
-     * @var Collection|Street[]
+     * @var Collection<int, Street>
      */
     protected $streets;
 
@@ -48,7 +48,7 @@ class Place
     protected $parentPlace;
 
     /**
-     * @var Collection|Place[]
+     * @var Collection<int, Place>
      */
     protected $childPlaces;
 
@@ -98,7 +98,7 @@ class Place
     }
 
     /**
-     * @return Collection|Street[]
+     * @return Collection<int, Street>
      */
     public function getStreets(): Collection
     {
@@ -116,7 +116,7 @@ class Place
     }
 
     /**
-     * @return Collection|Place[]
+     * @return Collection<int, Place>
      */
     public function getChildPlaces(): Collection
     {

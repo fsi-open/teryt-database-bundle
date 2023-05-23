@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace FSi\Bundle\TerytDatabaseBundle\Command;
 
+use Assert\Assertion;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -36,11 +37,13 @@ class TerytDownloadStreetsDatabaseCommand extends TerytDownloadCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): ?int
     {
-        $this->saveFile(
-            $this->getApiClient()->getStreetsData(),
-            $input->getArgument('target') ?? $this->getDefaultTargetPath(),
-            $input->getArgument('filename')
-        );
+        $target = $input->getArgument('target');
+        Assertion::nullOrString($target);
+
+        $fileName = $input->getArgument('filename');
+        Assertion::string($fileName);
+
+        $this->saveFile($this->getApiClient()->getStreetsData(), $target ?? $this->getDefaultTargetPath(), $fileName);
 
         return 0;
     }

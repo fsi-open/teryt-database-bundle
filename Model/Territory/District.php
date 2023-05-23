@@ -22,7 +22,7 @@ class District extends Territory
     protected $province;
 
     /**
-     * @var Collection|Community[]
+     * @var Collection<int, Community>
      */
     protected $communities;
 
@@ -40,9 +40,9 @@ class District extends Territory
     }
 
     /**
-     * @return Collection|Community[]
+     * @return Collection<int, Community>
      */
-    public function getCommunities()
+    public function getCommunities(): Collection
     {
         return $this->communities;
     }

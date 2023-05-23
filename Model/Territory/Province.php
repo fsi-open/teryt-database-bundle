@@ -17,7 +17,7 @@ use Doctrine\Common\Collections\Collection;
 class Province extends Territory
 {
     /**
-     * @var Collection|District[]
+     * @var Collection<int, District>
      */
     protected $districts;
 
@@ -29,9 +29,9 @@ class Province extends Territory
     }
 
     /**
-     * @return Collection|District[]
+     * @return Collection<int, District>
      */
-    public function getDistricts()
+    public function getDistricts(): Collection
     {
         return $this->districts;
     }
