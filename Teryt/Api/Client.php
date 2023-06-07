@@ -61,12 +61,12 @@ class Client
         return $this->getFile('PobierzKatalogULIC');
     }
 
-    public function getPlacesDictionaryData() : SplTempFileObject
+    public function getPlacesDictionaryData(): SplTempFileObject
     {
         return $this->getFile('PobierzKatalogWMRODZ');
     }
 
-    private function getFile($functionName): SplTempFileObject
+    private function getFile(string $functionName): SplTempFileObject
     {
         $response = $this->makeCall($functionName, [
             'DataStanu' => (new DateTime())->format('Y-m-d')
@@ -77,12 +77,16 @@ class Client
         return $this->prepareTempFile($response->{$resultKey}->plik_zawartosc);
     }
 
-    private function makeCall($functionName, array $args)
+    /**
+     * @param array<string, mixed> $args
+     * @return mixed
+     */
+    private function makeCall(string $functionName, array $args)
     {
         return $this->soapClient->__soapCall($functionName, [$args]);
     }
 
-    private function prepareTempFile($data): SplTempFileObject
+    private function prepareTempFile(string $data): SplTempFileObject
     {
         $tempXml = new SplTempFileObject();
         $tempXml->fwrite(base64_decode($data));

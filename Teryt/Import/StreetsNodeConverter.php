@@ -21,7 +21,7 @@ class StreetsNodeConverter extends NodeConverter
         $place = $this->getPlace();
 
         /** @var Street|null $streetEntity */
-        $streetEntity = $this->findOneBy('FSiTerytDbBundle:Street', [
+        $streetEntity = $this->findOneBy(Street::class, [
             'id' => $this->getStreetId(),
             'place' => $place
         ]);

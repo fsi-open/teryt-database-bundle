@@ -27,7 +27,7 @@ class Type
     protected $name;
 
     /**
-     * @var Collection|Place[]
+     * @var Collection<int, Place>
      */
     protected $places;
 
@@ -54,7 +54,7 @@ class Type
     }
 
     /**
-     * @return Collection|Place[]
+     * @return Collection<int, Place>
      */
     public function getPlaces(): Collection
     {

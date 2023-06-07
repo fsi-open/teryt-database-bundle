@@ -11,30 +11,20 @@ declare(strict_types=1);
 
 namespace FSi\Bundle\TerytDatabaseBundle\Behat\Context;
 
-use Behat\Symfony2Extension\Context\KernelAwareContext;
+use Assert\Assertion;
+use Behat\Behat\Context\Context;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpKernel\KernelInterface;
 
-class DownloadTerytCommandContext implements KernelAwareContext
+class DownloadTerytCommandContext implements Context
 {
-    /**
-     * @var KernelInterface
-     */
-    private $kernel;
-
     /**
      * @var string
      */
     protected $fixturesPath;
 
-    public function __construct($fixturesPath)
+    public function __construct(string $fixturesPath)
     {
         $this->fixturesPath = $fixturesPath;
-    }
-
-    public function setKernel(KernelInterface $kernel): void
-    {
-        $this->kernel = $kernel;
     }
 
     /**
@@ -42,9 +32,9 @@ class DownloadTerytCommandContext implements KernelAwareContext
      */
     public function fileShouldBeDownloadedIntoFolder(string $fileName, string $targetFilesPath): void
     {
-        $downloadPath = realpath( __DIR__ . '/../' . $targetFilesPath);
+        $downloadPath = realpath(__DIR__ . '/../' . $targetFilesPath);
         $filePath = $downloadPath . '/' . $fileName;
-        expect(file_exists($filePath))->toBe(true);
+        Assertion::true(file_exists($filePath));
     }
 
     /**

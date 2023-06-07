@@ -28,7 +28,7 @@ class Community extends Territory
     protected $type;
 
     /**
-     * @var Collection|Place[]
+     * @var Collection<int, Place>
      */
     protected $places;
 
@@ -57,9 +57,9 @@ class Community extends Territory
     }
 
     /**
-     * @return Collection|Place[]
+     * @return Collection<int, Place>
      */
-    public function getPlaces()
+    public function getPlaces(): Collection
     {
         return $this->places;
     }

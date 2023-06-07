@@ -11,10 +11,14 @@ declare(strict_types=1);
 
 namespace FSi\Bundle\TerytDatabaseBundle\Behat\Context;
 
+use Assert\Assertion;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Symfony2Extension\Context\KernelAwareContext;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ObjectManager;
 use FSi\Bundle\TerytDatabaseBundle\Entity\District;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Place;
 use FSi\Bundle\TerytDatabaseBundle\Entity\PlaceType;
@@ -36,7 +40,7 @@ class ImportTerytCommandContext implements KernelAwareContext
      */
     protected $fixturesPath;
 
-    public function __construct($fixturesPath)
+    public function __construct(string $fixturesPath)
     {
         $this->fixturesPath = $fixturesPath;
     }
@@ -58,7 +62,7 @@ class ImportTerytCommandContext implements KernelAwareContext
 
         $filePath = sprintf('%s/%s', $targetFolder, $fileName);
         file_put_contents($filePath, $fileContent->getRaw());
-        expect(file_exists($filePath))->toBe(true);
+        Assertion::true(file_exists($filePath));
     }
 
     /**
@@ -66,7 +70,7 @@ class ImportTerytCommandContext implements KernelAwareContext
      */
     public function thereAreNoProvincesInDatabase(): void
     {
-        expect($this->getProvinceRepository()->findAll())->toBe([]);
+        Assertion::same($this->getProvinceRepository()->findAll(), []);
     }
 
     /**
@@ -74,7 +78,7 @@ class ImportTerytCommandContext implements KernelAwareContext
      */
     public function thereAreNoDistrictsInDatabase(): void
     {
-        expect($this->getDistrictRepository()->findAll())->toBe([]);
+        Assertion::same($this->getDistrictRepository()->findAll(), []);
     }
 
     /**
@@ -82,7 +86,7 @@ class ImportTerytCommandContext implements KernelAwareContext
      */
     public function thereAreNoCommunitiesInDatabase(): void
     {
-        expect($this->getCommunityRepository()->findAll())->toBe([]);
+        Assertion::same($this->getCommunityRepository()->findAll(), []);
     }
 
     /**
@@ -90,7 +94,7 @@ class ImportTerytCommandContext implements KernelAwareContext
      */
     public function placesDictionaryTableInDatabaseIsEmpty(): void
     {
-        expect($this->getPlaceTypeRepository()->findAll())->toBe([]);
+        Assertion::same($this->getPlaceTypeRepository()->findAll(), []);
     }
 
     /**
@@ -98,7 +102,7 @@ class ImportTerytCommandContext implements KernelAwareContext
      */
     public function placesTableInDatabaseIsEmpty(): void
     {
-        expect($this->getPlaceRepository()->findAll())->toBe([]);
+        Assertion::same($this->getPlaceRepository()->findAll(), []);
     }
 
     /**
@@ -106,8 +110,7 @@ class ImportTerytCommandContext implements KernelAwareContext
      */
     public function thereAreNoStreetsInDatabase(): void
     {
-        expect($this->getStreetRepository()
-            ->findAll())->toBe([]);
+        Assertion::same($this->getStreetRepository()->findAll(), []);
     }
 
     /**
@@ -119,9 +122,9 @@ class ImportTerytCommandContext implements KernelAwareContext
 
         foreach ($tableHash as $row) {
             /** @var Province|null $entity */
-            $entity = $this->getProvinceRepository()->findOneByCode($row['Code']);
-            expect($entity)->toBeAnInstanceOf(Province::class);
-            expect($entity->getName())->toBe($row['Name']);
+            $entity = $this->getProvinceRepository()->findOneBy(['code' => $row['Code']]);
+            Assertion::isInstanceOf($entity, Province::class);
+            Assertion::same($entity->getName(), $row['Name']);
         }
     }
 
@@ -134,10 +137,10 @@ class ImportTerytCommandContext implements KernelAwareContext
 
         foreach ($tableHash as $row) {
             /** @var District|null $entity */
-            $entity = $this->getDistrictRepository()->findOneByCode($row['Code']);
-            expect($entity)->toBeAnInstanceOf(District::class);
-            expect($entity->getName())->toBe($row['Name']);
-            expect($entity->getProvince()->getName())->toBe($row['Province']);
+            $entity = $this->getDistrictRepository()->findOneBy(['code' => $row['Code']]);
+            Assertion::isInstanceOf($entity, District::class);
+            Assertion::same($entity->getName(), $row['Name']);
+            Assertion::same($entity->getProvince()->getName(), $row['Province']);
         }
     }
 
@@ -150,11 +153,11 @@ class ImportTerytCommandContext implements KernelAwareContext
 
         foreach ($tableHash as $row) {
             /** @var Community|null $entity */
-            $entity = $this->getCommunityRepository()->findOneByCode($row['Code']);
-            expect($entity)->toBeAnInstanceOf(Community::class);
-            expect($entity->getName())->toBe($row['Name']);
-            expect($entity->getDistrict()->getName())->toBe($row['District']);
-            expect($entity->getType()->getName())->toBe($row['Community type']);
+            $entity = $this->getCommunityRepository()->findOneBy(['code' => $row['Code']]);
+            Assertion::isInstanceOf($entity, Community::class);
+            Assertion::same($entity->getName(), $row['Name']);
+            Assertion::same($entity->getDistrict()->getName(), $row['District']);
+            Assertion::same($entity->getType()->getName(), $row['Community type']);
         }
     }
 
@@ -167,9 +170,9 @@ class ImportTerytCommandContext implements KernelAwareContext
 
         foreach ($tableHash as $row) {
             /** @var CommunityType|null $entity */
-            $entity = $this->getCommunityTypeRepository()->findOneByType($row['Type']);
-            expect($entity)->toBeAnInstanceOf(CommunityType::class);
-            expect($entity->getName())->toBe($row['Name']);
+            $entity = $this->getCommunityTypeRepository()->findOneBy(['type' => $row['Type']]);
+            Assertion::isInstanceOf($entity, CommunityType::class);
+            Assertion::same($entity->getName(), $row['Name']);
         }
     }
 
@@ -182,9 +185,9 @@ class ImportTerytCommandContext implements KernelAwareContext
 
         foreach ($tableHash as $row) {
             /** @var PlaceType|null $entity */
-            $entity = $this->getPlaceTypeRepository()->findOneByType($row['Type']);
-            expect($entity)->toBeAnInstanceOf(PlaceType::class);
-            expect($entity->getName())->toBe($row['Name']);
+            $entity = $this->getPlaceTypeRepository()->findOneBy(['type' => $row['Type']]);
+            Assertion::isInstanceOf($entity, PlaceType::class);
+            Assertion::same($entity->getName(), $row['Name']);
         }
     }
 
@@ -197,13 +200,13 @@ class ImportTerytCommandContext implements KernelAwareContext
 
         foreach ($tableHash as $row) {
             /** @var Place|null $entity */
-            $entity = $this->getPlaceRepository()->findOneById($row['Identity']);
-            expect($entity)->toBeAnInstanceOf(Place::class);
-            expect($entity->getName())->toBe($row['Name']);
-            expect($entity->getType()->getName())->toBe($row['Place type']);
-            expect($entity->getCommunity()->getName())->toBe($row['Community']);
+            $entity = $this->getPlaceRepository()->find($row['Identity']);
+            Assertion::isInstanceOf($entity, Place::class);
+            Assertion::same($entity->getName(), $row['Name']);
+            Assertion::same($entity->getType()->getName(), $row['Place type']);
+            Assertion::same($entity->getCommunity()->getName(), $row['Community']);
             if (!empty($row['Parent place'])) {
-                expect($entity->getParentPlace()->getName())->toBe($row['Parent place']);
+                Assertion::same($entity->getParentPlace()->getName(), $row['Parent place']);
             }
         }
     }
@@ -216,76 +219,80 @@ class ImportTerytCommandContext implements KernelAwareContext
         $tableHash = $table->getHash();
 
         foreach ($tableHash as $row) {
-            $entity = $this->getStreetRepository()->findOneById($row['Identity']);
-            expect($entity)->toBeAnInstanceOf(Street::class);
-            expect($entity->getId())->toBe((int) $row['Identity']);
-            expect($entity->getName())->toBe($row['Name']);
-            expect($entity->getType())->toBe($row['Type']);
-            expect((string) $entity->getAdditionalName())->toBe($row['Additional name']);
-            expect($entity->getPlace()->getName())->toBe($row['Place']);
+            $entity = $this->getStreetRepository()->findOneBy(['id' => $row['Identity']]);
+            Assertion::isInstanceOf($entity, Street::class);
+            Assertion::same($entity->getId(), (int) $row['Identity']);
+            Assertion::same($entity->getName(), $row['Name']);
+            Assertion::same($entity->getType(), $row['Type']);
+            Assertion::same((string) $entity->getAdditionalName(), $row['Additional name']);
+            Assertion::same($entity->getPlace()->getName(), $row['Place']);
         }
     }
 
+    /**
+     * @return EntityRepository<Province>
+     */
     private function getProvinceRepository(): EntityRepository
     {
-        return $this->kernel
-            ->getContainer()
-            ->get('doctrine')
-            ->getManager()
-            ->getRepository(Province::class);
+        return $this->getManager()->getRepository(Province::class);
     }
 
+    /**
+     * @return EntityRepository<District>
+     */
     private function getDistrictRepository(): EntityRepository
     {
-        return $this->kernel
-            ->getContainer()
-            ->get('doctrine')
-            ->getManager()
-            ->getRepository(District::class);
+        return $this->getManager()->getRepository(District::class);
     }
 
+    /**
+     * @return EntityRepository<Community>
+     */
     private function getCommunityRepository(): EntityRepository
     {
-        return $this->kernel
-            ->getContainer()
-            ->get('doctrine')
-            ->getManager()
-            ->getRepository(Community::class);
+        return $this->getManager()->getRepository(Community::class);
     }
 
+    /**
+     * @return EntityRepository<PlaceType>
+     */
     private function getPlaceTypeRepository(): EntityRepository
     {
-        return $this->kernel
-            ->getContainer()
-            ->get('doctrine')
-            ->getManager()
-            ->getRepository(PlaceType::class);
+        return $this->getManager()->getRepository(PlaceType::class);
     }
 
+    /**
+     * @return EntityRepository<CommunityType>
+     */
     private function getCommunityTypeRepository(): EntityRepository
     {
-        return $this->kernel
-            ->getContainer()
-            ->get('doctrine')
-            ->getManager()
-            ->getRepository(CommunityType::class);
+        return $this->getManager()->getRepository(CommunityType::class);
     }
 
+    /**
+     * @return EntityRepository<Place>
+     */
     private function getPlaceRepository(): EntityRepository
     {
-        return $this->kernel
-            ->getContainer()
-            ->get('doctrine')
-            ->getManager()
-            ->getRepository(Place::class);
+        return $this->getManager()->getRepository(Place::class);
     }
 
+    /**
+     * @return EntityRepository<Street>
+     */
     private function getStreetRepository(): EntityRepository
     {
-        return $this->kernel
-            ->getContainer()
-            ->get('doctrine')
-            ->getManager()
-            ->getRepository(Street::class);
+        return $this->getManager()->getRepository(Street::class);
+    }
+
+    private function getManager(): EntityManagerInterface
+    {
+        $managerRegistry = $this->kernel->getContainer()->get(ManagerRegistry::class);
+        Assertion::isInstanceOf($managerRegistry, ManagerRegistry::class);
+
+        $manager = $managerRegistry->getManager();
+        Assertion::isInstanceOf($manager, EntityManagerInterface::class);
+
+        return $manager;
     }
 }

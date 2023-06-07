@@ -29,3 +29,8 @@ fsi_teryt_db:
         url: "https://uslugaterytws1test.stat.gov.pl/wsdl/terytws1.wsdl"
         username: "TestPubliczny"
         password: "1234abcd"
+
+services:
+    Doctrine\Persistence\ManagerRegistry:
+        alias: doctrine
+        public: true

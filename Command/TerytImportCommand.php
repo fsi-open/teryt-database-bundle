@@ -11,8 +11,9 @@ declare(strict_types=1);
 
 namespace FSi\Bundle\TerytDatabaseBundle\Command;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\Common\Persistence\ObjectManager;
+use Assert\Assertion;
+use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ObjectManager;
 use FSi\Bundle\TerytDatabaseBundle\Teryt\Import\NodeConverter;
 use Hobnob\XmlStreamReader\Parser;
 use SimpleXMLElement;
@@ -38,14 +39,17 @@ abstract class TerytImportCommand extends Command
      */
     private $progressBar;
 
+    /**
+     * @var int
+     */
+    private $recordsCount = 0;
+
     public function __construct(ManagerRegistry $managerRegistry)
     {
         parent::__construct();
 
         $this->managerRegistry = $managerRegistry;
     }
-
-    private $recordsCount = 0;
 
     abstract public function getNodeConverter(SimpleXMLElement $node, ObjectManager $om): NodeConverter;
 
@@ -54,6 +58,7 @@ abstract class TerytImportCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): ?int
     {
         $xmlFile = $input->getArgument('file');
+        Assertion::string($xmlFile);
 
         if (!file_exists($xmlFile)) {
             $output->writeln(sprintf('File %s does not exist', $xmlFile));
@@ -62,7 +67,9 @@ abstract class TerytImportCommand extends Command
 
         $xmlParser = $this->createXmlParser();
 
-        $this->progressBar = new ProgressBar($output, filesize($xmlFile));
+        $fileSize = filesize($xmlFile);
+        Assertion::integer($fileSize);
+        $this->progressBar = new ProgressBar($output, $fileSize);
         $this->progressBar->start();
 
         $this->importXmlFile($xmlParser, $xmlFile);
@@ -110,7 +117,10 @@ abstract class TerytImportCommand extends Command
 
     private function updateProgressHelper(): void
     {
-        $this->progressBar->setProgress(ftell($this->handle));
+        $pos = ftell($this->handle);
+        Assertion::integer($pos);
+
+        $this->progressBar->setProgress($pos);
     }
 
     private function flushAndClear(): void
@@ -121,7 +131,10 @@ abstract class TerytImportCommand extends Command
 
     private function importXmlFile(Parser $xmlParser, string $xmlFile): void
     {
-        $this->handle = fopen($xmlFile, 'rb');
+        $handle = fopen($xmlFile, 'rb');
+        Assertion::isResource($handle);
+
+        $this->handle = $handle;
         $xmlParser->parse($this->handle);
         fclose($this->handle);
     }

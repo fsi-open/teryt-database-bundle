@@ -11,8 +11,12 @@ declare(strict_types=1);
 
 namespace FSi\Bundle\TerytDatabaseBundle\Behat\Context;
 
+use Assert\Assertion;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Symfony2Extension\Context\KernelAwareContext;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ObjectManager;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Community;
 use FSi\Bundle\TerytDatabaseBundle\Entity\CommunityType;
 use FSi\Bundle\TerytDatabaseBundle\Entity\District;
@@ -146,8 +150,8 @@ class DataContext implements KernelAwareContext
     {
         $placeType = new PlaceType((int) $type, $name);
 
-        $this->kernel->getContainer()->get('doctrine')->getManager()->persist($placeType);
-        $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
+        $this->getManager()->persist($placeType);
+        $this->getManager()->flush();
     }
 
     protected function createCommunity(int $code, string $name, string $typeName, string $districtName): void
@@ -159,16 +163,16 @@ class DataContext implements KernelAwareContext
             $this->findCommunityTypeByName($typeName)
         );
 
-        $this->kernel->getContainer()->get('doctrine')->getManager()->persist($community);
-        $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
+        $this->getManager()->persist($community);
+        $this->getManager()->flush();
     }
 
     protected function createCommunityType(int $type, string $name): void
     {
         $communityType = new CommunityType($type, $name);
 
-        $this->kernel->getContainer()->get('doctrine')->getManager()->persist($communityType);
-        $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
+        $this->getManager()->persist($communityType);
+        $this->getManager()->flush();
     }
 
     protected function createPlace(int $id, string $name, string $typeName, string $communityName): void
@@ -178,99 +182,92 @@ class DataContext implements KernelAwareContext
 
         $place = new Place($id, $name, $type, $community);
 
-        $this->kernel->getContainer()->get('doctrine')->getManager()->persist($place);
-        $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
+        $this->getManager()->persist($place);
+        $this->getManager()->flush();
     }
 
     protected function createPlaceType(int $type, string $name): void
     {
         $placeType = new PlaceType($type, $name);
 
-        $this->kernel->getContainer()->get('doctrine')->getManager()->persist($placeType);
-        $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
+        $this->getManager()->persist($placeType);
+        $this->getManager()->flush();
     }
 
     protected function createProvince(int $code, string $name): void
     {
         $provinceEntity = new Province($code, $name);
 
-        $this->kernel->getContainer()->get('doctrine')->getManager()->persist($provinceEntity);
-        $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
+        $this->getManager()->persist($provinceEntity);
+        $this->getManager()->flush();
     }
 
     protected function createDistrict(int $code, string $name, Province $province): void
     {
         $communityEntity = new District($province, $code, $name);
 
-        $this->kernel->getContainer()->get('doctrine')->getManager()->persist($communityEntity);
-        $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
+        $this->getManager()->persist($communityEntity);
+        $this->getManager()->flush();
     }
 
     private function createStreet(int $id, string $type, string $name, ?string $additionalName, string $placeName): void
     {
         $street = new Street($this->findPlaceByName($placeName), $id, $type, $additionalName, $name);
 
-        $this->kernel->getContainer()->get('doctrine')->getManager()->persist($street);
-        $this->kernel->getContainer()->get('doctrine')->getManager()->flush();
+        $this->getManager()->persist($street);
+        $this->getManager()->flush();
     }
 
     protected function findProvinceByName(string $name): ?Province
     {
-        return $this->kernel
-            ->getContainer()
-            ->get('doctrine')
-            ->getManager()
+        return $this->getManager()
             ->getRepository(Province::class)
-            ->findOneByName($name);
+            ->findOneBy(['name' => $name]);
     }
 
     protected function findDistrictByName(string $name): ?District
     {
-        return $this->kernel
-            ->getContainer()
-            ->get('doctrine')
-            ->getManager()
+        return $this->getManager()
             ->getRepository(District::class)
-            ->findOneByName($name);
+            ->findOneBy(['name' => $name]);
     }
 
     protected function findCommunityByName(string $name): ?Community
     {
-        return $this->kernel
-            ->getContainer()
-            ->get('doctrine')
-            ->getManager()
+        return $this->getManager()
             ->getRepository(Community::class)
-            ->findOneByName($name);
+            ->findOneBy(['name' => $name]);
     }
 
     protected function findCommunityTypeByName(string $name): ?CommunityType
     {
-        return $this->kernel
-            ->getContainer()
-            ->get('doctrine')
-            ->getManager()
+        return $this->getManager()
             ->getRepository(CommunityType::class)
-            ->findOneByName($name);
+            ->findOneBy(['name' => $name]);
     }
 
     protected function findPlaceTypeByName(string $name): ?PlaceType
     {
-        return $this->kernel
-            ->getContainer()
-            ->get('doctrine')
-            ->getManager()
+        return $this->getManager()
             ->getRepository(PlaceType::class)
-            ->findOneByName($name);
+            ->findOneBy(['name' => $name]);
     }
 
     protected function findPlaceByName(string $name): ?Place
     {
-        return $this->kernel
-            ->getContainer()
-            ->get('doctrine')
-            ->getManager()
+        return $this->getManager()
             ->getRepository(Place::class)
-            ->findOneByName($name);
+            ->findOneBy(['name' => $name]);
+    }
+
+    private function getManager(): EntityManagerInterface
+    {
+        $managerRegistry = $this->kernel->getContainer()->get(ManagerRegistry::class);
+        Assertion::isInstanceOf($managerRegistry, ManagerRegistry::class);
+
+        $manager = $managerRegistry->getManager();
+        Assertion::isInstanceOf($manager, EntityManagerInterface::class);
+
+        return $manager;
     }
 }

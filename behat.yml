@@ -13,11 +13,14 @@ default:
         - FSi\Bundle\TerytDatabaseBundle\Behat\Context\ImportTerytCommandContext:
             fixturesPath: '%paths.base%/Behat/Fixtures'
   extensions:
+    Caciobanu\Behat\DeprecationExtension:
+      mode: weak
     Behat\Symfony2Extension:
       kernel:
         env: test
         debug: true
         path: Behat/Fixtures/Project/app/AppKernel.php
+        class: TestApp\AppKernel
         bootstrap: Behat/Fixtures/Project/app/bootstrap.php
     Behat\MinkExtension:
       sessions:

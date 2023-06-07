@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace FSi\Bundle\TerytDatabaseBundle\Command;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use FSi\Bundle\TerytDatabaseBundle\Teryt\Import\NodeConverter;
 use FSi\Bundle\TerytDatabaseBundle\Teryt\Import\PlacesDictionaryNodeConverter;
 use SimpleXMLElement;
