@@ -28,7 +28,7 @@ Feature: Parse places dictionary xml file and import data into database
     </simc>
     """
     And places dictionary table in database is empty
-    When I successfully run console command "teryt:import:places-dictionary" with argument "--file=teryt/places-dictionary.xml"
+    When I successfully run console command "teryt:import:places-dictionary" with argument "--file=../../../../teryt/places-dictionary.xml"
     Then places dictionary table in database should have following records
       | Type | Name       |
       | 01   | wieś       |
@@ -65,7 +65,7 @@ Feature: Parse places dictionary xml file and import data into database
       | 01   | WIEŚ       |
       | 02   | KOLONIA    |
       | 03   | PRZYSIÓŁEK |
-    When I successfully run console command "teryt:import:places-dictionary" with argument "--file=teryt/places-dictionary.xml"
+    When I successfully run console command "teryt:import:places-dictionary" with argument "--file=../../../../teryt/places-dictionary.xml"
     Then places dictionary table in database should have following records
       | Type | Name       |
       | 01   | wieś       |

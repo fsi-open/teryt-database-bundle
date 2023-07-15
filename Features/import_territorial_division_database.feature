@@ -26,7 +26,7 @@ Feature: Parse territorial division xml file and import data into database
     </teryt>
     """
     And there are no provinces in database
-    When I successfully run console command "teryt:import:territorial-division" with argument "--file=teryt/territorial-division.xml"
+    When I successfully run console command "teryt:import:territorial-division" with argument "--file=../../../../teryt/territorial-division.xml"
     Then following province should exist in database
       | Code | Name         |
       | 02   | DOLNOŚLĄSKIE |
@@ -55,7 +55,7 @@ Feature: Parse territorial division xml file and import data into database
     And following province was already imported
       | Code | Name         |
       | 02   | DOLNOŚLĄSKIE |
-    When I successfully run console command "teryt:import:territorial-division" with argument "--file=teryt/territorial-division.xml"
+    When I successfully run console command "teryt:import:territorial-division" with argument "--file=../../../../teryt/territorial-division.xml"
     Then following province should exist in database
       | Code | Name         |
       | 02   | Dolnośląskie |
@@ -84,7 +84,7 @@ Feature: Parse territorial division xml file and import data into database
     And following province was already imported
       | Code | Name         |
       | 02   | DOLNOŚLĄSKIE |
-    When I successfully run console command "teryt:import:territorial-division" with argument "--file=teryt/territorial-division.xml"
+    When I successfully run console command "teryt:import:territorial-division" with argument "--file=../../../../teryt/territorial-division.xml"
     Then following district should exist in database
       | Code | Name          | Province     |
       | 0201 | bolesławiecki | DOLNOŚLĄSKIE |
@@ -116,7 +116,7 @@ Feature: Parse territorial division xml file and import data into database
     And following district was already imported
       | Code | Name          | Province     |
       | 0201 | BOLESŁAWIECKI | DOLNOŚLĄSKIE |
-    When I successfully run console command "teryt:import:territorial-division" with argument "--file=teryt/territorial-division.xml"
+    When I successfully run console command "teryt:import:territorial-division" with argument "--file=../../../../teryt/territorial-division.xml"
     Then following district should exist in database
       | Code | Name          | Province     |
       | 0201 | bolesławiecki | DOLNOŚLĄSKIE |
@@ -146,7 +146,7 @@ Feature: Parse territorial division xml file and import data into database
     And following district was already imported
       | Code | Name          | Province     |
       | 0201 | bolesławiecki | DOLNOŚLĄSKIE |
-    When I successfully run console command "teryt:import:territorial-division" with argument "--file=teryt/territorial-division.xml"
+    When I successfully run console command "teryt:import:territorial-division" with argument "--file=../../../../teryt/territorial-division.xml"
     Then following communities should exist in database
       | Code    | Name        | District      | Community type |
       | 0201011 | Bolesławiec | bolesławiecki | gmina miejska  |
@@ -179,11 +179,11 @@ Feature: Parse territorial division xml file and import data into database
     And following community was already imported
       | Code    | Name        | District      | Community type |
       | 0201011 | BOLESŁAWIEC | bolesławiecki | gmina wiejska  |
-    When I successfully run console command "teryt:import:territorial-division" with argument "--file=teryt/territorial-division.xml"
+    When I successfully run console command "teryt:import:territorial-division" with argument "--file=../../../../teryt/territorial-division.xml"
     Then following communities should exist in database
       | Code    | Name        | District      | Community type |
       | 0201011 | BOLESŁAWIEC | bolesławiecki | gmina miejska  |
 
   Scenario: Attempting to import data from non existing xml file
-    When I unsuccessfully run console command "teryt:import:territorial-division" with argument "--file=teryt/territorial-division.xml"
-    Then I should see "File teryt/territorial-division.xml does not exist" console output
+    When I unsuccessfully run console command "teryt:import:territorial-division" with argument "--file=../../../../teryt/territorial-division.xml"
+    Then I should see "File ../../../../teryt/territorial-division.xml does not exist" console output

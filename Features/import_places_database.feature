@@ -33,7 +33,7 @@ Feature: Parse places xml file and import data into database
     And places table in database is empty
     And there is a place type with type "01" and name "wieś"
     And there is a community in database with code "0411055" and name "Gmina Rzerzyca" in district "RADZIEJOWSKI"
-    When I successfully run console command "teryt:import:places" with argument "--file=teryt/places.xml"
+    When I successfully run console command "teryt:import:places" with argument "--file=../../../../teryt/places.xml"
     Then places table in database should have following records
       | Identity | Name     | Place type | Community      |
       | 0867650  | Rzeczyca | wieś       | Gmina Rzerzyca |
@@ -84,7 +84,7 @@ Feature: Parse places xml file and import data into database
       | Identity | Name           | Place type | Community      |
       | 0867643  | RZECZYCA GÓRNA | wieś       | Gmina Rzerzyca |
       | 0867650  | RZECZYCA       | wieś       | Gmina Rzerzyca |
-    When I successfully run console command "teryt:import:places" with argument "--file=teryt/places.xml"
+    When I successfully run console command "teryt:import:places" with argument "--file=../../../../teryt/places.xml"
     Then places table in database should have following records
       | Identity | Name           | Parent place   | Place type | Community      |
       | 0867643  | Rzeczyca Górna |                | wieś       | Gmina Rzerzyca |

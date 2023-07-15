@@ -32,7 +32,7 @@ class DownloadTerytCommandContext implements Context
      */
     public function fileShouldBeDownloadedIntoFolder(string $fileName, string $targetFilesPath): void
     {
-        $downloadPath = realpath(__DIR__ . '/../' . $targetFilesPath);
+        $downloadPath = realpath(__DIR__ . '/../../' . $targetFilesPath);
         $filePath = $downloadPath . '/' . $fileName;
         Assertion::true(file_exists($filePath));
     }
@@ -42,7 +42,7 @@ class DownloadTerytCommandContext implements Context
      */
     public function afterScenario(): void
     {
-        $terytDownloadPath = $this->fixturesPath . '/Project/app/teryt';
+        $terytDownloadPath = $this->fixturesPath . '/teryt';
         if (!file_exists($terytDownloadPath)) {
             return;
         }

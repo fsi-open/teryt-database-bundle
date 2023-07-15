@@ -6,7 +6,7 @@
 
     <services>
         <defaults autowire="true" autoconfigure="true" public="false">
-            <bind key="$rootDir" type="string">%kernel.root_dir%</bind>
+            <bind key="$projectDir" type="string">%kernel.project_dir%</bind>
         </defaults>
 
         <service id="FSi\Bundle\TerytDatabaseBundle\Teryt\Api\Client">
