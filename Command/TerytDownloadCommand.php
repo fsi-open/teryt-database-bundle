@@ -27,19 +27,19 @@ abstract class TerytDownloadCommand extends Command
     /**
      * @var string
      */
-    private $rootDir;
+    private $projectDir;
 
-    public function __construct(Client $client, string $rootDir)
+    public function __construct(Client $client, string $projectDir)
     {
         parent::__construct();
 
         $this->client = $client;
-        $this->rootDir = $rootDir;
+        $this->projectDir = $projectDir;
     }
 
     protected function getDefaultTargetPath(): string
     {
-        return $this->rootDir . '/teryt';
+        return $this->projectDir . '/teryt';
     }
 
     protected function getApiClient(): Client

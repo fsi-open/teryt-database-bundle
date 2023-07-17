@@ -55,7 +55,7 @@ class ImportTerytCommandContext implements KernelAwareContext
      */
     public function xmlFileHaveFollowingContent(string $fileName, PyStringNode $fileContent): void
     {
-        $targetFolder = sprintf('%s/Project/app/teryt', $this->fixturesPath);
+        $targetFolder = sprintf('%s/teryt', $this->fixturesPath);
         if (!file_exists($targetFolder) && !mkdir($targetFolder) && !is_dir($targetFolder)) {
             throw new \RuntimeException(sprintf('Directory "%s" was not created', $targetFolder));
         }
