@@ -3,27 +3,19 @@ default:
     default:
       paths: [ '%paths.base%/Features' ]
       contexts:
-        - FSi\Bundle\TerytDatabaseBundle\Behat\Context\CommandContext:
-            fixturesPath: '%paths.base%'
+        - FSi\Bundle\TerytDatabaseBundle\Behat\Context\CommandContext
         - FSi\Bundle\TerytDatabaseBundle\Behat\Context\DataContext
-        - FSi\Bundle\TerytDatabaseBundle\Behat\Context\DownloadTerytCommandContext:
-            fixturesPath: '%paths.base%'
-        - FSi\Bundle\TerytDatabaseBundle\Behat\Context\CommandContext:
-            fixturesPath: '%paths.base%'
-        - FSi\Bundle\TerytDatabaseBundle\Behat\Context\ImportTerytCommandContext:
-            fixturesPath: '%paths.base%'
+        - FSi\Bundle\TerytDatabaseBundle\Behat\Context\DownloadTerytCommandContext
+        - FSi\Bundle\TerytDatabaseBundle\Behat\Context\ImportTerytCommandContext
   extensions:
-    Caciobanu\Behat\DeprecationExtension:
-      mode: weak
-    Behat\Symfony2Extension:
+    FriendsOfBehat\SymfonyExtension:
       kernel:
-        env: test
+        environment: test
         debug: true
         path: Behat/Fixtures/Project/app/AppKernel.php
         class: TestApp\AppKernel
-        bootstrap: Behat/Fixtures/Project/app/bootstrap.php
     Behat\MinkExtension:
       sessions:
         default:
-          symfony2: ~
+          symfony: ~
       base_url: 'http://www.fsi-teryt.dev/app_test.php/'

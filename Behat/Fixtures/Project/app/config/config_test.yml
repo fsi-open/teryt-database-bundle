@@ -4,12 +4,11 @@ framework:
     form:            false
     csrf_protection: false
     validation:      false
-    templating:      false
     profiler:        false
     assets:          false
     test:            ~
     session:
-        storage_id:     session.storage.filesystem
+        storage_factory_id: session.storage.factory.mock_file
 
 doctrine:
     dbal:
@@ -31,6 +30,29 @@ fsi_teryt_db:
         password: "1234abcd"
 
 services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
     Doctrine\Persistence\ManagerRegistry:
         alias: doctrine
         public: true
+
+    FSi\Bundle\TerytDatabaseBundle\Behat\Context\CommandContext:
+        arguments:
+            $kernel: '@kernel'
+            $fixturesPath: '%kernel.project_dir%'
+
+    FSi\Bundle\TerytDatabaseBundle\Behat\Context\DataContext:
+        arguments:
+            $kernel: '@kernel'
+
+    FSi\Bundle\TerytDatabaseBundle\Behat\Context\DownloadTerytCommandContext:
+        arguments:
+            $fixturesPath: '%kernel.project_dir%'
+
+    FSi\Bundle\TerytDatabaseBundle\Behat\Context\ImportTerytCommandContext:
+        arguments:
+            $kernel: '@kernel'
+            $fixturesPath: '%kernel.project_dir%'

@@ -12,13 +12,12 @@ declare(strict_types=1);
 namespace FSi\Bundle\TerytDatabaseBundle\Behat\Context;
 
 use Assert\Assertion;
+use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
-use Behat\Symfony2Extension\Context\KernelAwareContext;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\Persistence\ObjectManager;
 use FSi\Bundle\TerytDatabaseBundle\Entity\District;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Place;
 use FSi\Bundle\TerytDatabaseBundle\Entity\PlaceType;
@@ -28,7 +27,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Community;
 use FSi\Bundle\TerytDatabaseBundle\Entity\CommunityType;
 
-class ImportTerytCommandContext implements KernelAwareContext
+class ImportTerytCommandContext implements Context
 {
     /**
      * @var KernelInterface
@@ -40,14 +39,10 @@ class ImportTerytCommandContext implements KernelAwareContext
      */
     protected $fixturesPath;
 
-    public function __construct(string $fixturesPath)
-    {
-        $this->fixturesPath = $fixturesPath;
-    }
-
-    public function setKernel(KernelInterface $kernel): void
+    public function __construct(KernelInterface $kernel, string $fixturesPath)
     {
         $this->kernel = $kernel;
+        $this->fixturesPath = $fixturesPath;
     }
 
     /**

@@ -12,11 +12,10 @@ declare(strict_types=1);
 namespace FSi\Bundle\TerytDatabaseBundle\Behat\Context;
 
 use Assert\Assertion;
+use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\TableNode;
-use Behat\Symfony2Extension\Context\KernelAwareContext;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\Persistence\ObjectManager;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Community;
 use FSi\Bundle\TerytDatabaseBundle\Entity\CommunityType;
 use FSi\Bundle\TerytDatabaseBundle\Entity\District;
@@ -26,7 +25,7 @@ use FSi\Bundle\TerytDatabaseBundle\Entity\Province;
 use FSi\Bundle\TerytDatabaseBundle\Entity\Street;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-class DataContext implements KernelAwareContext
+class DataContext implements Context
 {
     /**
      * @var KernelInterface
@@ -38,7 +37,7 @@ class DataContext implements KernelAwareContext
      */
     protected $lastCommandOutput;
 
-    public function setKernel(KernelInterface $kernel): void
+    public function __construct(KernelInterface $kernel)
     {
         $this->kernel = $kernel;
     }
