@@ -1,0 +1,39 @@
+name: Tests
+
+on:
+    push:
+        branches:
+            - 'master'
+            - '2.1'
+            - '2.0'
+            - '1.x'
+    pull_request:
+    workflow_dispatch:
+
+jobs:
+    test:
+        strategy:
+            matrix:
+                php-version: [8.1, 8.2, 8.3, 8.4]
+        runs-on: ubuntu-22.04
+        container:
+            image: fsiopenpl/docker-php-apache:alpine-${{ matrix.php-version }}
+            env:
+                COMPOSER_FLAGS: ${{ matrix.php-version == '8.1' && ' --prefer-lowest' || '' }}
+        timeout-minutes: 10
+        steps:
+            - name: Checkout source
+              uses: actions/checkout@v1
+            - name: Validate composer config
+              run: composer validate
+            - name: Install dependencies
+              run: composer update ${COMPOSER_FLAGS}
+            - name: Code quality
+              run: vendor/bin/phpcs
+            - name: Code static analysis
+              run: vendor/bin/phpstan
+            - name: Phpspec
+              run: vendor/bin/phpspec run -f pretty
+              if: ${{ matrix.php-version != '8.4 }}
+            - name: Functional tests
+              run: vendor/bin/behat --no-snippets --verbose
