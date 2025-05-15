@@ -11,6 +11,7 @@ parameters:
         - Entity
         - Model
         - Teryt
+        - Xml
     reportUnmatchedIgnoredErrors: false
     ignoreErrors:
         - '#Parameter \#5 \$oneWay of method SoapClient::__doRequest\(\) expects \w+, \S+ given\.#'

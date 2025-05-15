@@ -54,7 +54,7 @@ Feature: Parse streets xml file and import data into database
       | 0884849  | City 1 | ŻORAWINA     |
       | 0935802  | City 2 | JELENIA GÓRA |
     And there are no streets in database
-    When I successfully run console command "teryt:import:streets" with argument "--file=../../../../teryt/streets.xml"
+    When I successfully run console command "teryt:import:streets" with argument "--file=teryt/streets.xml"
     Then following streets should exist in database
       | Identity | Type | Name        | Additional name | Place  |
       | 10268    | ul.  | Księżycowa  |                 | City 1 |
@@ -96,7 +96,7 @@ Feature: Parse streets xml file and import data into database
     And following streets was already imported
       | Identity | Type | Name        | Additional name | Place  |
       | 14018    | ul.  | NARUTOWICZA | GABRIELA        | City 1 |
-    When I successfully run console command "teryt:import:streets" with argument "--file=../../../../teryt/streets.xml"
+    When I successfully run console command "teryt:import:streets" with argument "--file=teryt/streets.xml"
     Then following streets should exist in database
       | Identity | Type | Name        | Additional name | Place  |
       | 14018    | ul.  | Narutowicza | Gabriela        | City 1 |

@@ -12,17 +12,23 @@ declare(strict_types=1);
 namespace FSi\Bundle\TerytDatabaseBundle\Behat\Context;
 
 use Assert\Assertion;
-use Behat\Symfony2Extension\Context\KernelAwareContext;
+use Behat\Behat\Context\Context;
 use FSi\Bundle\TerytDatabaseBundle\Behat\Context\Console\ApplicationTester;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-class CommandContext implements KernelAwareContext
+class CommandContext implements Context
 {
     /**
      * @var KernelInterface
      */
     protected $kernel;
+
+    public function __construct(KernelInterface $kernel, string $fixturesPath)
+    {
+        $this->kernel = $kernel;
+        $this->fixturesPath = $fixturesPath;
+    }
 
     /**
      * @var string
@@ -38,16 +44,6 @@ class CommandContext implements KernelAwareContext
      * @var string
      */
     protected $fixturesPath;
-
-    public function __construct(string $fixturesPath)
-    {
-        $this->fixturesPath = $fixturesPath;
-    }
-
-    public function setKernel(KernelInterface $kernel): void
-    {
-        $this->kernel = $kernel;
-    }
 
     /**
      * @When /^I successfully run console command "([^"]*)"$/
@@ -133,7 +129,7 @@ class CommandContext implements KernelAwareContext
     public function prepareValue(string $argument, string $value): string
     {
         if ($argument === 'file') {
-            return $this->kernel->getRootDir() . DIRECTORY_SEPARATOR . $value;
+            return $this->kernel->getProjectDir() . DIRECTORY_SEPARATOR . $value;
         }
 
         return $value;
