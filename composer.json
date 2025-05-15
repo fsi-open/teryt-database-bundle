@@ -15,12 +15,12 @@
         "ext-dom": "*",
         "ext-simplexml": "*",
         "ext-soap": "*",
+        "ext-xml": "*",
         "symfony/framework-bundle": "^5.4|^6.4",
         "symfony/console": "^5.4|^6.4",
         "symfony/dom-crawler": "^5.4|^6.4",
         "symfony/css-selector": "^5.4|^6.4",
         "doctrine/persistence": "^2.0|^3.0",
-        "hobnob/xml-stream-reader": "^1.0.8",
         "doctrine/doctrine-fixtures-bundle": "^3.4|^4.0",
         "robrichards/wse-php": "^2.0",
         "robrichards/xmlseclibs": "^3.0"

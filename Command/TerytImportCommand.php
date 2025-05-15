@@ -15,7 +15,7 @@ use Assert\Assertion;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use FSi\Bundle\TerytDatabaseBundle\Teryt\Import\NodeConverter;
-use Hobnob\XmlStreamReader\Parser;
+use FSi\Bundle\TerytDatabaseBundle\Xml\Parser;
 use SimpleXMLElement;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
