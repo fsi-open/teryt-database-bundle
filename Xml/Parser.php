@@ -95,9 +95,6 @@ class Parser
             $this->parseString($parser, $data, true);
         }
 
-        //Free up the parser
-        xml_parser_free($parser);
-
         return $this;
     }
 
