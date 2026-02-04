@@ -35,7 +35,7 @@ class TerytDownloadPlacesDatabaseCommand extends TerytDownloadCommand
             );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): ?int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $target = $input->getArgument('target');
         Assertion::nullOrString($target);

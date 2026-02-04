@@ -39,8 +39,14 @@ class TerytSoapClient extends SoapClient
         $this->digest = $digest;
     }
 
-    public function __doRequest($request, $location, $action, $version, $one_way = 0): string
-    {
+    public function __doRequest(
+        $request,
+        $location,
+        $action,
+        $version,
+        $oneWay = 0,
+        ?string $uriParserClass = null
+    ): string {
         $doc = new DOMDocument('1.0');
         $doc->loadXML($request);
 
@@ -55,6 +61,6 @@ class TerytSoapClient extends SoapClient
 
         $request = $wsse->saveXML();
 
-        return parent::__doRequest($request, $location, $action, $version, $one_way);
+        return parent::__doRequest($request, $location, $action, $version, $oneWay);
     }
 }
