@@ -20,7 +20,6 @@ doctrine:
         memory: true
 
     orm:
-        auto_generate_proxy_classes: '%kernel.debug%'
         auto_mapping: true
 
 fsi_teryt_db:
