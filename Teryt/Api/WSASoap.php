@@ -85,7 +85,7 @@ class WSASoap
             $headers = $this->SOAPXPath->query('//wssoap:Envelope/wssoap:Header');
             Assertion::isInstanceOf($headers, DOMNodeList::class);
             $header = $headers->item(0);
-            if (!$header) {
+            if (false === $header instanceof DOMNode) {
                 $header = $this->soapDoc->createElementNS($this->soapNS, $this->soapPFX . ':Header');
                 Assertion::isInstanceOf($header, DOMNode::class);
                 $this->envelope->insertBefore($header, $this->envelope->firstChild);

@@ -74,7 +74,6 @@ class ApplicationTester
         if ($normalize) {
             $display = str_replace(PHP_EOL, "\n", $display);
         }
-        Assertion::string($display);
 
         return $display;
     }
