@@ -59,11 +59,6 @@ class Parser
             throw new Exception('Data must be a string or a stream resource');
         }
 
-        //Ensure $chunkSize is the right type
-        if (!is_int($chunkSize)) {
-            throw new Exception('Chunk size must be an integer');
-        }
-
         //Initialise the object
         $this->init();
 
